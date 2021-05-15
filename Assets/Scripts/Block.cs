@@ -55,12 +55,25 @@ public class Block : MonoBehaviour
 	public BreakDelegate breakDelegate;
 
 	/// <summary>
+	/// Called when the player began breaking the block.
+	/// </summary>
+	[HideInInspector]
+	public delegate void BeganBreakingDelegate();
+
+	/// <summary>
+	/// Called when the player began breaking the block.
+	/// </summary>
+	[HideInInspector]
+	public BeganBreakingDelegate beganBreakingDelegate;
+
+	/// <summary>
 	/// Breaks the given block.
 	/// </summary>
 	public void Break()
 	{
-		foreach (MeshRenderer render in this.gameObject.GetComponentsInChildren<MeshRenderer>())
-			render.material.color = Color.red;
+		if (GameState.debug)
+			foreach (MeshRenderer render in this.gameObject.GetComponentsInChildren<MeshRenderer>())
+				render.material.color = Color.red;
 
 		this.broken = true;
 
@@ -76,6 +89,9 @@ public class Block : MonoBehaviour
 	{
 		Debug.Log("[Block Breaking] Initiating block breaking... " + this.blockName);
 
+		if (this.beganBreakingDelegate != null)
+			this.beganBreakingDelegate();
+
 		this._breakingProgress = 0;
 
 		Clock.instance.AddTickDelegate(this.UpdateBreakingProgress);
@@ -87,7 +103,6 @@ public class Block : MonoBehaviour
 	/// </summary>
 	private void UpdateBreakingProgress()
 	{
-		//Debug.Log(System.String.Format("Progress for block ({0}, {1}): {2}", this.blockName, this.id, this._breakingProgress));
 		this._breakingProgress++;
 
 		if (this._breakingProgress >= this.hardness)
