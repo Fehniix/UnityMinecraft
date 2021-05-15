@@ -8,4 +8,6 @@ public class GameState
 	public static Player player;
 
 	public static Clock clock;
+
+	public static bool debug = true;
 }
