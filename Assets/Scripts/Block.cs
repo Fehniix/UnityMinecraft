@@ -37,6 +37,7 @@ public class Block : MonoBehaviour
 	/// </summary>
 	public bool breakable = true;
 
+	[HideInInspector]
 	/// <summary>
 	/// Whether the block was broken or not.
 	/// </summary>
@@ -94,6 +95,8 @@ public class Block : MonoBehaviour
 
 		this._breakingProgress = 0;
 
+		this.GetComponentInChildren<BreakingHypercube>(true).gameObject.SetActive(true);
+
 		Clock.instance.AddTickDelegate(this.UpdateBreakingProgress);
 	}
 
@@ -104,6 +107,8 @@ public class Block : MonoBehaviour
 	private void UpdateBreakingProgress()
 	{
 		this._breakingProgress++;
+
+		this.UpdateBreakingTexture();
 
 		if (this._breakingProgress >= this.hardness)
 		{
@@ -122,7 +127,20 @@ public class Block : MonoBehaviour
 
 		this._breakingProgress = 0;
 
+		this.GetComponentInChildren<BreakingHypercube>(true).gameObject.SetActive(false);
+
 		Clock.instance.RemoveTickDelegate(this.UpdateBreakingProgress);
+	}
+
+	/// <summary>
+	/// Takes care of updating the current block's hypercube breaking texture.
+	/// </summary>
+	private void UpdateBreakingTexture()
+	{
+		HypercubeFace[] faces 		= this.GetComponentsInChildren<HypercubeFace>();
+		int breakingStage 			= Mathf.FloorToInt((float)this._breakingProgress / (float)this.hardness * 10f);
+		Texture2D breakingTexture 	= CachedResources.Load<Texture2D>(System.String.Format("Textures/Destroy/destroy_stage_{0}", breakingStage));
+		Debug.Log(breakingTexture);
 	}
 
 	void Awake()

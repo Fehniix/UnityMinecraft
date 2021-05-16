@@ -52,8 +52,9 @@ public class PlayerController : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Manages the BeginBreak logic.
+	/// Manages the BeginBreak logic. See KeepBreaking().
 	/// </summary>
+	/// <param name="target">The `Face` GameObject that was hit by a Raycast.</param>
 	private void BeginBreak(GameObject target)
 	{
 		Block targetBlock = target.GetComponentInParent<Block>();
@@ -72,6 +73,7 @@ public class PlayerController : MonoBehaviour
 	}
 
 	/// <summary>
+	/// Manages block breaking (start-progress-end). 
 	/// If the player is currently breaking a block and the view moves off no longer targeting the block, breaking is reset.
 	/// </summary>
 	private void KeepBreaking()

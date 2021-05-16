@@ -303,10 +303,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a62ea4392647624697b46c530fa3459, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  id: 
   blockName: air
   textureName: default
   hasSidedTextures: 0
-  myID: 12345
+  hardness: -1
+  breakable: 1
+  broken: 0
 --- !u!65 &-3969988593156560048
 BoxCollider:
   m_ObjectHideFlags: 0

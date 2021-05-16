@@ -7,8 +7,8 @@ public class Controller : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-		GameObject block = Resources.Load("Prefabs/Blocks/Block.Dirt") as GameObject;
-		GameObject b2 = Resources.Load("Prefabs/Blocks/Block.Cobblestone") as GameObject;
+		GameObject block = CachedResources.Load<GameObject>("Prefabs/Blocks/Block.Dirt");
+		GameObject b2 = CachedResources.Load<GameObject>("Prefabs/Blocks/Block.Cobblestone");
 		GameObject instantiatedBlock = Instantiate<GameObject>(block, new Vector3(2,2,2), Quaternion.identity);
 
 		for (int i = 0; i < 3; i++)

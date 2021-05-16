@@ -23,10 +23,10 @@ public class TextureLoader : MonoBehaviour
 
 		if (block.hasSidedTextures)
 		{
-			Texture2D side 		= Resources.Load<Texture2D>(string.Format("Textures/{0}_side", textureName));
-			Texture2D front 	= Resources.Load<Texture2D>(string.Format("Textures/{0}_front", textureName));
-			Texture2D top 		= Resources.Load<Texture2D>(string.Format("Textures/{0}_top", textureName));
-			Texture2D bottom 	= Resources.Load<Texture2D>(string.Format("Textures/{0}_bottom", textureName));
+			Texture2D side 		= CachedResources.Load<Texture2D>(string.Format("Textures/{0}_side", textureName));
+			Texture2D front 	= CachedResources.Load<Texture2D>(string.Format("Textures/{0}_front", textureName));
+			Texture2D top 		= CachedResources.Load<Texture2D>(string.Format("Textures/{0}_top", textureName));
+			Texture2D bottom 	= CachedResources.Load<Texture2D>(string.Format("Textures/{0}_bottom", textureName));
 
 			if (front == null)
 				front = side;
@@ -51,7 +51,7 @@ public class TextureLoader : MonoBehaviour
 			foreach (Face face in faces)
 			{
 				// Load the texture from resources.
-				Texture2D t = Resources.Load<Texture2D>(string.Format("Textures/{0}", textureName));
+				Texture2D t = CachedResources.Load<Texture2D>(string.Format("Textures/{0}", textureName));
 
 				// Set the texture to the target face.
 				face.GetComponent<MeshRenderer>().material.mainTexture = t;
