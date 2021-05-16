@@ -140,7 +140,9 @@ public class Block : MonoBehaviour
 		HypercubeFace[] faces 		= this.GetComponentsInChildren<HypercubeFace>();
 		int breakingStage 			= Mathf.FloorToInt((float)this._breakingProgress / (float)this.hardness * 10f);
 		Texture2D breakingTexture 	= CachedResources.Load<Texture2D>(System.String.Format("Textures/Destroy/destroy_stage_{0}", breakingStage));
-		Debug.Log(breakingTexture);
+		
+		foreach(HypercubeFace face in faces)
+			face.GetComponent<MeshRenderer>().material.mainTexture = breakingTexture;
 	}
 
 	void Awake()

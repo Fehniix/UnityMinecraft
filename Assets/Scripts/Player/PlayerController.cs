@@ -59,9 +59,6 @@ public class PlayerController : MonoBehaviour
 	{
 		Block targetBlock = target.GetComponentInParent<Block>();
 
-		if (GameState.debug)
-			target.GetComponent<MeshRenderer>().material.color = Color.cyan;
-
 		if (targetBlock != null)
 		{
 			this._breakingBlock = true;
@@ -127,9 +124,6 @@ public class PlayerController : MonoBehaviour
 		if (targetBlock == null)
 			return;
 
-		if (GameState.debug)
-			target.GetComponent<MeshRenderer>().material.color = new Color(1,1,1,1);
-
 		targetBlock.EndBreak();
 	}
 
@@ -149,9 +143,6 @@ public class PlayerController : MonoBehaviour
 		}
 
 		this._breakingBlockReference.GetComponentInParent<Block>().EndBreak();
-
-		if (GameState.debug)
-			this._breakingBlockReference.GetComponent<MeshRenderer>().material.color = new Color(1,1,1,1);
 
 		this._breakingBlock = false;
 		this._breakingBlockReference = null;
