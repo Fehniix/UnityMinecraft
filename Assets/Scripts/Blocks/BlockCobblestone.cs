@@ -7,7 +7,7 @@ public class BlockCobblestone : MonoBehaviour
 		Block block 				= this.GetComponent<Block>();
 		block.blockName 			= "cobblestone";
 		block.hasSidedTextures		= false;
-		block.hardness		 		= 2 * 20;
+		block.hardness		 		= 10;
 		block.breakDelegate 		= this.Break;
 		block.beganBreakingDelegate = this.BeganBreaking;
 

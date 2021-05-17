@@ -9,7 +9,7 @@ using UnityEngine;
 public class Chunk : MonoBehaviour
 {	
 	// The blocks contained within the current chunk.
-    private List<Block> blocks;
+    private Block[,,] blocks;
 
 	[SerializeField] private int chunkSize = 16;
 
@@ -25,4 +25,14 @@ public class Chunk : MonoBehaviour
 	/// The y-position in the world's 2D plane of the chunk.
 	/// </summary>
 	public int y { get; }
+
+	void BuildMesh()
+	{
+		
+	}
+
+	void Awake()
+	{
+		this.blocks = new Block[this.chunkSize, this.chunkSize, this.chunkSize];
+	}
 }
