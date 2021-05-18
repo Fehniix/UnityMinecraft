@@ -4,12 +4,12 @@ using UnityEngine;
 public class TextureStitcher : MonoBehaviour
 {
 	/// <summary>
-	/// For a given texture name, associates the UV mapping on the stitched texture atlas.
+	/// For a given texture name, associates the UV mapping on the stitched texture atlas for an ordered set of clockwise vertices.
 	/// </summary>
 	private Dictionary<string, List<Vector2>> textureUVs;
 
 	/// <summary>
-	/// For a given texture name, associates the UV mapping on the stitched texture atlas.
+	/// For a given texture name, associates the UV mapping on the stitched texture atlas for an ordered set of clockwise vertices.
 	/// </summary>
 	public Dictionary<string, List<Vector2>> TextureUVs {
 		get { return this.textureUVs; }
@@ -30,8 +30,6 @@ public class TextureStitcher : MonoBehaviour
 	/// Static instance of the class to be accessed globally.
 	/// </summary>
 	public static TextureStitcher instance;
-
-	public Texture2D test;
 
     // Start is called before the first frame update
     void Start()
@@ -95,6 +93,12 @@ public class TextureStitcher : MonoBehaviour
 				yCoord * squareSize / (float)rowSize
 			));
 
+			// Calculate the 0,1 UV.
+			this.textureUVs[textures[z].name].Add(new Vector2(
+				xCoord * squareSize / (float)rowSize, 
+				(yCoord * squareSize + squareSize) / (float)rowSize
+			));
+
 			// Calculate the 1,1 UV.
 			this.textureUVs[textures[z].name].Add(new Vector2(
 				(xCoord * squareSize + squareSize) / (float)rowSize,
@@ -106,17 +110,10 @@ public class TextureStitcher : MonoBehaviour
 				(xCoord * squareSize + squareSize) / (float)rowSize, // adding squareSize moves the UV coordinate to the right
 				yCoord * squareSize / (float)rowSize
 			));
-
-			// Calculate the 0,1 UV.
-			this.textureUVs[textures[z].name].Add(new Vector2(
-				xCoord * squareSize / (float)rowSize, 
-				(yCoord * squareSize + squareSize) / (float)rowSize
-			));
 		}
 
 		finalTexture.Apply();
 
-		this.test = finalTexture;
 		this.stitchedTexture = finalTexture;
 	}
 }
