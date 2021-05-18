@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Extensions;
 
 /// <summary>
 /// A chunk is a cubic structure of fixed side that contains individual blocks.
@@ -9,9 +10,13 @@ using UnityEngine;
 public class Chunk : MonoBehaviour
 {	
 	// The blocks contained within the current chunk.
-    private Block[,,] blocks;
+    private string[,,] blocks;
 
-	[SerializeField] private int chunkSize = 16;
+	[SerializeField] 
+	private int chunkSize = 16;
+
+	[SerializeField]
+	private int chunkHeight = 256;
 
 	private int _x;
 	private int _y;
@@ -28,11 +33,76 @@ public class Chunk : MonoBehaviour
 
 	void BuildMesh()
 	{
-		
+		// Instantiate the GameObject (and implictly add it to the scene).
+		GameObject chunk = new GameObject("Chunk");
+
+		// Get the stitched texture.
+		Texture2D texture = TextureStitcher.instance.StitchedTexture;
+
+		// Add mesh filter and renderer.
+		chunk.AddComponent<MeshFilter>();
+		chunk.AddComponent<MeshRenderer>();
+
+		Mesh mesh = new Mesh();
+
+		List<Vector3> vertices	= new List<Vector3>();
+		List<Vector2> uvs		= new List<Vector2>();
+		List<int> triangles 	= new List<int>();
+
+		for (int i = 0; i < this.chunkSize; i++)
+			for (int j = 0; j < this.chunkHeight; j++)
+				for (int k = 0; k < this.chunkSize; k++)
+				{
+					// Determine block adjacency with air. For each adjacent block face, render the face.
+
+					// Top face adjacency
+					//!TODO if (blocks[])
+				}
+
+		vertices.AddRange(CubeMeshFaces.front);
+		vertices.AddRange(CubeMeshFaces.top);
+		vertices.AddRange(CubeMeshFaces.west);
+		vertices.AddRange(CubeMeshFaces.east);
+
+		uvs.AddRange(TextureStitcher.instance.TextureUVs["dirt"].ToArray());
+		uvs.AddRange(TextureStitcher.instance.TextureUVs["dirt"].ToArray());
+		uvs.AddRange(TextureStitcher.instance.TextureUVs["dirt"].ToArray());
+		uvs.AddRange(TextureStitcher.instance.TextureUVs["dirt"].ToArray());
+
+		int[] identityQuad = new int[] {
+			0, 1, 3,
+			1, 2, 3
+		};
+
+		int[] identityQuadInverse = new int[] {
+			3, 1, 0,
+			3, 2, 1
+		};
+
+		triangles.AddRange(identityQuad);
+		triangles.AddRange(identityQuad.Add(4));
+		triangles.AddRange(identityQuad.Add(8));
+		triangles.AddRange(identityQuad.Add(12));
+
+		mesh.vertices 	= vertices.ToArray();
+		mesh.uv 		= uvs.ToArray();
+		mesh.triangles 	= triangles.ToArray();
+
+		mesh.RecalculateNormals();
+
+		chunk.GetComponent<MeshFilter>().mesh = mesh;
+		chunk.transform.position = new Vector3(3,0,3);
+
+		chunk.GetComponent<MeshRenderer>().material.mainTexture = texture;
 	}
 
 	void Awake()
 	{
-		this.blocks = new Block[this.chunkSize, this.chunkSize, this.chunkSize];
+		this.blocks = new string[this.chunkSize, this.chunkHeight, this.chunkSize];
+
+		for (int i = 0; i < this.chunkSize; i++)
+			for (int j = 0; j < this.chunkHeight; j++)
+				for (int k = 0; k < this.chunkSize; k++)
+					this.blocks[i,j,k] = "air";
 	}
 }
