@@ -11,13 +11,18 @@ public class Controller : MonoBehaviour
     void Start()
     {
 		GameObject block = CachedResources.Load<GameObject>("Prefabs/Blocks/Block.Dirt");
-		
 		GameObject instantiatedBlock = Instantiate<GameObject>(block, new Vector3(0,0,0), Quaternion.identity);
 
-		
-		this.test();
+		//this.test();
 
+		Chunk test = new Chunk();
 		
+		for (int i = 0; i < 16; i++)
+			for (int k = 0; k < 16; k++)
+				test.blocks[i,1,k] = "dirt";
+		test.blocks[1,1,1] = "cobblestone";
+
+		test.BuildMesh();
     }
 
     // Update is called once per frame

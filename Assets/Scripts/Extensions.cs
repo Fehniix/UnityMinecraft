@@ -76,5 +76,19 @@ namespace Extensions
 				arr[i] = t[i] + n;
 			return arr;
 		}
-	} 
+	}
+
+	public static class VectorExtension
+	{
+		/// <summary>
+		/// Adds the (x,y,z) float tuple to all components of these vectors. Returns a copy of the original vectors.
+		/// </summary>
+		public static Vector3[] Add(this Vector3[] vectors, (float,float,float) n)
+		{
+			Vector3[] v = new Vector3[vectors.Length];
+			for (int i = 0; i < vectors.Length; i++)
+				v[i] = vectors[i] + n.ToVector3();
+			return v;
+		}
+	}
 }
