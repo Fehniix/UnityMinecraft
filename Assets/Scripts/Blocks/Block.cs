@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents a fundamental block.
 /// </summary>
-public class Block: MonoBehaviour
+public abstract class Block
 {
 	/// <summary>
 	/// ID describing the unique block.
@@ -40,26 +40,6 @@ public class Block: MonoBehaviour
 	/// </summary>
 	public bool broken = false;
 
-	/// <summary>
-	/// Called when the block is broken.
-	/// </summary>
-	public delegate void BreakDelegate();
-
-	/// <summary>
-	/// Called when the block is broken.
-	/// </summary>
-	public BreakDelegate breakDelegate;
-
-	/// <summary>
-	/// Called when the player began breaking the block.
-	/// </summary>
-	public delegate void BeganBreakingDelegate();
-
-	/// <summary>
-	/// Called when the player began breaking the block.
-	/// </summary>
-	public BeganBreakingDelegate beganBreakingDelegate;
-
 	public Block()
 	{
 		this.id = System.Guid.NewGuid().ToString();
@@ -70,13 +50,8 @@ public class Block: MonoBehaviour
 	/// </summary>
 	public void Break()
 	{
-		// if (GameState.debug)
-		// 	foreach (MeshRenderer render in this.gameObject.GetComponentsInChildren<MeshRenderer>())
-		// 		render.material.color = Color.red;
-
+		Debug.Log("Block broken.");
 		this.broken = true;
-
-		this.breakDelegate();
 	}
 
 	// Block breaking logic.
@@ -87,9 +62,6 @@ public class Block: MonoBehaviour
 	public void BeginBreak()
 	{
 		Debug.Log("[Block Breaking] Initiating block breaking... " + this.blockName);
-
-		if (this.beganBreakingDelegate != null)
-			this.beganBreakingDelegate();
 
 		this._breakingProgress = 0;
 
