@@ -1,30 +1,25 @@
 ﻿using UnityEngine;
 
-[RequireComponent(typeof(Clock))]
-public class Block : MonoBehaviour
+public class Block
 {
 	/// <summary>
 	/// ID describing the unique block.
 	/// </summary>
-	[HideInInspector]
 	public string id;
 
 	/// <summary>
 	///Describes the name of the block. The block texture depends on it.
 	/// </summary>
-	[HideInInspector]
 	public string blockName = "air";
 
 	/// <summary>
 	///Describes the name of the texture. If not set, defaults to the block name.
 	/// </summary>
-	[HideInInspector]
 	public string textureName = "default";
 
 	/// <summary>
 	///If set to false, one texture is used for all the block's faces.
 	/// </summary>
-	[HideInInspector]
 	public bool hasSidedTextures = false;
 
 	/// <summary>
@@ -37,7 +32,6 @@ public class Block : MonoBehaviour
 	/// </summary>
 	public bool breakable = true;
 
-	[HideInInspector]
 	/// <summary>
 	/// Whether the block was broken or not.
 	/// </summary>
@@ -46,35 +40,36 @@ public class Block : MonoBehaviour
 	/// <summary>
 	/// Called when the block is broken.
 	/// </summary>
-	[HideInInspector] 
 	public delegate void BreakDelegate();
 
 	/// <summary>
 	/// Called when the block is broken.
 	/// </summary>
-	[HideInInspector] 
 	public BreakDelegate breakDelegate;
 
 	/// <summary>
 	/// Called when the player began breaking the block.
 	/// </summary>
-	[HideInInspector]
 	public delegate void BeganBreakingDelegate();
 
 	/// <summary>
 	/// Called when the player began breaking the block.
 	/// </summary>
-	[HideInInspector]
 	public BeganBreakingDelegate beganBreakingDelegate;
+
+	public Block()
+	{
+		this.id = System.Guid.NewGuid().ToString();
+	}
 
 	/// <summary>
 	/// Breaks the given block.
 	/// </summary>
 	public void Break()
 	{
-		if (GameState.debug)
-			foreach (MeshRenderer render in this.gameObject.GetComponentsInChildren<MeshRenderer>())
-				render.material.color = Color.red;
+		// if (GameState.debug)
+		// 	foreach (MeshRenderer render in this.gameObject.GetComponentsInChildren<MeshRenderer>())
+		// 		render.material.color = Color.red;
 
 		this.broken = true;
 
@@ -95,7 +90,7 @@ public class Block : MonoBehaviour
 
 		this._breakingProgress = 0;
 
-		this.GetComponentInChildren<BreakingHypercube>(true).gameObject.SetActive(true);
+		//this.GetComponentInChildren<BreakingHypercube>(true).gameObject.SetActive(true);
 
 		Clock.instance.AddTickDelegate(this.UpdateBreakingProgress);
 	}
@@ -127,7 +122,7 @@ public class Block : MonoBehaviour
 
 		this._breakingProgress = 0;
 
-		this.GetComponentInChildren<BreakingHypercube>(true).gameObject.SetActive(false);
+		//this.GetComponentInChildren<BreakingHypercube>(true).gameObject.SetActive(false);
 
 		Clock.instance.RemoveTickDelegate(this.UpdateBreakingProgress);
 	}
@@ -137,16 +132,11 @@ public class Block : MonoBehaviour
 	/// </summary>
 	private void UpdateBreakingTexture()
 	{
-		HypercubeFace[] faces 		= this.GetComponentsInChildren<HypercubeFace>();
-		int breakingStage 			= Mathf.FloorToInt((float)this._breakingProgress / (float)this.hardness * 10f);
-		Texture2D breakingTexture 	= CachedResources.Load<Texture2D>(System.String.Format("Textures/Destroy/destroy_stage_{0}", breakingStage));
+		// HypercubeFace[] faces 		= this.GetComponentsInChildren<HypercubeFace>();
+		// int breakingStage 			= Mathf.FloorToInt((float)this._breakingProgress / (float)this.hardness * 10f);
+		// Texture2D breakingTexture 	= CachedResources.Load<Texture2D>(System.String.Format("Textures/Destroy/destroy_stage_{0}", breakingStage));
 		
-		foreach(HypercubeFace face in faces)
-			face.GetComponent<MeshRenderer>().material.mainTexture = breakingTexture;
-	}
-
-	void Awake()
-	{
-		this.id = System.Guid.NewGuid().ToString();
+		// foreach(HypercubeFace face in faces)
+		// 	face.GetComponent<MeshRenderer>().material.mainTexture = breakingTexture;
 	}
 }
