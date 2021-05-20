@@ -18,18 +18,15 @@ public class Chunk
 	[SerializeField]
 	private int chunkHeight = 256;
 
-	private int _x;
-	private int _y;
+	/// <summary>
+	/// x-position of the chunk.
+	/// </summary>
+	public int x;
 
 	/// <summary>
-	/// The x-position in the world's 2D plane of the chunk.
+	/// z-position of the chunk.
 	/// </summary>
-	public int x { get; }
-
-	/// <summary>
-	/// The y-position in the world's 2D plane of the chunk.
-	/// </summary>
-	public int y { get; }
+	public int z;
 
 	/// <summary>
 	/// Used to build a quad's triangles.
@@ -60,6 +57,7 @@ public class Chunk
 		// Add mesh filter and renderer.
 		chunk.AddComponent<MeshFilter>();
 		chunk.AddComponent<MeshRenderer>();
+		chunk.AddComponent<MeshCollider>();
 
 		Mesh mesh = new Mesh();
 
@@ -82,41 +80,35 @@ public class Chunk
 
 					// Top face adjacency
 					if (j >= 0 && j <= this.chunkHeight - 1)
-						if (j == this.chunkHeight - 1)
-							// Always render the top most face.
-							this.AddFace(i, j, k, builtFaces++, CubeMeshFaces.top, vertices, uvs, triangles);
-						else if (this.blocks[i, j + 1, k] == "air")
+						if (j == this.chunkHeight - 1 || this.blocks[i, j + 1, k] == "air")
+							// Always render the top most face, OR if the top-adjacent block is "air".
 							this.AddFace(i, j, k, builtFaces++, CubeMeshFaces.top, vertices, uvs, triangles);
 
 					// Bottom face adjacency
 					if (j >= 0 && j < this.chunkHeight)
-						if (j == 0)
-							this.AddFace(i, j, k, builtFaces++, CubeMeshFaces.bottom, vertices, uvs, triangles);
-						else if (this.blocks[i, j - 1, k] == "air")
+						if (j == 0 || this.blocks[i, j - 1, k] == "air")
 							this.AddFace(i, j, k, builtFaces++, CubeMeshFaces.bottom, vertices, uvs, triangles);
 					
 					// West face adjacency
 					if (i >= 0 && i < this.chunkSize)
-						if (i == 0)
+						if (i == 0 || this.blocks[i - 1, j, k] == "air")
 							this.AddFace(i, j, k, builtFaces++, CubeMeshFaces.west, vertices, uvs, triangles);
-						else if (this.blocks[i - 1, j, k] == "air")
-							this.AddFace(i, j, k, builtFaces++, CubeMeshFaces.west, vertices, uvs, triangles);
+
+					// East face adjacency
+					if (i >= 0 && i <= this.chunkSize)
+						if (i == this.chunkSize - 1 || this.blocks[i + 1, j, k] == "air")
+							this.AddFace(i, j, k, builtFaces++, CubeMeshFaces.east, vertices, uvs, triangles);
+
+					// Front face adjacency
+					if (k >= 0 && k < this.chunkSize)
+						if (k == 0 || this.blocks[i, j, k - 1] == "air")
+							this.AddFace(i, j, k, builtFaces++, CubeMeshFaces.front, vertices, uvs, triangles);
+
+					// Back face adjacency
+					if (k >= 0 && k <= this.chunkSize)
+						if (k == this.chunkSize - 1 || this.blocks[i, j, k + 1] == "air")
+							this.AddFace(i, j, k, builtFaces++, CubeMeshFaces.back, vertices, uvs, triangles);
 				}
-
-		// vertices.AddRange(CubeMeshFaces.front);
-		// vertices.AddRange(CubeMeshFaces.top);
-		// vertices.AddRange(CubeMeshFaces.west);
-		// vertices.AddRange(CubeMeshFaces.east);
-
-		// uvs.AddRange(TextureStitcher.instance.TextureUVs["dirt"].ToArray());
-		// uvs.AddRange(TextureStitcher.instance.TextureUVs["dirt"].ToArray());
-		// uvs.AddRange(TextureStitcher.instance.TextureUVs["dirt"].ToArray());
-		// uvs.AddRange(TextureStitcher.instance.TextureUVs["dirt"].ToArray());
-
-		// triangles.AddRange(identityQuad);
-		// triangles.AddRange(identityQuad.Add(4));
-		// triangles.AddRange(identityQuad.Add(8));
-		// triangles.AddRange(identityQuad.Add(12));
 
 		mesh.vertices 	= vertices.ToArray();
 		mesh.uv 		= uvs.ToArray();
@@ -125,7 +117,8 @@ public class Chunk
 		mesh.RecalculateNormals();
 
 		chunk.GetComponent<MeshFilter>().mesh = mesh;
-		chunk.transform.position = new Vector3(10,0,3);
+		chunk.GetComponent<MeshCollider>().sharedMesh = mesh;
+		chunk.transform.position = new Vector3(this.x, 0, this.z);
 
 		chunk.GetComponent<MeshRenderer>().material.mainTexture = texture;
 	}
