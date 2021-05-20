@@ -1,17 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Extensions;
+﻿using UnityEngine;
 
 public class Controller : MonoBehaviour
 {
-	public GameObject cube;
-	public Texture2D testTexture;
     // Start is called before the first frame update
     void Start()
     {
-		GameObject block = CachedResources.Load<GameObject>("Prefabs/Blocks/Block.Dirt");
-		GameObject instantiatedBlock = Instantiate<GameObject>(block, new Vector3(0,0,0), Quaternion.identity);
+		this.RegisterBlocks();
 
 		Chunk test = new Chunk();
 
@@ -21,16 +15,22 @@ public class Controller : MonoBehaviour
 		test.x = 5;
 		test.z = 5;
 		test.BuildMesh();
-
-		Cobblestone cobble = new Cobblestone();
-		Debug.Log(cobble.id);
     }
 
     // Update is called once per frame
     void Update()
     {
-		
+		if (Input.GetMouseButtonDown(0))
+		{
+			Block test = Blocks.Spawn("cobblestone");
+			Debug.Log(test);
+		}
     }
+
+	void RegisterBlocks()
+	{
+		Blocks.RegisterBlock<Cobblestone>("cobblestone");
+	}
 	
 	void printArray<T>(T[] arr)
 	{

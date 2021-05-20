@@ -75,6 +75,15 @@ public class PlayerController : MonoBehaviour
 	/// </summary>
 	private void KeepBreaking()
 	{
+		RaycastHit hit1;
+		if (this.CenterRaycast(out hit1))
+		{
+			GameObject obj = hit1.transform.gameObject;
+			Debug.Log(obj);
+		}
+
+		return;
+
 		RaycastHit hit;
 		if (!this.CenterRaycast(out hit)) 
 		{
