@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 
-public class Block
+/// <summary>
+/// Represents a fundamental block.
+/// </summary>
+public class Block: MonoBehaviour
 {
 	/// <summary>
 	/// ID describing the unique block.

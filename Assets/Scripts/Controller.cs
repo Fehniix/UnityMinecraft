@@ -16,11 +16,14 @@ public class Controller : MonoBehaviour
 		Chunk test = new Chunk();
 
 		for (int i = 0; i < 256; i++)
-			test.blocks[Random.Range(0, 16), Random.Range(0, 32), Random.Range(0, 16)] = "furnace";
+			test.blocks[Random.Range(0, 16), Random.Range(0, 32), Random.Range(0, 16)] = "stone";
 		
 		test.x = 5;
 		test.z = 5;
 		test.BuildMesh();
+
+		Cobblestone cobble = new Cobblestone();
+		Debug.Log(cobble.id);
     }
 
     // Update is called once per frame
