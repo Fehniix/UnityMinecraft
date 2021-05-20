@@ -13,15 +13,13 @@ public class Controller : MonoBehaviour
 		GameObject block = CachedResources.Load<GameObject>("Prefabs/Blocks/Block.Dirt");
 		GameObject instantiatedBlock = Instantiate<GameObject>(block, new Vector3(0,0,0), Quaternion.identity);
 
-		//this.test();
-
 		Chunk test = new Chunk();
-		
-		for (int i = 0; i < 16; i++)
-			for (int k = 0; k < 16; k++)
-				test.blocks[i,1,k] = "dirt";
-		test.blocks[1,1,1] = "cobblestone";
 
+		for (int i = 0; i < 256; i++)
+			test.blocks[Random.Range(0, 16), Random.Range(0, 32), Random.Range(0, 16)] = "furnace";
+		
+		test.x = 5;
+		test.z = 5;
 		test.BuildMesh();
     }
 
@@ -30,58 +28,7 @@ public class Controller : MonoBehaviour
     {
 		
     }
-
-	void test()
-	{
-		GameObject obj = new GameObject("SuperMesh");
-		Texture2D texture = TextureStitcher.instance.StitchedTexture;
-
-		obj.AddComponent<MeshFilter>();
-		obj.AddComponent<MeshRenderer>();
-
-		Mesh mesh = new Mesh();
-
-		List<Vector3> vertices	= new List<Vector3>();
-		List<Vector2> uvs		= new List<Vector2>();
-		List<int> triangles 	= new List<int>();
-
-		vertices.AddRange(CubeMeshFaces.front);
-		vertices.AddRange(CubeMeshFaces.top);
-		vertices.AddRange(CubeMeshFaces.west);
-		vertices.AddRange(CubeMeshFaces.east);
-
-		uvs.AddRange(TextureStitcher.instance.TextureUVs["dirt"].ToArray());
-		uvs.AddRange(TextureStitcher.instance.TextureUVs["dirt"].ToArray());
-		uvs.AddRange(TextureStitcher.instance.TextureUVs["dirt"].ToArray());
-		uvs.AddRange(TextureStitcher.instance.TextureUVs["dirt"].ToArray());
-
-		int[] identityQuad = new int[] {
-			0, 1, 3,
-			1, 2, 3
-		};
-
-		int[] identityQuadInverse = new int[] {
-			3, 1, 0,
-			3, 2, 1
-		};
-
-		triangles.AddRange(identityQuad);
-		triangles.AddRange(identityQuad.Add(4));
-		triangles.AddRange(identityQuad.Add(8));
-		triangles.AddRange(identityQuad.Add(12));
-
-		mesh.vertices 	= vertices.ToArray();
-		mesh.uv 		= uvs.ToArray();
-		mesh.triangles 	= triangles.ToArray();
-
-		mesh.RecalculateNormals();
-
-		obj.GetComponent<MeshFilter>().mesh = mesh;
-		obj.transform.position = new Vector3(3,0,3);
-
-		obj.GetComponent<MeshRenderer>().material.mainTexture = texture;
-	}
-
+	
 	void printArray<T>(T[] arr)
 	{
 		string output = "[ ";
