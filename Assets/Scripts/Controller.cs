@@ -11,19 +11,6 @@ public class Controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-		if (Input.GetMouseButtonDown(0))
-		{
-			
-		}
+		
     }
-	void printArray<T>(T[] arr)
-	{
-		string output = "[ ";
-		foreach(T el in arr)
-		{
-			output += el + " ";
-		}
-		output += "]";
-		Debug.Log(output);
-	}
 }

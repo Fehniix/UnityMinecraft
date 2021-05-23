@@ -77,7 +77,7 @@ public class Chunk
 			this.chunkGameObject.AddComponent<ChunkObject>();
 
 			this.chunkGameObject.GetComponent<MeshRenderer>().material.mainTexture = texture;
-			this.chunkGameObject.transform.position = new Vector3(this.x, 0, this.z);
+			this.chunkGameObject.transform.position = new Vector3(this.x * this.chunkSize, 0, this.z * this.chunkSize);
 		}
 
 		Mesh mesh = new Mesh();
@@ -150,5 +150,10 @@ public class Chunk
 		vertices.AddRange(face.Add((i,j,k)));
 		uvs.AddRange(TextureStitcher.instance.TextureUVs[blocks[i,j,k]].ToArray());
 		triangles.AddRange(this.identityQuad.Add(builtFaces * 4));
+	}
+
+	public void Destroy()
+	{
+		GameObject.Destroy(this.chunkGameObject);
 	}
 }
