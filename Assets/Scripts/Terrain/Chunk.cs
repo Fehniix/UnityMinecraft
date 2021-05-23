@@ -10,14 +10,27 @@ using Extensions;
 [RequireComponent(typeof(TextureStitcher))]
 public class Chunk
 {	
-	// The blocks contained within the current chunk.
+	/// <summary>
+	/// Individual blockNames contained within the chunk.
+	/// </summary>
     public string[,,] blocks;
 
+	/// <summary>
+	/// (x,z) size of the chunk.
+	/// </summary>
 	[SerializeField] 
 	private int chunkSize = 16;
 
+	/// <summary>
+	/// y-size of the chunk.
+	/// </summary>
 	[SerializeField]
 	private int chunkHeight = 256;
+
+	/// <summary>
+	/// Private reference to the game object first created by BuildMesh().
+	/// </summary>
+	private GameObject chunkGameObject;
 
 	/// <summary>
 	/// x-position of the chunk.
@@ -49,16 +62,22 @@ public class Chunk
 
 	public void BuildMesh()
 	{
-		// Instantiate the GameObject (and implictly add it to the scene).
-		GameObject chunk = new GameObject("Chunk");
+		if (this.chunkGameObject == null)
+		{
+			// Instantiate the GameObject (and implictly add it to the scene).
+			this.chunkGameObject = new GameObject("Chunk");
 
-		// Get the stitched texture.
-		Texture2D texture = TextureStitcher.instance.StitchedTexture;
+			// Get the stitched texture.
+			Texture2D texture = TextureStitcher.instance.StitchedTexture;
 
-		// Add mesh filter and renderer.
-		chunk.AddComponent<MeshFilter>();
-		chunk.AddComponent<MeshRenderer>();
-		chunk.AddComponent<MeshCollider>();
+			// Add mesh filter and renderer.
+			this.chunkGameObject.AddComponent<MeshFilter>();
+			this.chunkGameObject.AddComponent<MeshRenderer>();
+			this.chunkGameObject.AddComponent<MeshCollider>();
+
+			this.chunkGameObject.GetComponent<MeshRenderer>().material.mainTexture = texture;
+			this.chunkGameObject.transform.position = new Vector3(this.x, 0, this.z);
+		}
 
 		Mesh mesh = new Mesh();
 
@@ -117,11 +136,8 @@ public class Chunk
 
 		mesh.RecalculateNormals();
 
-		chunk.GetComponent<MeshFilter>().mesh = mesh;
-		chunk.GetComponent<MeshCollider>().sharedMesh = mesh;
-		chunk.transform.position = new Vector3(this.x, 0, this.z);
-
-		chunk.GetComponent<MeshRenderer>().material.mainTexture = texture;
+		this.chunkGameObject.GetComponent<MeshFilter>().mesh = mesh;
+		this.chunkGameObject.GetComponent<MeshCollider>().sharedMesh = mesh;
 	}
 
 	/// <summary>

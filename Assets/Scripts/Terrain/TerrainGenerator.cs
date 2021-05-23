@@ -15,6 +15,19 @@ public class TerrainGenerator : MonoBehaviour
 	void Start()
 	{
 		this.noise = new FastNoise();
+
+		Chunk test = new Chunk();
+
+		// for (int i = 0; i < 256; i++)
+		// 	test.blocks[Random.Range(0, 16), Random.Range(0, 32), Random.Range(0, 16)] = "stone";
+		test.blocks[1,1,1] = "cobblestone";
+		test.blocks[2,2,1] = "bedrock";
+		
+		test.x = 0;
+		test.z = 0;
+		test.BuildMesh();
+
+		PCTerrain.GetInstance().chunks[(test.x, test.z)] = test;
 	}
 
 	void Update()

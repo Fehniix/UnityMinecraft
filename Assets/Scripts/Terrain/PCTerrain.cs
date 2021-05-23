@@ -12,10 +12,10 @@ public class PCTerrain
 
 	private PCTerrain()
 	{
-		this.chunks = new List<List<Chunk>>();
+		this.chunks = new Dictionary<ChunkPosition, Chunk>();
 	}
 
-	public PCTerrain GetInstance()
+	public static PCTerrain GetInstance()
 	{
 		if (PCTerrain.instance == null)
 			PCTerrain.instance = new PCTerrain();
@@ -26,5 +26,26 @@ public class PCTerrain
 	/// <summary>
 	/// The terrain's chunks organized by (x,y) coordinates.
 	/// </summary>
-	public List<List<Chunk>> chunks;
+	public Dictionary<ChunkPosition, Chunk> chunks;
+}
+
+public struct ChunkPosition
+{
+	/// <summary>
+	/// x-position of the chunk in the world.
+	/// </summary>
+	public int x;
+
+	/// <summary>
+	/// z-position of the chunk in the world.
+	/// </summary>
+	public int z;
+
+	public ChunkPosition(int x, int z)
+	{
+		this.x = x;
+		this.z = z;
+	}
+
+	public static implicit operator ChunkPosition((int x, int z) t) => new ChunkPosition(t.x, t.z);
 }

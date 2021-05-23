@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class Cobblestone: Block
 {
-	public override string blockName { get => "cobblestone"; set {} }
-	
     public Cobblestone(): base()
 	{
-		
+		this.blockName = "cobblestone";
 	}
 }

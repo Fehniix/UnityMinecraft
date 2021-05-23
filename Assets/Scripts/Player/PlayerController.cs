@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Extensions;
 
 public class PlayerController : MonoBehaviour
 {
@@ -66,7 +67,11 @@ public class PlayerController : MonoBehaviour
 
 			targetBlock.BeginBreak();
 		}
-		
+	}
+
+	private void PrintVector(Vector3 v)
+	{
+		Debug.Log("[" + v.x + ", " + v.y + ", " + v.z + "]");
 	}
 
 	/// <summary>
@@ -78,8 +83,25 @@ public class PlayerController : MonoBehaviour
 		RaycastHit hit1;
 		if (this.CenterRaycast(out hit1))
 		{
-			GameObject obj = hit1.transform.gameObject;
-			Debug.Log(obj);
+			Vector3 blockCenterPosition = hit1.point - hit1.normal * .5f;
+			
+			ChunkPosition chunkPosition = (
+				Mathf.FloorToInt(blockCenterPosition.x / 16), 
+				Mathf.FloorToInt(blockCenterPosition.z / 16)
+			);
+			Vector3 blockCoords = (
+				Mathf.FloorToInt(blockCenterPosition.x), 
+				Mathf.FloorToInt(blockCenterPosition.y), 
+				Mathf.FloorToInt(blockCenterPosition.z)
+			).ToVector3();
+			
+			string blockName = PCTerrain.GetInstance().chunks[chunkPosition].blocks[(int)blockCoords.x, (int)blockCoords.y, (int)blockCoords.z];
+			Debug.Log(blockName);
+			Block block = Blocks.Instantiate(blockName);
+
+			Debug.Log(block.breakable);
+
+			//PCTerrain.GetInstance().chunks[chunkPosition].BuildMesh();
 		}
 
 		return;

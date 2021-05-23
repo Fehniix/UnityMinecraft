@@ -20,7 +20,7 @@ public static class Blocks
 	/// <summary>
 	/// Given a block name, returns a Block instance.
 	/// </summary>
-	public static Block Spawn(string name)
+	public static Block Instantiate(string name)
 	{
 		if (!Blocks.registeredBlocks.ContainsKey(name))
 			return null;

@@ -13,7 +13,7 @@ public abstract class Block
 	/// <summary>
 	///Describes the name of the block. The block texture depends on it.
 	/// </summary>
-	abstract public string blockName { get; set; }
+	public string blockName;
 
 	/// <summary>
 	///Describes the name of the texture. If not set, defaults to the block name.
