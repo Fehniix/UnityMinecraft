@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Extensions;
 
 /// <summary>
 /// Represents a fundamental block.
@@ -19,6 +20,11 @@ public abstract class Block
 	///Describes the name of the texture. If not set, defaults to the block name.
 	/// </summary>
 	public string textureName = "default";
+
+	/// <summary>
+	/// (x,y,z) Voxel world coordinates of the current block. 
+	/// </summary>
+	public Vector3Int coordinates;
 
 	/// <summary>
 	///If set to false, one texture is used for all the block's faces.
@@ -74,7 +80,7 @@ public abstract class Block
 
 		this._breakingProgress = 0;
 
-		//this.GetComponentInChildren<BreakingHypercube>(true).gameObject.SetActive(true);
+		this.SpawnBreakHypercube();
 
 		Clock.instance.AddTickDelegate(this.UpdateBreakingProgress);
 	}
@@ -92,7 +98,7 @@ public abstract class Block
 		if (this._breakingProgress >= this.hardness)
 		{
 			this.EndBreak();
-			this.Break();
+			PCTerrain.GetInstance().BreakAt(this.coordinates.x, this.coordinates.y, this.coordinates.z);
 		}
 	}
 
@@ -102,25 +108,44 @@ public abstract class Block
 	/// </summary>
 	public void EndBreak()
 	{
+		if (!this.breakable)
+			return;
+			
 		Debug.Log("[Block Breaking] User either lifted the break button, broke the block or moved outside block view: " + this.blockName);
 
 		this._breakingProgress = 0;
 
-		//this.GetComponentInChildren<BreakingHypercube>(true).gameObject.SetActive(false);
+		GameObject.Destroy(this.hypercubeRef);
 
 		Clock.instance.RemoveTickDelegate(this.UpdateBreakingProgress);
 	}
+
+	// Reference the hypercube prefab. Used to destroy the prefab.
+	private GameObject hypercubeRef;
 
 	/// <summary>
 	/// Takes care of updating the current block's hypercube breaking texture.
 	/// </summary>
 	private void UpdateBreakingTexture()
 	{
-		// HypercubeFace[] faces 		= this.GetComponentsInChildren<HypercubeFace>();
-		// int breakingStage 			= Mathf.FloorToInt((float)this._breakingProgress / (float)this.hardness * 10f);
-		// Texture2D breakingTexture 	= CachedResources.Load<Texture2D>(System.String.Format("Textures/Destroy/destroy_stage_{0}", breakingStage));
+		int breakingStage 			= Mathf.FloorToInt((float)this._breakingProgress / (float)this.hardness * 10f);
+		Texture2D breakingTexture 	= CachedResources.Load<Texture2D>(System.String.Format("Textures/Destroy/destroy_stage_{0}", breakingStage));
 		
-		// foreach(HypercubeFace face in faces)
-		// 	face.GetComponent<MeshRenderer>().material.mainTexture = breakingTexture;
+		this.hypercubeRef.GetComponentInChildren<MeshRenderer>().sharedMaterial.mainTexture = breakingTexture;
+	}
+
+	/// <summary>
+	/// Spawns the "break hypercube" at the block's position.
+	/// </summary>
+	private void SpawnBreakHypercube()
+	{
+		GameObject breakHypercube = Resources.Load<GameObject>("Prefabs/BreakHypercube");
+		breakHypercube.GetComponentInChildren<MeshRenderer>().sharedMaterial.mainTexture = CachedResources.Load<Texture2D>("Textures/Destroy/destroy_stage_0");
+		
+		this.hypercubeRef = GameObject.Instantiate(
+			breakHypercube, 
+			this.coordinates + (0.5, 0.5, 0.5).ToVector3(), 
+			Quaternion.identity
+		);
 	}
 }

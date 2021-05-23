@@ -6,16 +6,6 @@ using Extensions;
 public class TargetBlock : MonoBehaviour
 {
 	/// <summary>
-	/// Contains instances of targeted blocks.
-	/// </summary>
-	private static Dictionary<Vector3, Block> blocks;
-
-	void Awake()
-	{
-		TargetBlock.blocks = new Dictionary<Vector3, Block>();
-	}
-
-	/// <summary>
 	/// Shoots a Raycast from the center of the screen (relative to the camera)
 	/// </summary>
 	/// <param name="hit">Reference parameter to the GameObject that was hit.</param>
@@ -42,6 +32,9 @@ public class TargetBlock : MonoBehaviour
 		if (!TargetBlock.CenterRaycast(out hit))
 			return null;
 
+		if (hit.transform.gameObject.GetComponent<ChunkObject>() == null)
+			return null;
+
 		// `hit.normal` represents the normal vector with respect to the hit mesh.
 		// By over-simplifying the chunk mesh to a simple cube, `hit.normal` refers to the hit face's normal vector.
 		// This aims at positioning the hit point inside the cube, being then able to get the hit block's coordinates.
@@ -59,14 +52,14 @@ public class TargetBlock : MonoBehaviour
 		).ToVector3();
 
 		// The block's (x,y,z) coordinates with respect to the Voxel world.
-		Vector3 blockWCoords = (
-			blockCoords.x + chunkPosition.x,
-			blockCoords.y,
-			blockCoords.z + chunkPosition.z
-		).ToVector3();
+		Vector3Int blockWCoords = (
+			(int)blockCoords.x + chunkPosition.x,
+			(int)blockCoords.y,
+			(int)blockCoords.z + chunkPosition.z
+		).ToVector3Int();
 
-		if (TargetBlock.blocks.ContainsKey(blockWCoords))
-			return TargetBlock.blocks[blockWCoords];
+		if (PCTerrain.GetInstance().blocks.ContainsKey(blockWCoords))
+			return PCTerrain.GetInstance().blocks[blockWCoords];
 		
 		string blockName = PCTerrain.GetInstance().chunks[chunkPosition].blocks[
 			(int)blockCoords.x, 
@@ -74,36 +67,18 @@ public class TargetBlock : MonoBehaviour
 			(int)blockCoords.z
 		];
 
-		Block instance = Blocks.Instantiate(blockName);
-		TargetBlock.blocks[(
+		if (blockName == "air")
+			return null;
+
+		Block blockInstance = Blocks.Instantiate(blockName);
+		blockInstance.coordinates = blockWCoords;
+		
+		PCTerrain.GetInstance().blocks[(
 			blockCoords.x + chunkPosition.x,
 			blockCoords.y,
 			blockCoords.z + chunkPosition.z).ToVector3()
-		] = instance;
+		] = blockInstance;
 
-		return instance;
-	}
-
-	/// <summary>
-	/// Removes the block at the supplied position without breaking it.
-	/// </summary>
-	public static void RemoveAt(int x, int y, int z)
-	{
-		if (TargetBlock.blocks[(x,y,z).ToVector3()] == null)
-			return;
-
-		TargetBlock.blocks[(x,y,z).ToVector3()] = null;
-	}
-
-	/// <summary>
-	/// Breaks the block at the supplied position and clears the block instance.
-	/// </summary>
-	public void BreakAt(int x, int y, int z)
-	{
-		if (TargetBlock.blocks[(x,y,z).ToVector3()] == null)
-			return;
-
-		TargetBlock.blocks[(x,y,z).ToVector3()].Break();
-		TargetBlock.blocks[(x,y,z).ToVector3()] = null;
+		return blockInstance;
 	}
 }

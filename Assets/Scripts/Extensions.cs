@@ -29,6 +29,14 @@ namespace Extensions
 		}
 
 		/// <summary>
+		/// Converts the tuple to a Vector3Int.
+		/// </summary>
+		public static Vector3Int ToVector3Int(this (int,int,int) t)
+		{
+			return new Vector3Int(t.Item1, t.Item2, t.Item3);
+		}
+
+		/// <summary>
 		/// Converts the tuple to a Vector2.
 		/// </summary>
 		public static Vector2 ToVector2(this (float,float) t)

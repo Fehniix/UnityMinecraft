@@ -13,8 +13,7 @@ public class Controller : MonoBehaviour
     {
 		if (Input.GetMouseButtonDown(0))
 		{
-			Block test = Blocks.Instantiate("cobblestone");
-			Debug.Log(test);
+			
 		}
     }
 	void printArray<T>(T[] arr)

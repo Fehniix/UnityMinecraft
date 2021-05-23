@@ -40,7 +40,6 @@ public class PlayerController : MonoBehaviour
 	{
 		// Player position test
 		Debug.Log("Voxel Position: " + GameState.player.GetVoxelPosition());
-		Debug.Log(TargetBlock.Get()?.blockName ?? "undefined");
 	}
 
 	private void HandleMouseLeftClickHeld()
@@ -79,7 +78,7 @@ public class PlayerController : MonoBehaviour
 	/// </summary>
 	private void KeepBreaking()
 	{
-		Block block = this.GetTargetBlock();
+		Block block = TargetBlock.Get();
 		
 		if (block == null) 
 		{
@@ -108,7 +107,7 @@ public class PlayerController : MonoBehaviour
 		if (!this._breakingBlock)
 			return;
 
-		Block block = this.GetTargetBlock();
+		Block block = TargetBlock.Get();
 
 		if (block.broken)
 			return;
@@ -141,49 +140,5 @@ public class PlayerController : MonoBehaviour
 
 		this._breakingBlock = false;
 		this._breakingBlockReference = null;
-	}
-
-	/// <summary>
-	/// Shoots a Raycast from the center of the screen (relative to the camera)
-	/// </summary>
-	/// <param name="hit">Reference parameter to the GameObject that was hit.</param>
-	/// <returns>`true` if the Raycast hit a GameObject, `false` otherwise.</returns>
-	private bool CenterRaycast(out RaycastHit hit)
-	{
-		Vector3 cameraCenter = new Vector3(this._camera.pixelWidth / 2, this._camera.pixelHeight / 2, 0);
-
-		Ray ray = this._camera.ScreenPointToRay(cameraCenter);
-	
-		if (Physics.Raycast(ray, out hit))
-			return true;
-		return false;
-	}
-
-	/// <summary>
-	/// Returns the `Block` instance of the block that the player is looking at.
-	/// If the targeted block is "air", returns null.
-	/// </summary>
-	private Block GetTargetBlock()
-	{
-		RaycastHit hit;
-		if (!this.CenterRaycast(out hit))
-			return null;
-
-		Vector3 blockCenterPosition = hit.point - hit.normal * .5f;
-			
-		ChunkPosition chunkPosition = (
-			Mathf.FloorToInt(blockCenterPosition.x / 16), 
-			Mathf.FloorToInt(blockCenterPosition.z / 16)
-		);
-
-		Vector3 blockCoords = (
-			Mathf.FloorToInt(blockCenterPosition.x), 
-			Mathf.FloorToInt(blockCenterPosition.y), 
-			Mathf.FloorToInt(blockCenterPosition.z)
-		).ToVector3();
-		
-		string blockName = PCTerrain.GetInstance().chunks[chunkPosition].blocks[(int)blockCoords.x, (int)blockCoords.y, (int)blockCoords.z];
-
-		return Blocks.Instantiate(blockName);
 	}
 }

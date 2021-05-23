@@ -7,5 +7,6 @@ public class Cobblestone: Block
     public Cobblestone(): base()
 	{
 		this.blockName = "cobblestone";
+		this.hardness = 3 * 20;
 	}
 }
