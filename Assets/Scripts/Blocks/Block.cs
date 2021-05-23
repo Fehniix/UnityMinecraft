@@ -40,6 +40,12 @@ public abstract class Block
 	/// </summary>
 	public bool broken = false;
 
+	/// <summary>
+	/// Determines whether the block needs a strong and unique reference to it in memory.
+	/// Disposed only if broken.
+	/// </summary>
+	public bool stateful = false;
+
 	public Block()
 	{
 		this.id = System.Guid.NewGuid().ToString();
@@ -61,6 +67,9 @@ public abstract class Block
 	private int _breakingProgress = 0;
 	public void BeginBreak()
 	{
+		if (!this.breakable)
+			return;
+			
 		Debug.Log("[Block Breaking] Initiating block breaking... " + this.blockName);
 
 		this._breakingProgress = 0;

@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
 	/// <summary>
 	/// Hard reference to the block that is currently being broken.
 	/// </summary>
-	private GameObject _breakingBlockReference;
+	private Block _breakingBlockReference;
 
 	/// <summary>
 	/// Indicates whether or not a block is being broken.
@@ -40,6 +40,7 @@ public class PlayerController : MonoBehaviour
 	{
 		// Player position test
 		Debug.Log("Voxel Position: " + GameState.player.GetVoxelPosition());
+		Debug.Log(TargetBlock.Get()?.blockName ?? "undefined");
 	}
 
 	private void HandleMouseLeftClickHeld()
@@ -56,16 +57,14 @@ public class PlayerController : MonoBehaviour
 	/// Manages the BeginBreak logic. See KeepBreaking().
 	/// </summary>
 	/// <param name="target">The `Face` GameObject that was hit by a Raycast.</param>
-	private void BeginBreak(GameObject target)
+	private void BeginBreak(Block target)
 	{
-		Block targetBlock = target.GetComponentInParent<Block>();
-
-		if (targetBlock != null)
+		if (target != null)
 		{
 			this._breakingBlock = true;
 			this._breakingBlockReference = target;
 
-			targetBlock.BeginBreak();
+			target.BeginBreak();
 		}
 	}
 
@@ -80,34 +79,9 @@ public class PlayerController : MonoBehaviour
 	/// </summary>
 	private void KeepBreaking()
 	{
-		RaycastHit hit1;
-		if (this.CenterRaycast(out hit1))
-		{
-			Vector3 blockCenterPosition = hit1.point - hit1.normal * .5f;
-			
-			ChunkPosition chunkPosition = (
-				Mathf.FloorToInt(blockCenterPosition.x / 16), 
-				Mathf.FloorToInt(blockCenterPosition.z / 16)
-			);
-			Vector3 blockCoords = (
-				Mathf.FloorToInt(blockCenterPosition.x), 
-				Mathf.FloorToInt(blockCenterPosition.y), 
-				Mathf.FloorToInt(blockCenterPosition.z)
-			).ToVector3();
-			
-			string blockName = PCTerrain.GetInstance().chunks[chunkPosition].blocks[(int)blockCoords.x, (int)blockCoords.y, (int)blockCoords.z];
-			Debug.Log(blockName);
-			Block block = Blocks.Instantiate(blockName);
-
-			Debug.Log(block.breakable);
-
-			//PCTerrain.GetInstance().chunks[chunkPosition].BuildMesh();
-		}
-
-		return;
-
-		RaycastHit hit;
-		if (!this.CenterRaycast(out hit)) 
+		Block block = this.GetTargetBlock();
+		
+		if (block == null) 
 		{
 			// The player is currently breaking a block and moved off the cursor to the sky.
 			if (this._breakingBlock && this._breakingBlockReference != null)
@@ -116,18 +90,13 @@ public class PlayerController : MonoBehaviour
 			return;
 		}
 
-		GameObject target = hit.transform.gameObject;
-		Block targetBlock = target.GetComponentInParent<Block>();
-
-		if (targetBlock.broken)
+		if (block.broken)
 			return;
 
 		if (this._breakingBlockReference == null)
-			this.BeginBreak(target);
+			this.BeginBreak(block);
 
-		Block referencedBlock = this._breakingBlockReference.GetComponentInParent<Block>();
-
-		if ((referencedBlock.id != targetBlock.id) && this._breakingBlock)
+		if ((this._breakingBlockReference.id != block.id) && this._breakingBlock)
 			this.ResetBreaking();
 	}
 
@@ -139,23 +108,18 @@ public class PlayerController : MonoBehaviour
 		if (!this._breakingBlock)
 			return;
 
-		RaycastHit hit;
-		if (!this.CenterRaycast(out hit))
-			return;
+		Block block = this.GetTargetBlock();
 
-		GameObject target = hit.transform.gameObject;
-		Block targetBlock = target.GetComponentInParent<Block>();
-
-		if (targetBlock.broken)
+		if (block.broken)
 			return;
 
 		this._breakingBlock = false;
 		this._breakingBlockReference = null;
 
-		if (targetBlock == null)
+		if (block == null)
 			return;
 
-		targetBlock.EndBreak();
+		block.EndBreak();
 	}
 
 	private void ResetBreaking()
@@ -163,7 +127,7 @@ public class PlayerController : MonoBehaviour
 		if (this._breakingBlockReference == null || !this._breakingBlock)
 			return;
 
-		if (this._breakingBlockReference.GetComponentInParent<Block>().broken)
+		if (this._breakingBlockReference.broken)
 		{
 			// The block was successfully broken!
 			// Block.EndBreak() was already called by the block itself. Reset only bool state and ref.
@@ -173,7 +137,7 @@ public class PlayerController : MonoBehaviour
 			return;
 		}
 
-		this._breakingBlockReference.GetComponentInParent<Block>().EndBreak();
+		this._breakingBlockReference.EndBreak();
 
 		this._breakingBlock = false;
 		this._breakingBlockReference = null;
@@ -193,5 +157,33 @@ public class PlayerController : MonoBehaviour
 		if (Physics.Raycast(ray, out hit))
 			return true;
 		return false;
+	}
+
+	/// <summary>
+	/// Returns the `Block` instance of the block that the player is looking at.
+	/// If the targeted block is "air", returns null.
+	/// </summary>
+	private Block GetTargetBlock()
+	{
+		RaycastHit hit;
+		if (!this.CenterRaycast(out hit))
+			return null;
+
+		Vector3 blockCenterPosition = hit.point - hit.normal * .5f;
+			
+		ChunkPosition chunkPosition = (
+			Mathf.FloorToInt(blockCenterPosition.x / 16), 
+			Mathf.FloorToInt(blockCenterPosition.z / 16)
+		);
+
+		Vector3 blockCoords = (
+			Mathf.FloorToInt(blockCenterPosition.x), 
+			Mathf.FloorToInt(blockCenterPosition.y), 
+			Mathf.FloorToInt(blockCenterPosition.z)
+		).ToVector3();
+		
+		string blockName = PCTerrain.GetInstance().chunks[chunkPosition].blocks[(int)blockCoords.x, (int)blockCoords.y, (int)blockCoords.z];
+
+		return Blocks.Instantiate(blockName);
 	}
 }
