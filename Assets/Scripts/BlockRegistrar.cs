@@ -5,6 +5,7 @@ public class BlockRegistrar : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+		Blocks.RegisterBlock<Air>("air");
         Blocks.RegisterBlock<Cobblestone>("cobblestone");
 		Blocks.RegisterBlock<Stone>("stone");
 		Blocks.RegisterBlock<Dirt>("dirt");

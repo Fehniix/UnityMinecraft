@@ -58,7 +58,7 @@ public class TargetBlock : MonoBehaviour
 			(int)blockCoords.x % 16, 
 			(int)blockCoords.y, 
 			(int)blockCoords.z % 16
-		];
+		].blockName;
 
 		if (blockName == "air")
 			return null;

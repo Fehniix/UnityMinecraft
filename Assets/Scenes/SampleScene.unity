@@ -496,6 +496,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 6
   gravitationalAcceleration: -9.8
+  downwardsSpeed: -9.8
 --- !u!23 &1598840885
 MeshRenderer:
   m_ObjectHideFlags: 0

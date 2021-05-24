@@ -82,7 +82,7 @@ public class PCTerrain
 			Mathf.FloorToInt(z / 16)
 		);
 
-		this.chunks[chunkPosition].blocks[x % 16, y, z % 16] = "air";
+		this.chunks[chunkPosition].blocks[x % 16, y, z % 16] = new Air();
 		this.chunks[chunkPosition].BuildMesh();
 	}
 }

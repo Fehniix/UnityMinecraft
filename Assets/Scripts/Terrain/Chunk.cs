@@ -13,7 +13,7 @@ public class Chunk
 	/// <summary>
 	/// Individual blockNames contained within the chunk.
 	/// </summary>
-    public string[,,] blocks;
+    public Block[,,] blocks;
 
 	/// <summary>
 	/// (x,z) size of the chunk.
@@ -52,12 +52,7 @@ public class Chunk
 
 	public Chunk()
 	{
-		this.blocks = new string[this.chunkSize, this.chunkHeight, this.chunkSize];
-
-		for (int i = 0; i < this.chunkSize; i++)
-			for (int j = 0; j < this.chunkHeight; j++)
-				for (int k = 0; k < this.chunkSize; k++)
-					this.blocks[i,j,k] = "air";
+		this.blocks = new Block[this.chunkSize, this.chunkHeight, this.chunkSize];
 	}
 
 	public void BuildMesh()
@@ -96,39 +91,39 @@ public class Chunk
 					// Determine block adjacency with air. For each adjacent block face, render the face.
 
 					// If the block itself is air, don't render anything
-					if (this.blocks[i,j,k] == "air")
+					if (this.blocks[i,j,k] == null || this.blocks[i,j,k].blockName == "air")
 						continue;
 
 					// Top face adjacency
 					if (j >= 0 && j <= this.chunkHeight - 1)
-						if (j == this.chunkHeight - 1 || this.blocks[i, j + 1, k] == "air")
+						if (j == this.chunkHeight - 1 || this.blocks[i, j + 1, k].blockName == "air")
 							// Always render the top most face, OR if the top-adjacent block is "air".
-							this.AddFace(i, j, k, builtFaces++, CubeMeshFaces.top, vertices, uvs, triangles);
+							this.AddFace(i, j, k, builtFaces++, "top", CubeMeshFaces.top, vertices, uvs, triangles);
 
 					// Bottom face adjacency
 					if (j >= 0 && j < this.chunkHeight)
-						if (j == 0 || this.blocks[i, j - 1, k] == "air")
-							this.AddFace(i, j, k, builtFaces++, CubeMeshFaces.bottom, vertices, uvs, triangles);
+						if (j == 0 || this.blocks[i, j - 1, k].blockName == "air")
+							this.AddFace(i, j, k, builtFaces++, "bottom", CubeMeshFaces.bottom, vertices, uvs, triangles);
 					
 					// West face adjacency
 					if (i >= 0 && i < this.chunkSize)
-						if (i == 0 || this.blocks[i - 1, j, k] == "air")
-							this.AddFace(i, j, k, builtFaces++, CubeMeshFaces.west, vertices, uvs, triangles);
+						if (i == 0 || this.blocks[i - 1, j, k].blockName == "air")
+							this.AddFace(i, j, k, builtFaces++, "west", CubeMeshFaces.west, vertices, uvs, triangles);
 
 					// East face adjacency
 					if (i >= 0 && i <= this.chunkSize)
-						if (i == this.chunkSize - 1 || this.blocks[i + 1, j, k] == "air")
-							this.AddFace(i, j, k, builtFaces++, CubeMeshFaces.east, vertices, uvs, triangles);
+						if (i == this.chunkSize - 1 || this.blocks[i + 1, j, k].blockName == "air")
+							this.AddFace(i, j, k, builtFaces++, "east", CubeMeshFaces.east, vertices, uvs, triangles);
 
 					// Front face adjacency
 					if (k >= 0 && k < this.chunkSize)
-						if (k == 0 || this.blocks[i, j, k - 1] == "air")
-							this.AddFace(i, j, k, builtFaces++, CubeMeshFaces.front, vertices, uvs, triangles);
+						if (k == 0 || this.blocks[i, j, k - 1].blockName == "air")
+							this.AddFace(i, j, k, builtFaces++, "front", CubeMeshFaces.front, vertices, uvs, triangles);
 
 					// Back face adjacency
 					if (k >= 0 && k <= this.chunkSize)
-						if (k == this.chunkSize - 1 || this.blocks[i, j, k + 1] == "air")
-							this.AddFace(i, j, k, builtFaces++, CubeMeshFaces.back, vertices, uvs, triangles);
+						if (k == this.chunkSize - 1 || this.blocks[i, j, k + 1].blockName == "air")
+							this.AddFace(i, j, k, builtFaces++, "back", CubeMeshFaces.back, vertices, uvs, triangles);
 				}
 
 		mesh.vertices 	= vertices.ToArray();
@@ -145,10 +140,23 @@ public class Chunk
 	/// Given the block's (i,j,k) vector, the number of built faces, face to build, vertices, uvs and triangles references,
 	/// this appends a new face mesh's data on the vertices, uvs and triangles references.
 	/// </summary>
-	void AddFace(int i, int j, int k, int builtFaces, Vector3[] face, List<Vector3> vertices, List<Vector2> uvs, List<int> triangles)
+	void AddFace(int i, int j, int k, int builtFaces, string faceName, Vector3[] face, List<Vector3> vertices, List<Vector2> uvs, List<int> triangles)
 	{
+		string textureName = this.blocks[i,j,k].blockName;
+
+		if (this.blocks[i,j,k].textureName != "default")
+			textureName = this.blocks[i,j,k].textureName;
+
+		if (this.blocks[i,j,k].hasSidedTextures)
+		{
+			if (TextureStitcher.instance.TextureUVs.ContainsKey(System.String.Format("{0}_{1}", textureName, faceName)))
+				textureName = System.String.Format("{0}_{1}", textureName, faceName);
+			else
+				textureName = System.String.Format("{0}_{1}", textureName, "side");	
+		}
+
 		vertices.AddRange(face.Add((i,j,k)));
-		uvs.AddRange(TextureStitcher.instance.TextureUVs[blocks[i,j,k]].ToArray());
+		uvs.AddRange(TextureStitcher.instance.TextureUVs[textureName].ToArray());
 		triangles.AddRange(this.identityQuad.Add(builtFaces * 4));
 	}
 

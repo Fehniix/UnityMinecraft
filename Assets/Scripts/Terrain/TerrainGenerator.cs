@@ -51,7 +51,7 @@ public class TerrainGenerator : MonoBehaviour
 			}
 	}
 
-	private System.String GenerateBlockType(int i, int j, int k)
+	private Block GenerateBlockType(int i, int j, int k)
 	{
 		string blockType = "air";
 
@@ -77,13 +77,11 @@ public class TerrainGenerator : MonoBehaviour
 
 			if (j == Mathf.FloorToInt(baselineLandHeight))
 				blockType = "grass";
-
-			Debug.Log("j: " + j + " height: " + baselineLandHeight);
 		}
 
 		if (j <= baselineStoneHeight)
 			blockType = "stone";
 
-		return blockType;
+		return Blocks.Instantiate(blockType);
 	}
 }
