@@ -45,39 +45,32 @@ public class TargetBlock : MonoBehaviour
 			Mathf.FloorToInt(blockCenterPosition.z / 16)
 		);
 
-		Vector3 blockCoords = (
+		Vector3Int blockCoords = (
 			Mathf.FloorToInt(blockCenterPosition.x), 
 			Mathf.FloorToInt(blockCenterPosition.y), 
 			Mathf.FloorToInt(blockCenterPosition.z)
-		).ToVector3();
-
-		// The block's (x,y,z) coordinates with respect to the Voxel world.
-		Vector3Int blockWCoords = (
-			(int)blockCoords.x + chunkPosition.x,
-			(int)blockCoords.y,
-			(int)blockCoords.z + chunkPosition.z
 		).ToVector3Int();
 
-		if (PCTerrain.GetInstance().blocks.ContainsKey(blockWCoords))
-			return PCTerrain.GetInstance().blocks[blockWCoords];
+		if (PCTerrain.GetInstance().blocks.ContainsKey(blockCoords))
+			return PCTerrain.GetInstance().blocks[blockCoords];
 		
 		string blockName = PCTerrain.GetInstance().chunks[chunkPosition].blocks[
-			(int)blockCoords.x, 
+			(int)blockCoords.x % 16, 
 			(int)blockCoords.y, 
-			(int)blockCoords.z
+			(int)blockCoords.z % 16
 		];
 
 		if (blockName == "air")
 			return null;
 
 		Block blockInstance = Blocks.Instantiate(blockName);
-		blockInstance.coordinates = blockWCoords;
+		blockInstance.coordinates = blockCoords;
 		
 		PCTerrain.GetInstance().blocks[(
-			blockCoords.x + chunkPosition.x,
+			blockCoords.x,
 			blockCoords.y,
-			blockCoords.z + chunkPosition.z).ToVector3()
-		] = blockInstance;
+			blockCoords.z
+		).ToVector3()] = blockInstance;
 
 		return blockInstance;
 	}

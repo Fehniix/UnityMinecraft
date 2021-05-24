@@ -19,13 +19,10 @@ public class TerrainGenerator : MonoBehaviour
 
 	void Update()
 	{
-		if (Input.GetKeyDown(KeyCode.U))
-		{
-			this.GenerateTerrain();
-		}
+		
 	}
 
-	private void GenerateTerrain()
+	public void GenerateTerrain()
 	{
 		foreach(var chunk in PCTerrain.GetInstance().chunks)
 		{
@@ -34,8 +31,8 @@ public class TerrainGenerator : MonoBehaviour
 
 		this.noise = new FastNoise();
 
-		for (int _i = 0; _i < 3; _i++)
-			for (int _k = 0; _k < 3; _k++)
+		for (int _i = 0; _i < 4; _i++)
+			for (int _k = 0; _k < 4; _k++)
 			{
 				Chunk chunk = new Chunk();
 				chunk.x = _i;
@@ -47,7 +44,6 @@ public class TerrainGenerator : MonoBehaviour
 						{
 							chunk.blocks[i,j,k] = this.GenerateBlockType(i + chunk.x * 16, j, k + chunk.z * 16);
 						}
-
 	
 				chunk.BuildMesh();
 
@@ -57,11 +53,35 @@ public class TerrainGenerator : MonoBehaviour
 
 	private System.String GenerateBlockType(int i, int j, int k)
 	{
-		float landSimplex1 = this.noise.GetSimplex(i * 0.8f, k * 0.8f) * 10;
-		float baselineLandHeight = 256 * .05f + landSimplex1;
+		string blockType = "air";
 
-		if (j < baselineLandHeight)
-			return "cobblestone";
-		return "air";
+		float landSimplex1 = this.noise.GetSimplex(
+			i * 0.8f, 
+			k * 0.8f
+		) * 10f;
+
+		float landSimplex2 = this.noise.GetSimplex(
+			i * 5f, 
+			k * 5f
+		) * 10f * (this.noise.GetSimplex(
+			i * .5f,
+			k * .5f
+		) + .3f);
+
+		float baselineLandHeight = 256 * .1f + landSimplex1 + landSimplex2;
+		float baselineStoneHeight = 256 * .05f + landSimplex1 + landSimplex2;
+
+		if (j <= baselineLandHeight)
+		{
+			blockType = "dirt";
+
+			if (j == baselineLandHeight)
+				blockType = "grass";
+		}
+
+		if (j <= baselineStoneHeight)
+			blockType = "stone";
+
+		return blockType;
 	}
 }

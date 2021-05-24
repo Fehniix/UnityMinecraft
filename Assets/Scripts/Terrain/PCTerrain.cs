@@ -37,6 +37,17 @@ public class PCTerrain
 	public Dictionary<ChunkPosition, Chunk> chunks;
 
 	/// <summary>
+	/// Calls `BuildMesh()` on all chunks.
+	/// </summary>
+	public void RebuildAllChunks()
+	{
+		foreach(Chunk chunk in this.chunks.Values)
+		{
+			chunk.BuildMesh();
+		}
+	}
+
+	/// <summary>
 	/// Removes the block at the supplied position without breaking it.
 	/// </summary>
 	public void RemoveAt(int x, int y, int z)

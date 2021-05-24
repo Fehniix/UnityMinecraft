@@ -6,6 +6,9 @@ public class BlockRegistrar : MonoBehaviour
     void Start()
     {
         Blocks.RegisterBlock<Cobblestone>("cobblestone");
+		Blocks.RegisterBlock<Stone>("stone");
+		Blocks.RegisterBlock<Dirt>("dirt");
+		Blocks.RegisterBlock<Grass>("grass");
 		Blocks.RegisterBlock<Bedrock>("bedrock");
     }
 }

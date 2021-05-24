@@ -110,7 +110,7 @@ public abstract class Block
 	{
 		if (!this.breakable)
 			return;
-			
+
 		Debug.Log("[Block Breaking] User either lifted the break button, broke the block or moved outside block view: " + this.blockName);
 
 		this._breakingProgress = 0;
@@ -142,9 +142,10 @@ public abstract class Block
 		GameObject breakHypercube = Resources.Load<GameObject>("Prefabs/BreakHypercube");
 		breakHypercube.GetComponentInChildren<MeshRenderer>().sharedMaterial.mainTexture = CachedResources.Load<Texture2D>("Textures/Destroy/destroy_stage_0");
 		
+		Vector3 floatCoords = this.coordinates;
 		this.hypercubeRef = GameObject.Instantiate(
 			breakHypercube, 
-			this.coordinates + (0.5, 0.5, 0.5).ToVector3(), 
+			floatCoords + (0.5, 0.5, 0.5).ToVector3(), 
 			Quaternion.identity
 		);
 	}
