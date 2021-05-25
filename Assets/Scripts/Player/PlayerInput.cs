@@ -1,28 +1,35 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Extensions;
 
 public class PlayerInput : MonoBehaviour
 {
 	/// <summary>
 	/// The rate of change of the player's position over time.
 	/// </summary>
-	public float speed = 6.0f;
+	public float speed = 5.0f;
 
 	/// <summary>
 	/// The downwards acceleration due to gravity.
 	/// </summary>
-	private float gravitationalAcceleration = -9.81f;
+	private float gravitationalAcceleration = -9.81f * 2;
 
 	/// <summary>
 	/// Current magnitude of the downwards velocity vector.
 	/// </summary>
-	private float downwardsSpeed = -9.81f;
+	[SerializeField]
+	private float downwardsSpeed = -9.81f * 2;
 
 	/// <summary>
 	/// Height of the jump that can be performed by the player.
 	/// </summary>
-	private float jumpHeight = 1f;
+	private float jumpHeight = 1.125f;
+
+	/// <summary>
+	/// Determines whether the player is currently jumping or not.
+	/// </summary>
+	private bool jumping = false;
 
 	/// <summary>
 	/// Reference to the player's CharacterController. Used to change the player's position.
@@ -40,6 +47,23 @@ public class PlayerInput : MonoBehaviour
     {
 		float deltaX = Input.GetAxis("Horizontal") * speed;
 		float deltaY = Input.GetAxis("Vertical") * speed;
+		
+		// Grounding logic.
+		bool grounded = false;
+		float raycastDistance = this.characterController.height / 2 + this.characterController.skinWidth;
+
+		RaycastHit hit;
+		if (Physics.Raycast(this.transform.position, -this.transform.up, out hit, raycastDistance))
+		{
+			// The player did hit the ground after jumping.
+			if (this.jumping)
+				this.jumping = false;
+
+			grounded = true;
+		}
+
+		if (grounded && !this.jumping)
+			this.downwardsSpeed = 0.0f;
 
 		// Movement along the x-z axis
 		Vector3 movement_xz = new Vector3(deltaX, 0, deltaY);
@@ -49,15 +73,13 @@ public class PlayerInput : MonoBehaviour
 		// When moving diagonally, ||i+k|| > speed; "clamping" the movement vector's magnitude solves the issue.
 		movement_xz = Vector3.ClampMagnitude(movement_xz, this.speed);
 
-		if (this.characterController.isGrounded)
+		if (grounded && Input.GetKeyDown(KeyCode.Space))
 		{
-			movement_y = Vector3.zero;
-			this.downwardsSpeed = this.gravitationalAcceleration;
-			
-			if (Input.GetKeyDown(KeyCode.Space))
-			{
-				movement_y += new Vector3(0, Mathf.Sqrt(this.jumpHeight * -3.0f * this.gravitationalAcceleration), 0);
-			}
+			this.downwardsSpeed += Mathf.Sqrt(this.jumpHeight * -3.0f * this.gravitationalAcceleration);
+			this.jumping = true;
+
+			// Move the player upwards a little - otherwise the Raycast would reset the jumping state.
+			this.characterController.Move((0f, 0.1f, 0f).ToVector3());
 		}
 		else
 			// Emulate gravitational acceleration.

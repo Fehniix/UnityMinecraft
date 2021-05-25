@@ -13,7 +13,7 @@ public class Chunk
 	/// <summary>
 	/// Individual blockNames contained within the chunk.
 	/// </summary>
-    public Block[,,] blocks;
+    public BaseBlock[,,] blocks;
 
 	/// <summary>
 	/// (x,z) size of the chunk.
@@ -52,7 +52,7 @@ public class Chunk
 
 	public Chunk()
 	{
-		this.blocks = new Block[this.chunkSize, this.chunkHeight, this.chunkSize];
+		this.blocks = new BaseBlock[this.chunkSize, this.chunkHeight, this.chunkSize];
 	}
 
 	public void BuildMesh()

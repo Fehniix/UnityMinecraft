@@ -4,7 +4,7 @@ using Extensions;
 /// <summary>
 /// Represents a fundamental block.
 /// </summary>
-public abstract class Block
+public abstract class Block: BaseBlock
 {
 	/// <summary>
 	/// ID describing the unique block.
@@ -12,24 +12,9 @@ public abstract class Block
 	public string id;
 
 	/// <summary>
-	///Describes the name of the block. The block texture depends on it.
-	/// </summary>
-	public string blockName;
-
-	/// <summary>
-	///Describes the name of the texture. If not set, defaults to the block name.
-	/// </summary>
-	public string textureName = "default";
-
-	/// <summary>
 	/// (x,y,z) Voxel world coordinates of the current block. 
 	/// </summary>
 	public Vector3Int coordinates;
-
-	/// <summary>
-	///If set to false, one texture is used for all the block's faces.
-	/// </summary>
-	public bool hasSidedTextures = false;
 
 	/// <summary>
 	/// The number of ticks it takes to break the block.
