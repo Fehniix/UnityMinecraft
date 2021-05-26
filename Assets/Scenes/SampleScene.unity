@@ -478,7 +478,7 @@ CharacterController:
   m_Height: 2
   m_Radius: 0.5
   m_SlopeLimit: 45
-  m_StepOffset: 0.5
+  m_StepOffset: 0.01
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0
   m_Center: {x: 0, y: 0, z: 0}
@@ -494,7 +494,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2f652d5f3e9a304198cf85578ad20f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 6
   downwardsSpeed: -9.81
 --- !u!23 &1598840885
 MeshRenderer:
