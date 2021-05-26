@@ -8,7 +8,17 @@ public class PlayerInput : MonoBehaviour
 	/// <summary>
 	/// The rate of change of the player's position over time.
 	/// </summary>
-	public float speed = 5.0f;
+	private float speed;
+
+	/// <summary>
+	/// The speed at which the player walks.
+	/// </summary>
+	private const float walkingSpeed = 4.317f;
+
+	/// <summary>
+	/// The speed at which the player runs.
+	/// </summary>
+	private const float runningSpeed = 5.612f;
 
 	/// <summary>
 	/// The downwards acceleration due to gravity.
@@ -40,6 +50,7 @@ public class PlayerInput : MonoBehaviour
     void Start()
     {
 		this.characterController = this.GetComponent<CharacterController>();
+		this.speed = walkingSpeed;
     }
 
     // Update is called once per frame
