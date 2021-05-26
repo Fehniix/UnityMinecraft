@@ -86,7 +86,7 @@ public class PlayerInput : MonoBehaviour
 
 		if (grounded && Input.GetKeyDown(KeyCode.Space))
 		{
-			this.downwardsSpeed += Mathf.Sqrt(this.jumpHeight * -3.0f * this.gravitationalAcceleration);
+			this.downwardsSpeed += Mathf.Sqrt(this.jumpHeight * -2.0f * this.gravitationalAcceleration);
 			this.jumping = true;
 
 			// Move the player upwards a little - otherwise the Raycast would reset the jumping state.
