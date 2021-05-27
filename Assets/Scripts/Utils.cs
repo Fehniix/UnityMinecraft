@@ -1,15 +1,24 @@
-﻿namespace Utils 
+﻿public static class Utils
 {
-	public static class Utils
+	/// <summary>
+	/// Creates a new instance of the supplied type.
+	/// </summary>
+	/// Footnote: `where T: new()` is a type conditional clause. 
+	/// It forces (by runtime checking) T to necessarily include a constructor.
+	public static T CreateInstance<T>() where T: new()
 	{
-		/// <summary>
-		/// Creates a new instance of the supplied type.
-		/// </summary>
-		/// Footnote: `where T: new()` is a type conditional clause. 
-		/// It forces (by runtime checking) T to necessarily include a constructor.
-		public static T CreateInstance<T>() where T: new()
-		{
-			return new T();
-		}
+		return new T();
+	}
+
+	/// <summary>
+	/// Given the input `Vector3`, floors each component to the nearest int and returns a `Vector3Int`.
+	/// </summary>
+	public static UnityEngine.Vector3Int ToVectorInt(UnityEngine.Vector3 v)
+	{
+		return new UnityEngine.Vector3Int(
+			UnityEngine.Mathf.FloorToInt(v.x),
+			UnityEngine.Mathf.FloorToInt(v.y),
+			UnityEngine.Mathf.FloorToInt(v.z)
+		);
 	}
 }
