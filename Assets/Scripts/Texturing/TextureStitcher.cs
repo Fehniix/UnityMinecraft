@@ -89,26 +89,26 @@ public class TextureStitcher : MonoBehaviour
 
 			// Calculate the 0,0 UV.
 			this.textureUVs[textures[z].name].Add(new Vector2(
-				xCoord * squareSize / (float)rowSize, 
-				yCoord * squareSize / (float)rowSize
+				xCoord * squareSize / (float)rowSize + 0.001f, 
+				yCoord * squareSize / (float)rowSize + 0.001f
 			));
 
 			// Calculate the 0,1 UV.
 			this.textureUVs[textures[z].name].Add(new Vector2(
-				xCoord * squareSize / (float)rowSize, 
-				(yCoord * squareSize + squareSize) / (float)rowSize
+				xCoord * squareSize / (float)rowSize + 0.001f, 
+				(yCoord * squareSize + squareSize) / (float)rowSize - 0.001f
 			));
 
 			// Calculate the 1,1 UV.
 			this.textureUVs[textures[z].name].Add(new Vector2(
-				(xCoord * squareSize + squareSize) / (float)rowSize,
-				(yCoord * squareSize + squareSize) / (float)rowSize
+				(xCoord * squareSize + squareSize) / (float)rowSize - 0.001f,
+				(yCoord * squareSize + squareSize) / (float)rowSize - 0.001f
 			));
 
 			// Calculate the 1,0 UV.
 			this.textureUVs[textures[z].name].Add(new Vector2(
-				(xCoord * squareSize + squareSize) / (float)rowSize, // adding squareSize moves the UV coordinate to the right
-				yCoord * squareSize / (float)rowSize
+				(xCoord * squareSize + squareSize) / (float)rowSize - 0.001f, // adding squareSize moves the UV coordinate to the right
+				yCoord * squareSize / (float)rowSize + 0.001f
 			));
 		}
 
