@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Extensions;
 
 public class TerrainGenerator : MonoBehaviour
 {
@@ -42,7 +43,11 @@ public class TerrainGenerator : MonoBehaviour
 					for (int j = 0; j < 256; j++)
 						for (int k = 0; k < 16; k++)
 						{
-							chunk.blocks[i,j,k] = this.GenerateTerrainBlockType(i + chunk.x * 16, j, k + chunk.z * 16);
+							Block block = this.GenerateTerrainBlockType(i + chunk.x * 16, j, k + chunk.z * 16);
+							chunk.blocks[i,j,k] = block;
+							
+							if (chunk.blocks[i,j,k].stateful)
+								PCTerrain.GetInstance().blocks[(i,j,k).ToVector3Int()] = block;
 						}
 	
 				chunk.BuildMesh();
@@ -110,7 +115,7 @@ public class TerrainGenerator : MonoBehaviour
 		if (caveFractal > Mathf.Max(.2f, caveFractalMask) && j <= baselineCaveHeight)
 			blockType = "air";
 
-		if (j <= 3)
+		if (j <= 2)
 			blockType = "bedrock";
 
 		return Blocks.Instantiate(blockType);

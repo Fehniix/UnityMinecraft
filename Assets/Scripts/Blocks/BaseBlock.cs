@@ -14,4 +14,9 @@
 	///If set to false, one texture is used for all the block's faces.
 	/// </summary>
 	public bool hasSidedTextures = false;
+
+	/// <summary>
+	/// Whether the block has to have a hard reference in PCTerrain blocks.
+	/// </summary>
+	public bool stateful = false;
 }

@@ -121,6 +121,9 @@ public class PlayerController : MonoBehaviour
 		block.EndBreak();
 	}
 
+	/// <summary>
+	/// Resets the breaking state of the target block.
+	/// </summary>
 	private void ResetBreaking()
 	{
 		if (this._breakingBlockReference == null || !this._breakingBlock)
@@ -140,5 +143,13 @@ public class PlayerController : MonoBehaviour
 
 		this._breakingBlock = false;
 		this._breakingBlockReference = null;
+	}
+
+	/// <summary>
+	/// Allows the player to place a placeable block from the currently active item in the hotbar.
+	/// </summary>
+	void Place()
+	{
+		
 	}
 }

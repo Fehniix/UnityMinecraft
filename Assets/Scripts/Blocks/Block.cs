@@ -31,12 +31,6 @@ public abstract class Block: BaseBlock
 	/// </summary>
 	public bool broken = false;
 
-	/// <summary>
-	/// Determines whether the block needs a strong and unique reference to it in memory.
-	/// Disposed only if broken.
-	/// </summary>
-	public bool stateful = false;
-
 	public Block()
 	{
 		this.id = System.Guid.NewGuid().ToString();
