@@ -21,17 +21,6 @@ public class PlayerInput : MonoBehaviour
 	private const float runningSpeed = 5.612f;
 
 	/// <summary>
-	/// The downwards acceleration due to gravity.
-	/// </summary>
-	private float gravitationalAcceleration = -9.81f * 2;
-
-	/// <summary>
-	/// Current magnitude of the downwards velocity vector.
-	/// </summary>
-	[SerializeField]
-	private float downwardsSpeed = -9.81f * 2;
-
-	/// <summary>
 	/// Height of the jump that can be performed by the player.
 	/// </summary>
 	private float jumpHeight = 1.125f;
