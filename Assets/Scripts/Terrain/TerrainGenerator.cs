@@ -42,7 +42,7 @@ public class TerrainGenerator : MonoBehaviour
 					for (int j = 0; j < 256; j++)
 						for (int k = 0; k < 16; k++)
 						{
-							chunk.blocks[i,j,k] = this.GenerateBlockType(i + chunk.x * 16, j, k + chunk.z * 16);
+							chunk.blocks[i,j,k] = this.GenerateTerrainBlockType(i + chunk.x * 16, j, k + chunk.z * 16);
 						}
 	
 				chunk.BuildMesh();
@@ -51,10 +51,8 @@ public class TerrainGenerator : MonoBehaviour
 			}
 	}
 
-	private Block GenerateBlockType(int i, int j, int k)
+	private Block GenerateTerrainBlockType(int i, int j, int k)
 	{
-		string blockType = "air";
-
 		float landSimplex1 = this.noise.GetSimplex(
 			i * 0.8f, 
 			k * 0.8f
@@ -68,8 +66,35 @@ public class TerrainGenerator : MonoBehaviour
 			k * .5f
 		) + .3f);
 
-		float baselineLandHeight = 256 * .1f + landSimplex1 + landSimplex2;
-		float baselineStoneHeight = 256 * .05f + landSimplex1 + landSimplex2;
+		float stoneSimplex1 = this.noise.GetSimplex(
+			i * 2f,
+			k * 2f
+		) * 10;
+
+		float stoneSimplex2 = (this.noise.GetSimplex(
+			i * 5.1f,
+			k * 5.1f
+		) + .7f) * 20 * this.noise.GetSimplex(
+			i * .2f,
+			k * .2f
+		);
+
+		float caveFractal = this.noise.GetPerlinFractal(
+			i * 5f,
+			j * 3f,
+			k * 5f
+		) * 1.1f;
+
+		float caveFractalMask = this.noise.GetSimplex(
+			i * .4f,
+			k * .4f	
+		) * .3f;
+
+		float baselineLandHeight = 256 * 0.1f + landSimplex1 + landSimplex2;
+		float baselineStoneHeight = 256 * 0.04f + stoneSimplex1 + stoneSimplex1;
+		float baselineCaveHeight = 256 * 0.066f;
+
+		string blockType = "air";
 
 		if (j <= baselineLandHeight)
 		{
@@ -81,6 +106,12 @@ public class TerrainGenerator : MonoBehaviour
 
 		if (j <= baselineStoneHeight)
 			blockType = "stone";
+
+		if (caveFractal > Mathf.Max(.2f, caveFractalMask) && j <= baselineCaveHeight)
+			blockType = "air";
+
+		if (j <= 3)
+			blockType = "bedrock";
 
 		return Blocks.Instantiate(blockType);
 	}
