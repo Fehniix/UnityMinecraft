@@ -43,11 +43,11 @@ public class TerrainGenerator : MonoBehaviour
 					for (int j = 0; j < 256; j++)
 						for (int k = 0; k < 16; k++)
 						{
-							Block block = this.GenerateTerrainBlockType(i + chunk.x * 16, j, k + chunk.z * 16);
+							BaseBlock block = this.GenerateTerrainBlockType(i + chunk.x * 16, j, k + chunk.z * 16);
 							chunk.blocks[i,j,k] = block;
-							
+
 							if (chunk.blocks[i,j,k].stateful)
-								PCTerrain.GetInstance().blocks[(i,j,k).ToVector3Int()] = block;
+								PCTerrain.GetInstance().blocks[(i,j,k).ToVector3Int()] = Blocks.Instantiate(block.blockName);
 						}
 	
 				chunk.BuildMesh();
@@ -56,7 +56,7 @@ public class TerrainGenerator : MonoBehaviour
 			}
 	}
 
-	private Block GenerateTerrainBlockType(int i, int j, int k)
+	private BaseBlock GenerateTerrainBlockType(int i, int j, int k)
 	{
 		float landSimplex1 = this.noise.GetSimplex(
 			i * 0.8f, 
@@ -118,6 +118,6 @@ public class TerrainGenerator : MonoBehaviour
 		if (j <= 2)
 			blockType = "bedrock";
 
-		return Blocks.Instantiate(blockType);
+		return Blocks.InstantiateBase(blockType);
 	}
 }
