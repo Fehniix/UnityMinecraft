@@ -44,66 +44,61 @@ public class PlayerInput : MonoBehaviour
 	/// <summary>
 	/// Reference to the player's CharacterController. Used to change the player's position.
 	/// </summary>
-	private CharacterController characterController;
+	private Rigidbody _rigidbody;
 
     // Start is called before the first frame update
     void Start()
     {
-		this.characterController = this.GetComponent<CharacterController>();
+		this._rigidbody = this.GetComponent<Rigidbody>();
 		this.speed = walkingSpeed;
     }
 
+	void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.Space))
+		{
+			this.jumping = true;
+			Debug.Log("Space pressed");
+		}
+	}
+
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-		float deltaX = Input.GetAxis("Horizontal") * speed;
-		float deltaY = Input.GetAxis("Vertical") * speed;
+		float deltaX = Input.GetAxis("Horizontal");
+		float deltaY = Input.GetAxis("Vertical");
+
+		if (deltaX == 0 && deltaY == 0 && !this.jumping && false)
+			this._rigidbody.velocity = Vector3.zero;
 		
 		// Grounding logic.
-		bool grounded = false;
-		float raycastDistance = this.characterController.height / 2 + this.characterController.skinWidth;
-
-		RaycastHit hit;
-		if (Physics.Raycast(this.transform.position, -this.transform.up, out hit, raycastDistance))
-		{
-			// The player did hit the ground after jumping.
-			if (this.jumping)
-				this.jumping = false;
-
-			grounded = true;
-		}
-
-		if (grounded && !this.jumping)
-			this.downwardsSpeed = 0.0f;
+		float raycastDistance = this.GetComponent<BoxCollider>().bounds.extents.y + 0.01f;
+		
+		RaycastHit verticalHit;
+		bool grounded = Physics.Raycast(this.transform.position, -this.transform.up, out verticalHit, raycastDistance);
 
 		// Movement along the x-z axis
-		Vector3 movement_xz = new Vector3(deltaX, 0, deltaY);
-		// Movement along the y axis
-		Vector3 movement_y	= new Vector3(0, this.downwardsSpeed, 0);
+		Vector3 movement_xz = new Vector3(deltaX, 0.1f, deltaY);
 
 		// When moving diagonally, ||i+k|| > speed; "clamping" the movement vector's magnitude solves the issue.
 		movement_xz = Vector3.ClampMagnitude(movement_xz, this.speed);
 
-		if (grounded && Input.GetKeyDown(KeyCode.Space))
+		if (grounded && this.jumping)
 		{
-			this.downwardsSpeed += Mathf.Sqrt(this.jumpHeight * -2.0f * this.gravitationalAcceleration);
-			this.jumping = true;
+			this.jumping = false;
 
-			// Move the player upwards a little - otherwise the Raycast would reset the jumping state.
-			this.characterController.Move((0f, 0.1f, 0f).ToVector3());
+			// The force is applied istantaneously to the player at its center of mass.
+			// Given the istantaneous nature of the force, we're thinking about an impulse.
+			this._rigidbody.AddForce((
+				0f, 
+				Mathf.Sqrt(-2.0f * Physics.gravity.y * this.jumpHeight), 
+				0f
+			).ToVector3(), ForceMode.Impulse);
 		}
-		else
-			// Emulate gravitational acceleration.
-			this.downwardsSpeed += this.gravitationalAcceleration * Time.deltaTime;
-
-		// Now imagine the game running at 1200fps without the following line. Also, given the game is paused,
-		// Time.deltaTime equals zero: movement is zeroed out too.
-		movement_xz *= Time.deltaTime;
-		movement_y 	*= Time.deltaTime;
 
 		// Transform direction to global space coordinates.
-		Vector3 movement = this.transform.TransformDirection(movement_xz + movement_y);
+		Vector3 movement = this.transform.TransformDirection(movement_xz);
 
-        this.characterController.Move(movement);
+		this._rigidbody.velocity = new Vector3(movement.x * this.speed, this._rigidbody.velocity.y, movement.z * this.speed);
     }
 }

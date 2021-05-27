@@ -134,6 +134,7 @@ public class Chunk
 
 		this.chunkGameObject.GetComponent<MeshFilter>().mesh = mesh;
 		this.chunkGameObject.GetComponent<MeshCollider>().sharedMesh = mesh;
+		this.chunkGameObject.GetComponent<MeshCollider>().material = CachedResources.Load<PhysicMaterial>("PhysicsMaterials/FrictionLess");
 	}
 
 	/// <summary>
