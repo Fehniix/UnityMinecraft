@@ -34,12 +34,14 @@ public class PlayerController : MonoBehaviour
 
 		if (Input.GetMouseButtonUp(0))
 			this.HandleMouseLeftClickUp();
+
+		if (Input.GetMouseButtonDown(1))
+			this.Place();
     }
 
 	private void HandleMouseLeftClickDown()
 	{
-		// Player position test
-		Debug.Log("Voxel Position: " + GameState.player.GetVoxelPosition());
+
 	}
 
 	private void HandleMouseLeftClickHeld()
@@ -150,6 +152,28 @@ public class PlayerController : MonoBehaviour
 	/// </summary>
 	void Place()
 	{
+		// This process would have to first get the active item in the hotbar, check whether it's placeable and onl then place it.
+		string blockName = "dirt";
+
+		RaycastHit hit;
+		bool didHit = Physics.Raycast(Camera.main.ScreenPointToRay((
+			Camera.main.pixelWidth / 2,
+			Camera.main.pixelHeight / 2,
+			0
+		).ToVector3()), out hit);
+
+		if (!didHit)
+			return;
 		
+		Vector3Int placingBlockCoordinates = Utils.ToVectorInt(hit.point + hit.normal / 2.0f);
+		Vector3Int playerPosition = Player.instance.GetVoxelPosition();
+
+		if (
+			placingBlockCoordinates == playerPosition || 
+			placingBlockCoordinates == new Vector3Int(playerPosition.x, playerPosition.y + 1, playerPosition.z)
+		)
+			return;
+		
+		PCTerrain.GetInstance().PlaceAt(blockName, placingBlockCoordinates);
 	}
 }

@@ -64,7 +64,7 @@ public class PCTerrain
 	/// </summary>
 	public void BreakAt(int x, int y, int z)
 	{
-		if (this.blocks[(x,y,z).ToVector3()] == null)
+		if (!this.blocks.ContainsKey((x,y,z).ToVector3()))
 			return;
 
 		this.blocks[(x,y,z).ToVector3()].Break();
@@ -84,6 +84,58 @@ public class PCTerrain
 
 		this.chunks[chunkPosition].blocks[x % 16, y, z % 16] = new Air();
 		this.chunks[chunkPosition].BuildMesh();
+	}
+
+	/// <summary>
+	/// Places a block (given its reference) at the given position.
+	/// </summary>
+	public void PlaceAt(Block blockRef, int x, int y, int z)
+	{
+		ChunkPosition chunkPosition = (
+			Mathf.FloorToInt(x / 16), 
+			Mathf.FloorToInt(z / 16)
+		);
+
+		this.chunks[chunkPosition].blocks[x % 16, y, z % 16] = blockRef;
+		this.blocks[new Vector3(x % 16, y, z % 16)] = blockRef;
+
+		this.chunks[chunkPosition].BuildMesh();
+	}
+
+
+	/// <summary>
+	/// Places a block (given its name) at the given position.
+	/// </summary>
+	public void PlaceAt(string blockName, int x, int y, int z)
+	{
+		// Create the instance
+		Block b = Blocks.Instantiate(blockName);
+		b.coordinates = new Vector3Int(x,y,z);
+
+		// Delegate logic
+		this.PlaceAt(b, x, y, z);
+	}
+
+	/// <summary>
+	/// Places a block (given its name) at the given position.
+	/// </summary>
+	public void PlaceAt(string blockName, Vector3Int position)
+	{
+		// Create the instance
+		Block b = Blocks.Instantiate(blockName);
+		b.coordinates = new Vector3Int(position.x, position.y, position.z);
+
+		// Delegate logic
+		this.PlaceAt(b, position.x, position.y, position.z);
+	}
+
+	/// <summary>
+	/// Places a block (given its reference) at the given position.
+	/// </summary>
+	public void PlaceAt(Block blockRef, Vector3Int position)
+	{
+		// Delegate logic
+		this.PlaceAt(blockRef, position.x, position.y, position.z);
 	}
 }
 

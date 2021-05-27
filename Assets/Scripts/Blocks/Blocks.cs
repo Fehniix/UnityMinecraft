@@ -29,6 +29,17 @@ public static class Blocks
 	}
 
 	/// <summary>
+	/// Given a block name, returns a BaseBlock instance.
+	/// </summary>
+	public static BaseBlock InstantiateBase(string name)
+	{
+		if (!Blocks.registeredBlocks.ContainsKey(name))
+			return null;
+
+		return (BaseBlock)System.Activator.CreateInstance(Blocks.registeredBlocks[name]);
+	}
+
+	/// <summary>
 	/// Creates a new Block instance from its registered type.
 	/// </summary>
 	public static T SpawnFromType<T>() where T: new()
