@@ -87,28 +87,32 @@ public class TextureStitcher : MonoBehaviour
 					finalTexture.SetPixel(i + squareSize * xCoord, j + squareSize * yCoord, pixel);
 				}
 
+			// Allows to slightly adjust the UV coordinates to not include the empty part of the stitched texture.
+			float whiteBordersAdjustment = 0.004f;
+
+			// Adding squareSize moves the UV coordinate to the right
 			// Calculate the 0,0 UV.
 			this.textureUVs[textures[z].name].Add(new Vector2(
-				xCoord * squareSize / (float)rowSize + 0.001f, 
-				yCoord * squareSize / (float)rowSize + 0.001f
+				xCoord * squareSize / (float)rowSize + whiteBordersAdjustment, 
+				yCoord * squareSize / (float)rowSize + whiteBordersAdjustment
 			));
 
 			// Calculate the 0,1 UV.
 			this.textureUVs[textures[z].name].Add(new Vector2(
-				xCoord * squareSize / (float)rowSize + 0.001f, 
-				(yCoord * squareSize + squareSize) / (float)rowSize - 0.001f
+				xCoord * squareSize / (float)rowSize + whiteBordersAdjustment,
+				(yCoord * squareSize + squareSize) / (float)rowSize - whiteBordersAdjustment
 			));
 
 			// Calculate the 1,1 UV.
 			this.textureUVs[textures[z].name].Add(new Vector2(
-				(xCoord * squareSize + squareSize) / (float)rowSize - 0.001f,
-				(yCoord * squareSize + squareSize) / (float)rowSize - 0.001f
+				(xCoord * squareSize + squareSize) / (float)rowSize - whiteBordersAdjustment,
+				(yCoord * squareSize + squareSize) / (float)rowSize - whiteBordersAdjustment
 			));
 
 			// Calculate the 1,0 UV.
 			this.textureUVs[textures[z].name].Add(new Vector2(
-				(xCoord * squareSize + squareSize) / (float)rowSize - 0.001f, // adding squareSize moves the UV coordinate to the right
-				yCoord * squareSize / (float)rowSize + 0.001f
+				(xCoord * squareSize + squareSize) / (float)rowSize - whiteBordersAdjustment,
+				yCoord * squareSize / (float)rowSize + whiteBordersAdjustment
 			));
 		}
 
