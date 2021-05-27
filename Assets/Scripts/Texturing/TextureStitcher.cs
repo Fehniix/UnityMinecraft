@@ -88,7 +88,7 @@ public class TextureStitcher : MonoBehaviour
 				}
 
 			// Allows to slightly adjust the UV coordinates to not include the empty part of the stitched texture.
-			float whiteBordersAdjustment = 0.004f;
+			float whiteBordersAdjustment = 0.00039f;
 
 			// Adding squareSize moves the UV coordinate to the right
 			// Calculate the 0,0 UV.
