@@ -38,7 +38,7 @@ public class TextureStitcher : MonoBehaviour
 		this.textureUVs = new Dictionary<string, List<Vector2>>();
 
 		// Load recursively all textures.
-        Texture2D[] textures = Resources.LoadAll<Texture2D>("Textures");
+        Texture2D[] textures = Resources.LoadAll<Texture2D>("Textures/Stitch");
 
 		// Initialize the dictionary.
 		foreach (Texture2D texture in textures)
