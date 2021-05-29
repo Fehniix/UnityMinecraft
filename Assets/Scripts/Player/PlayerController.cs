@@ -155,14 +155,14 @@ public class PlayerController : MonoBehaviour
 	{
 		Block block = TargetBlock.Get();
 
-		if (block != null && block.interactable)
+		if (block?.interactable == true)
 			block.Interact();
 
 		Debug.Log("Target block non interactable.");
 
 		if (InventoryManager.IsActiveItemConsumable())
 		{
-			InventoryManager.Consume();
+			InventoryManager.ConsumeActive();
 			Debug.Log("Attempted to consume.");
 		}
 	}

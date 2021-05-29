@@ -16,7 +16,7 @@ public static class InventoryManager
 	/// <summary>
 	/// Tries to place or use the currently active item.
 	/// </summary>
-	public static bool Consume()
+	public static bool ConsumeActive()
 	{
 		Item activeItem = hotbarItems[activeItemIndex];
 
