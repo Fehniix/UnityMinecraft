@@ -23,7 +23,7 @@ public static class InventoryManager
 		if (!activeItem.placeable)
 			return false;
 
-		Block block = Blocks.Instantiate(activeItem.itemName);
+		Block block = Registry.Instantiate(activeItem.itemName) as Block;
 
 		if (!block.placeable)
 			return false;

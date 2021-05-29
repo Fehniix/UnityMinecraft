@@ -11,12 +11,12 @@ public class Registrar : MonoBehaviour
 
 	void RegisterBlocks()
 	{
-		Blocks.RegisterBlock<Air>("air");
-        Blocks.RegisterBlock<Cobblestone>("cobblestone");
-		Blocks.RegisterBlock<Stone>("stone");
-		Blocks.RegisterBlock<Dirt>("dirt");
-		Blocks.RegisterBlock<Grass>("grass");
-		Blocks.RegisterBlock<Bedrock>("bedrock");
+		Registry.RegisterItem<Air>("air");
+        Registry.RegisterItem<Cobblestone>("cobblestone");
+		Registry.RegisterItem<Stone>("stone");
+		Registry.RegisterItem<Dirt>("dirt");
+		Registry.RegisterItem<Grass>("grass");
+		Registry.RegisterItem<Bedrock>("bedrock");
 	}
 
 	void RegisterItems()

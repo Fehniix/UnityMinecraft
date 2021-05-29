@@ -109,7 +109,7 @@ public class PCTerrain
 	public void PlaceAt(string blockName, int x, int y, int z)
 	{
 		// Create the instance
-		Block b = Blocks.Instantiate(blockName);
+		Block b = Registry.Instantiate(blockName) as Block;
 		b.coordinates = new Vector3Int(x,y,z);
 
 		// Delegate logic
@@ -122,7 +122,7 @@ public class PCTerrain
 	public void PlaceAt(string blockName, Vector3Int position)
 	{
 		// Create the instance
-		Block b = Blocks.Instantiate(blockName);
+		Block b = Registry.Instantiate(blockName) as Block;
 		b.coordinates = new Vector3Int(position.x, position.y, position.z);
 
 		// Delegate logic

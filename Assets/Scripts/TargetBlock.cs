@@ -63,7 +63,7 @@ public class TargetBlock : MonoBehaviour
 		if (blockName == "air")
 			return null;
 
-		Block blockInstance = Blocks.Instantiate(blockName);
+		Block blockInstance = Registry.Instantiate(blockName) as Block;
 		blockInstance.coordinates = blockCoords;
 		
 		PCTerrain.GetInstance().blocks[(

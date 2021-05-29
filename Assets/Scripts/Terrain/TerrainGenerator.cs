@@ -47,7 +47,7 @@ public class TerrainGenerator : MonoBehaviour
 							chunk.blocks[i,j,k] = block;
 
 							if (chunk.blocks[i,j,k].stateful)
-								PCTerrain.GetInstance().blocks[(i,j,k).ToVector3Int()] = Blocks.Instantiate(block.blockName);
+								PCTerrain.GetInstance().blocks[(i,j,k).ToVector3Int()] = Registry.Instantiate(block.blockName) as Block;
 						}
 	
 				chunk.BuildMesh();
@@ -118,6 +118,6 @@ public class TerrainGenerator : MonoBehaviour
 		if (j <= 2)
 			blockType = "bedrock";
 
-		return Blocks.InstantiateBase(blockType);
+		return Registry.Instantiate(blockType) as BaseBlock;
 	}
 }
