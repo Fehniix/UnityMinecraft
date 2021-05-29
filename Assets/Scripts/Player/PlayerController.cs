@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
 			this.HandleMouseLeftClickUp();
 
 		if (Input.GetMouseButtonDown(1))
-			this.Place();
+			this.Interact();
     }
 
 	private void HandleMouseLeftClickDown()
@@ -148,32 +148,22 @@ public class PlayerController : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Allows the player to place a placeable block from the currently active item in the hotbar.
+	/// Allows to either interact with a block in the world or place an item from the inventory if the currently targeted block
+	/// is non-interactable.
 	/// </summary>
-	void Place()
+	private void Interact()
 	{
-		// This process would have to first get the active item in the hotbar, check whether it's placeable and onl then place it.
-		string blockName = "dirt";
+		Block block = TargetBlock.Get();
 
-		RaycastHit hit;
-		bool didHit = Physics.Raycast(Camera.main.ScreenPointToRay((
-			Camera.main.pixelWidth / 2,
-			Camera.main.pixelHeight / 2,
-			0
-		).ToVector3()), out hit);
+		if (block != null && block.interactable)
+			block.Interact();
 
-		if (!didHit)
-			return;
-		
-		Vector3Int placingBlockCoordinates = Utils.ToVectorInt(hit.point + hit.normal / 2.0f);
-		Vector3Int playerPosition = Player.instance.GetVoxelPosition();
+		Debug.Log("Target block non interactable.");
 
-		if (
-			placingBlockCoordinates == playerPosition || 
-			placingBlockCoordinates == new Vector3Int(playerPosition.x, playerPosition.y + 1, playerPosition.z)
-		)
-			return;
-		
-		PCTerrain.GetInstance().PlaceAt(blockName, placingBlockCoordinates);
+		if (InventoryManager.IsActiveItemConsumable())
+		{
+			InventoryManager.Consume();
+			Debug.Log("Attempted to consume.");
+		}
 	}
 }

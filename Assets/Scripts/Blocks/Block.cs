@@ -27,6 +27,16 @@ public abstract class Block: BaseBlock
 	public bool breakable = true;
 
 	/// <summary>
+	/// Determines whether the block is placeable in the world or not.
+	/// </summary>
+	public bool placeable = true;
+
+	/// <summary>
+	/// Determines whether the player can interact with the block or not.
+	/// </summary>
+	public bool interactable = false;
+
+	/// <summary>
 	/// Whether the block was broken or not.
 	/// </summary>
 	public bool broken = false;
@@ -43,6 +53,14 @@ public abstract class Block: BaseBlock
 	{
 		Debug.Log("Block broken.");
 		this.broken = true;
+	}
+
+	/// <summary>
+	/// Allows the player to interact with the block.
+	/// </summary>
+	public void Interact()
+	{
+
 	}
 
 	// Block breaking logic.
