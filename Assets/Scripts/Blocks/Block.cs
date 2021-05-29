@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using Extensions;
 
 /// <summary>
@@ -41,9 +42,15 @@ public abstract class Block: BaseBlock
 	/// </summary>
 	public bool broken = false;
 
+	/// <summary>
+	/// The list of items to drop.
+	/// </summary>
+	public List<Drop> drops;
+
 	public Block()
 	{
-		this.id = System.Guid.NewGuid().ToString();
+		this.id 	= System.Guid.NewGuid().ToString();
+		this.drops 	= new List<Drop>();
 	}
 
 	/// <summary>
@@ -51,8 +58,9 @@ public abstract class Block: BaseBlock
 	/// </summary>
 	public void Break()
 	{
-		Debug.Log("Block broken.");
 		this.broken = true;
+
+		
 	}
 
 	/// <summary>
