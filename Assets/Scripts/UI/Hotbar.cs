@@ -55,9 +55,11 @@ public class Hotbar : MonoBehaviour
 
 		InventoryManager.activeItemIndex %= 9;
 
-		Vector3 currentPosition = this.activeItemImgReference.transform.position;
+		Vector3 currentPosition = this.activeItemImgReference.transform.localPosition;
 		currentPosition.x = itemCellSize * InventoryManager.activeItemIndex + this.activeItemImgFirstX;
-
-		this.activeItemImgReference.transform.position = currentPosition;
+		
+		this.activeItemImgReference.transform.localPosition = currentPosition;
 	}
+
+	
 }

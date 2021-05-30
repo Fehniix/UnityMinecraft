@@ -47,6 +47,11 @@ public abstract class Block: BaseBlock
 	/// </summary>
 	public List<Drop> drops;
 
+	/// <summary>
+	/// Whether the block drops itself when broken.
+	/// </summary>
+	public bool dropsItself = true;
+
 	public Block()
 	{
 		this.id 	= System.Guid.NewGuid().ToString();
@@ -60,7 +65,12 @@ public abstract class Block: BaseBlock
 	{
 		this.broken = true;
 
-		
+		if (this.dropsItself)
+			Dropper.DropItem(this.blockName, this.coordinates);
+
+		foreach(Drop drop in this.drops)
+			if (Random.Range(0, 101) > drop.probability * 100)
+				Dropper.DropItem(drop.itemName, this.coordinates, drop.quantity);
 	}
 
 	/// <summary>
@@ -68,7 +78,7 @@ public abstract class Block: BaseBlock
 	/// </summary>
 	public void Interact()
 	{
-
+		
 	}
 
 	// Block breaking logic.

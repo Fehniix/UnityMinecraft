@@ -98,5 +98,17 @@ namespace Extensions
 				v[i] = vectors[i] + n.ToVector3();
 			return v;
 		}
+
+		/// <summary>
+		/// Adds `n` to all components of the Vector3.
+		/// </summary>
+		public static Vector3 FloorAdd(this Vector3 v, float n)
+		{
+			return new Vector3(
+				Mathf.FloorToInt(v.x) + n, 
+				Mathf.FloorToInt(v.y) + n,
+				Mathf.FloorToInt(v.z) + n
+			);
+		}
 	}
 }

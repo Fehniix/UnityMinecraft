@@ -3,6 +3,6 @@
     public Dirt(): base()
 	{
 		this.blockName = "dirt";
-		this.hardness = 3 * 20;
+		this.hardness = 2 * 20;
 	}
 }

@@ -7,8 +7,7 @@ public class Controller : MonoBehaviour
     {
 		GameObject.Find("Player").transform.position = new Vector3(8, 80, 8);
 
-		Block b = Registry.Instantiate("dirt") as Dirt;
-		Debug.Log(b?.blockName);
+		BlockItem.Render("cobblestone", GameObject.Find("item0").transform, Vector3.zero);
     }
 
     // Update is called once per frame
