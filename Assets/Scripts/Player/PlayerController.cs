@@ -156,7 +156,10 @@ public class PlayerController : MonoBehaviour
 		Block block = TargetBlock.Get();
 
 		if (block?.interactable == true)
+		{
 			block.Interact();
+			return;
+		}
 
 		Debug.Log("Target block non interactable.");
 

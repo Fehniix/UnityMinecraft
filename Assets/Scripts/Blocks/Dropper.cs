@@ -9,11 +9,12 @@ public static class Dropper
 	/// Given the registry item name to drop and broken block coordinates, instantiates a small cube and makes it shoot out 
 	/// in a random direction from the block center.
 	/// </summary>
-	public static void DropItem(string item, Vector3 coordinates, int quantity = 1)
+	public static void DropItem(string itemName, Vector3 coordinates, int quantity = 1)
 	{
 		for (int i = 0; i < quantity; i++)
 		{
-			GameObject entity = BlockBuilder.Build(item);
+			GameObject entity = BlockBuilder.Build(itemName);
+
 			// Adding 0.5f after flooring components results in the block's world center coordinates.
 			entity.transform.position = Utils.ToVectorInt(coordinates.FloorAdd(0.5f));
 

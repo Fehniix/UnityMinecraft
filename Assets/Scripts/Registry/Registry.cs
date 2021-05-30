@@ -27,9 +27,17 @@ public static class Registry
 	/// </summary>
 	public static object Instantiate(string itemName)
 	{
-		if (!registryItems.ContainsKey(itemName))
+		if (itemName == null || !registryItems.ContainsKey(itemName))
 			return null;
 
-		return (Block)Activator.CreateInstance(registryItems[itemName].itemType);
+		return Activator.CreateInstance(registryItems[itemName].itemType);
+	}
+
+	public static bool IsBlock(string itemName)
+	{
+		if (!registryItems.ContainsKey(itemName))
+			return false;
+
+		return Instantiate(itemName) is Block;
 	}
 }

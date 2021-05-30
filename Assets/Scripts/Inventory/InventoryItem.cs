@@ -2,11 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Item
+public class InventoryItem
 {
-	public Item(string name)
+	public InventoryItem(string name)
 	{
 		this.itemName = name;
+
+		if (Registry.IsBlock(itemName))
+		{
+			Block block 	= Registry.Instantiate(itemName) as Block;
+			this.isBlock 	= true;
+			this.placeable 	= block.placeable;
+		}
+			
+		//TODO implement items.
 	}
 
 	/// <summary>
@@ -28,4 +37,9 @@ public class Item
 	/// Determines whether the item is a block or not.
 	/// </summary>
 	public bool isBlock = false;
+
+	/// <summary>
+	/// The number of items.
+	/// </summary>
+	public int quantity = 1;
 }

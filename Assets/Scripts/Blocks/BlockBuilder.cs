@@ -83,6 +83,8 @@ public static class BlockBuilder
 			entity.GetComponent<SphereCollider>().radius	= 4.0f;
 			entity.GetComponent<SphereCollider>().isTrigger	= true;
 
+			entity.GetComponent<Entity>().entityName 		= blockName;
+
 			entity.GetComponent<Rigidbody>().constraints 	= RigidbodyConstraints.FreezeRotation;
 		}
 
