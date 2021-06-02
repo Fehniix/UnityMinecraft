@@ -14,9 +14,9 @@ TagManager:
   - 
   - 
   - HotbarItems
-  - 
-  - 
-  - 
+  - Light
+  - Ignore Player Collisions
+  - Player
   - 
   - 
   - 

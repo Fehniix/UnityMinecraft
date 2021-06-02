@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class ItemObject : MonoBehaviour
 {
+	/// <summary>
+	/// The name of the item represented by this prefab.
+	/// </summary>
+	public string itemName;
+
     // Start is called before the first frame update
     void Start()
     {

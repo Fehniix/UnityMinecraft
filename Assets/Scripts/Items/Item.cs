@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Extensions;
 
-public class Item
+public class Item: IInteractable
 {
 	/// <summary>
 	/// The name of the item.
@@ -26,9 +26,35 @@ public class Item
 	public Vector3 coordinates;
 
 	/// <summary>
-	/// Whether the item emits light or not.
+	/// Whether the item can be placed only on the top face of a block.
 	/// </summary>
-	public bool emitsLight = false;
+	public bool placeableOnlyOnTop = false;
+
+	/// <summary>
+	/// Determines whether this item can be placed on top of other items or not.
+	/// </summary>
+	public bool placeableOnOtherItems = false;
+
+	/// <summary>
+	/// Whether the item is non-empty and can be thus walked through.
+	/// Non-empty items cannot be placed on top of other non-empty items.
+	/// </summary>
+	public bool nonEmpty = true;
+
+	/// <summary>
+	/// Whether the block drops itself when broken.
+	/// </summary>
+	public bool dropsItself = true;
+
+	private bool _interactable;
+
+	/// <summary>
+	/// Whether the item is interactable or not.
+	/// </summary>
+	public bool interactable { 
+		get { return this._interactable; } 
+		set{ this._interactable = value; }
+	}
 
 	/// <summary>
 	/// Loads the prefab associated to the item name.
@@ -42,9 +68,34 @@ public class Item
 	/// <summary>
 	/// Places the item on the world.
 	/// </summary>
-	public void Place()
+	public virtual void Place()
 	{
+		// Place the block in the middle.
 		this.prefab.transform.position = this.coordinates + (0.5f, 0.0f, 0.5f).ToVector3();
+
+		this.prefab.GetComponent<ItemObject>().itemName = this.itemName;
+
+		// And instantiate the associated prefab.
 		GameObject.Instantiate(this.prefab);
+	}
+
+	/// <summary>
+	/// Breaks the item and removes it from the world.
+	/// </summary>
+	public virtual void Break()
+	{
+		GameObject.Destroy(this.prefab);
+
+		// if (this.dropsItself)
+		// 	Dropper.DropItem(this.blockName, this.coordinates);
+
+		// foreach(Drop drop in this.drops)
+		// 	if (Random.Range(0, 101) > drop.probability * 100)
+		// 		Dropper.DropItem(drop.itemName, this.coordinates, drop.quantity);
+	}
+
+	public virtual void Interact()
+	{
+
 	}
 }

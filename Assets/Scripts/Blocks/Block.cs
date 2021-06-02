@@ -5,7 +5,7 @@ using Extensions;
 /// <summary>
 /// Represents a fundamental block.
 /// </summary>
-public abstract class Block: BaseBlock
+public abstract class Block: BaseBlock, IInteractable
 {
 	/// <summary>
 	/// ID describing the unique block.
@@ -33,9 +33,12 @@ public abstract class Block: BaseBlock
 	public bool placeable = true;
 
 	/// <summary>
-	/// Determines whether the player can interact with the block or not.
+	/// Whether the block is interactable or not.
 	/// </summary>
-	public bool interactable = false;
+	public bool interactable { 
+		get { return false; } 
+		set{}
+	}
 
 	/// <summary>
 	/// Whether the block was broken or not.
@@ -61,7 +64,7 @@ public abstract class Block: BaseBlock
 	/// <summary>
 	/// Breaks the given block.
 	/// </summary>
-	public void Break()
+	public virtual void Break()
 	{
 		this.broken = true;
 
@@ -76,9 +79,36 @@ public abstract class Block: BaseBlock
 	/// <summary>
 	/// Allows the player to interact with the block.
 	/// </summary>
-	public void Interact()
+	public virtual void Interact()
 	{
 		
+	}
+
+	/// <summary>
+	/// Allows to place the block where the player is currently looking at.
+	/// </summary>
+	public virtual void Place()
+	{
+		RaycastHit hit;
+		bool didHit = Physics.Raycast(Camera.main.ScreenPointToRay((
+			Camera.main.pixelWidth / 2,
+			Camera.main.pixelHeight / 2,
+			0
+		).ToVector3()), out hit);
+
+		if (!didHit)
+			return;
+		
+		Vector3Int placingBlockCoordinates = Utils.ToVectorInt(hit.point + hit.normal / 2.0f);
+		Vector3Int playerPosition = Player.instance.GetVoxelPosition();
+
+		if (
+			placingBlockCoordinates == playerPosition || 
+			placingBlockCoordinates == new Vector3Int(playerPosition.x, playerPosition.y + 1, playerPosition.z)
+		)
+			return;
+		
+		PCTerrain.GetInstance().PlaceAt(this.blockName, placingBlockCoordinates);
 	}
 
 	// Block breaking logic.

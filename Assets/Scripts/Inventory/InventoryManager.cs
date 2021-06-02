@@ -42,11 +42,16 @@ public static class InventoryManager
 		Block block 				= instantiatedObject as Block;
 		Item item 					= instantiatedObject as Item;
 
+		// Active item is an item.
 		if (block == null)
 		{
-			Vector4? placement 		= GetPlacementCoordinates();
+			bool hitOtherItem;
+			Vector4? placement 		= GetPlacementCoordinates(out hitOtherItem);
 
-			if (placement == null || placement.Value.w == 0)
+			if ((placement == null || placement.Value.w == 0) && item.placeableOnlyOnTop)
+				return false;
+
+			if (placement.Value.w == 1 && !item.placeableOnOtherItems && hitOtherItem)
 				return false;
 
 			item.coordinates = placement.Value;
@@ -57,7 +62,7 @@ public static class InventoryManager
 			if (!block.placeable)
 				return false;
 
-			PlaceBlock();
+			block.Place();
 
 			hotbarItems[activeItemIndex].quantity--;
 			if (hotbarItems[activeItemIndex].quantity == 0)
@@ -85,35 +90,15 @@ public static class InventoryManager
 	/// </summary>
 	public static void PlaceBlock()
 	{
-		// This process would have to first get the active item in the hotbar, check whether it's placeable and onl then place it.
-		string blockName = hotbarItems[activeItemIndex].itemName;
 
-		RaycastHit hit;
-		bool didHit = Physics.Raycast(Camera.main.ScreenPointToRay((
-			Camera.main.pixelWidth / 2,
-			Camera.main.pixelHeight / 2,
-			0
-		).ToVector3()), out hit);
-
-		if (!didHit)
-			return;
-		
-		Vector3Int placingBlockCoordinates = Utils.ToVectorInt(hit.point + hit.normal / 2.0f);
-		Vector3Int playerPosition = Player.instance.GetVoxelPosition();
-
-		if (
-			placingBlockCoordinates == playerPosition || 
-			placingBlockCoordinates == new Vector3Int(playerPosition.x, playerPosition.y + 1, playerPosition.z)
-		)
-			return;
-		
-		PCTerrain.GetInstance().PlaceAt(blockName, placingBlockCoordinates);
 	}
 
 	/// <summary>
 	/// Returns the position of the Voxel block the player is looking at when the right mouse button gets clicked.
+	/// Returns `null` if nothing was hit.
+	/// The w-coordinate of the Vector4 is either 0 or 1 depending on whether the hit point belongs to a top surface.
 	/// </summary>
-	public static Vector4? GetPlacementCoordinates()
+	public static Vector4? GetPlacementCoordinates(out bool hitItem)
 	{
 		RaycastHit hit;
 		bool didHit = Physics.Raycast(Camera.main.ScreenPointToRay((
@@ -121,6 +106,11 @@ public static class InventoryManager
 			Camera.main.pixelHeight / 2,
 			0
 		).ToVector3()), out hit);
+
+		if (hit.transform.gameObject.GetComponent<ItemObject>() != null)
+			hitItem = true;
+		else
+			hitItem = false;
 
 		if (!didHit)
 			return null;

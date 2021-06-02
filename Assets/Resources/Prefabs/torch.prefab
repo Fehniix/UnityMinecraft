@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 942960550603401308}
   - component: {fileID: 759122583322223962}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: torch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 458735163818144486}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7.5, y: 24, z: 7.5}
+  m_LocalPosition: {x: 8.5, y: 24, z: 8.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 389039844273232132}
@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1db5c90d08e9f704ba1bc42641f08786, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemName: torch
 --- !u!1 &764671727664420276
 GameObject:
   m_ObjectHideFlags: 0
@@ -89,7 +90,7 @@ Light:
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
-  m_Range: 8
+  m_Range: 4.5
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -148,7 +149,8 @@ GameObject:
   - component: {fileID: 389039844273232132}
   - component: {fileID: 3292424832825892942}
   - component: {fileID: 2059465337365071066}
-  m_Layer: 0
+  - component: {fileID: 214730271386828517}
+  m_Layer: 10
   m_Name: default
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -206,7 +208,7 @@ MeshRenderer:
   m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
+  m_ImportantGI: 1
   m_StitchLightmapSeams: 1
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
@@ -216,3 +218,16 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &214730271386828517
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8921642764194482751}
+  m_Material: {fileID: 13400000, guid: 35c3cf94140f99a4089625f8824e0949, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.13198897, y: 0.67424726, z: 0.13202137}
+  m_Center: {x: 0, y: 0, z: 0}

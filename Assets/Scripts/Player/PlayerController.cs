@@ -80,7 +80,16 @@ public class PlayerController : MonoBehaviour
 	/// </summary>
 	private void KeepBreaking()
 	{
-		Block block = TargetBlock.Get();
+		object obj 	= TargetObject.Get();
+		Block block = obj as Block;
+		Item item 	= obj as Item;
+
+		// Handle instantaneous breaking of an item.
+		if (item != null)
+		{
+			item.Break();
+			return;
+		}
 		
 		if (block == null) 
 		{
@@ -109,7 +118,7 @@ public class PlayerController : MonoBehaviour
 		if (!this._breakingBlock)
 			return;
 
-		Block block = TargetBlock.Get();
+		Block block = TargetObject.Get() as Block;
 
 		if (block.broken)
 			return;
@@ -153,11 +162,11 @@ public class PlayerController : MonoBehaviour
 	/// </summary>
 	private void Interact()
 	{
-		Block block = TargetBlock.Get();
-
-		if (block?.interactable == true)
+		IInteractable obj = TargetObject.Get() as IInteractable;
+		
+		if (obj?.interactable == true)
 		{
-			block.Interact();
+			obj.Interact();
 			return;
 		}
 
