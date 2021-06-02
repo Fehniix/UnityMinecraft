@@ -120,4 +120,37 @@ public class TextureStitcher : MonoBehaviour
 
 		this.stitchedTexture = finalTexture;
 	}
+
+	/// <summary>
+	/// Given a blockName, returns a Sprite representing the block item.
+	/// </summary>
+	public Sprite GetBlockItemSprite(string blockName)
+	{
+		object instantiatedObject 	= Registry.Instantiate(blockName);
+		Block block 				= instantiatedObject as Block;
+		Item item 					= instantiatedObject as Item;
+		
+		string textureName	= block?.blockName;
+		string texturePath	= item != null ? "Items" : "Stitch";
+
+		if (item != null)
+			textureName = item.itemTextureName;
+
+		if (block != null && block.textureName != "default")
+			textureName = block.textureName;
+
+		if (block != null && block.hasSidedTextures == true)
+			if (TextureUVs.ContainsKey(System.String.Format("{0}_{1}", textureName, "front")))
+				textureName = System.String.Format("{0}_{1}", textureName, "front");
+			else
+				textureName = System.String.Format("{0}_{1}", textureName, "side");
+
+		Texture2D tex = CachedResources.Load<Texture2D>(System.String.Format("Textures/{0}/{1}", texturePath, textureName));
+
+		return Sprite.Create(
+			tex, 
+			new Rect(0.0f, 0.0f, tex.width, tex.height), 
+			new Vector2(0.5f, 0.5f)
+		);
+	}
 }

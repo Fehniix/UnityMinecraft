@@ -24,6 +24,11 @@ public static class InventoryManager
 	public static Hotbar hotbarRef;
 
 	/// <summary>
+	/// Reference to the inventory component.
+	/// </summary>
+	public static Inventory inventoryRef;
+
+	/// <summary>
 	/// Tries to place or use the currently active item.
 	/// </summary>
 	public static bool ConsumeActive()
@@ -33,19 +38,34 @@ public static class InventoryManager
 		if (!activeItem.placeable)
 			return false;
 
-		Block block = Registry.Instantiate(activeItem.itemName) as Block;
+		object instantiatedObject 	= Registry.Instantiate(activeItem.itemName);
+		Block block 				= instantiatedObject as Block;
+		Item item 					= instantiatedObject as Item;
 
-		if (!block.placeable)
-			return false;
+		if (block == null)
+		{
+			Vector4? placement 		= GetPlacementCoordinates();
 
-		PlaceBlock();
+			if (placement == null || placement.Value.w == 0)
+				return false;
 
-		hotbarItems[activeItemIndex].quantity--;
-		if (hotbarItems[activeItemIndex].quantity == 0)
-			hotbarItems[activeItemIndex] = null;
+			item.coordinates = placement.Value;
+			item.Place();
+		}
+		else
+		{
+			if (!block.placeable)
+				return false;
 
-		InventoryManager.hotbarRef.UpdateItems();
-		
+			PlaceBlock();
+
+			hotbarItems[activeItemIndex].quantity--;
+			if (hotbarItems[activeItemIndex].quantity == 0)
+				hotbarItems[activeItemIndex] = null;
+
+			InventoryManager.hotbarRef.UpdateHotbarItems();
+		}
+
 		return true;
 	}
 
@@ -91,6 +111,36 @@ public static class InventoryManager
 	}
 
 	/// <summary>
+	/// Returns the position of the Voxel block the player is looking at when the right mouse button gets clicked.
+	/// </summary>
+	public static Vector4? GetPlacementCoordinates()
+	{
+		RaycastHit hit;
+		bool didHit = Physics.Raycast(Camera.main.ScreenPointToRay((
+			Camera.main.pixelWidth / 2,
+			Camera.main.pixelHeight / 2,
+			0
+		).ToVector3()), out hit);
+
+		if (!didHit)
+			return null;
+
+		// Returns the (0,y,0) coordinate of the block that the player is currently looking at.
+		Vector3 placementCoordinates = Utils.FloorVector3(hit.point + hit.normal / 2.0f);
+
+		// (x,y,z) correspond to placementCoordinates. The w-coordinate is either 0 or 1 depending on
+		// whether the hit point belongs to a top surface.
+		Vector4 placementCoordinates4D = placementCoordinates;
+		
+		if (Vector3.Dot(hit.normal, Vector3.up) == 1)
+			placementCoordinates4D.w = 1;
+		else
+			placementCoordinates4D.w = 0;
+
+		return placementCoordinates4D;
+	}
+
+	/// <summary>
 	/// Given the item name, instantiates a new item from the registry and adds it to the first available slot in inventory.
 	/// </summary>
 	public static void AddItem(string itemName, int quantity = 1)
@@ -103,11 +153,11 @@ public static class InventoryManager
 				hotbarItems[hotbarPosition] = new InventoryItem(itemName);
 			else
 				hotbarItems[hotbarPosition].quantity++;
+
+			hotbarRef.UpdateHotbarItems();
 		}
 
 		//TODO implement inventory.
-
-		hotbarRef.UpdateItems();
 	}
 
 	/// <summary>

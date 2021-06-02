@@ -165,4 +165,12 @@ public class Chunk
 	{
 		GameObject.Destroy(this.chunkGameObject);
 	}
+
+	/// <summary>
+	/// Recalculates the chunk mesh's normals.
+	/// </summary>
+	public void RecalculateNormals()
+	{
+		this.chunkGameObject.GetComponent<MeshFilter>().mesh.RecalculateNormals();
+	}
 }

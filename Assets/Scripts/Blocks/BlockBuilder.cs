@@ -89,6 +89,7 @@ public static class BlockBuilder
 		}
 
 		entity.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
+		entity.layer				= 2; // Ignore Raycast.
 
 		return entity;
 	}

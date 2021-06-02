@@ -32,15 +32,6 @@ public class Hotbar : MonoBehaviour
 		this.activeItemImgFirstX			= this.transform.position.x - itemCellSize * 4;
 
 		InventoryManager.hotbarRef 			= this;
-
-		//! Test.
-		InventoryItem i 		= new InventoryItem("grass");
-		i.placeable = true;
-		i.isBlock 	= true;
-		i.quantity	= 3;
-
-		InventoryManager.hotbarItems[4] 	= i;
-		//! End test.
     }
 
     // Update is called once per frame
@@ -72,7 +63,7 @@ public class Hotbar : MonoBehaviour
 	/// <summary>
 	/// Updates item images.
 	/// </summary>
-	public void UpdateItems()
+	public void UpdateHotbarItems()
 	{
 		for(int i = 0; i < 9; i++)
 		{
@@ -86,31 +77,8 @@ public class Hotbar : MonoBehaviour
 				continue;
 			}
 
-			string textureName = item.itemName;
-			object instantiatedItem = Registry.Instantiate(item.itemName);
-
-			if (instantiatedItem is Block && ((Block)instantiatedItem).hasSidedTextures)
-			{
-				Block block = (Block)instantiatedItem;
-
-				if (block.textureName != "default")
-					textureName = block.textureName;
-
-				if (block.hasSidedTextures)
-					if (TextureStitcher.instance.TextureUVs.ContainsKey(System.String.Format("{0}_{1}", textureName, "front")))
-						textureName = System.String.Format("{0}_{1}", textureName, "front");
-					else
-						textureName = System.String.Format("{0}_{1}", textureName, "side");	
-			}
-
-			Texture2D tex = CachedResources.Load<Texture2D>(String.Format("Textures/Stitch/{0}", textureName));
-			hotbarImage.GetComponent<Image>().sprite = Sprite.Create(
-				tex, 
-				new Rect(0.0f, 0.0f, tex.width, tex.height), 
-				new Vector2(0.5f, 0.5f)
-			);
-
-			hotbarImage.GetComponent<Image>().color = Color.white;
+			hotbarImage.GetComponent<Image>().sprite 	= TextureStitcher.instance.GetBlockItemSprite(item.itemName);
+			hotbarImage.GetComponent<Image>().color 	= Color.white;
 
 			if (item.quantity != 1)
 			{

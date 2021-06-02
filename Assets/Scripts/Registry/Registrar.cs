@@ -21,6 +21,6 @@ public class Registrar : MonoBehaviour
 
 	void RegisterItems()
 	{
-		
+		Registry.RegisterItem<Torch>("torch");
 	}
 }

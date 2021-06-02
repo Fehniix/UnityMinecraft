@@ -21,4 +21,16 @@
 			UnityEngine.Mathf.FloorToInt(v.z)
 		);
 	}
+
+	/// <summary>
+	/// Given the input `Vector3`, floors each component and returns a new `Vector3`.
+	/// </summary>
+	public static UnityEngine.Vector3 FloorVector3(UnityEngine.Vector3 v)
+	{
+		return new UnityEngine.Vector3(
+			UnityEngine.Mathf.Floor(v.x),
+			UnityEngine.Mathf.Floor(v.y),
+			UnityEngine.Mathf.Floor(v.z)
+		);
+	}
 }
