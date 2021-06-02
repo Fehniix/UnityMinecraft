@@ -46,9 +46,5 @@ public class Item
 	{
 		this.prefab.transform.position = this.coordinates + (0.5f, 0.0f, 0.5f).ToVector3();
 		GameObject.Instantiate(this.prefab);
-
-		// Recalculate normals to show light changes!
-		ChunkPosition chunkPosition = new ChunkPosition((int)this.coordinates.x / 16, (int)this.coordinates.z / 16);
-		PCTerrain.GetInstance().chunks[chunkPosition].RecalculateNormals();
 	}
 }
