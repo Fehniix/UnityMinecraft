@@ -30,7 +30,7 @@ public class MouseLook : MonoBehaviour
 	private float _rotationX = 0f;
     void Update()
     {
-		if (GameState.isPaused)
+		if (GameState.isPaused || GameState.inventoryOpen)
 			return;
 			
         if (axes == RotationAxes.MouseX)

@@ -13,6 +13,12 @@ public class PlayerController : MonoBehaviour
 	private Block _breakingBlockReference;
 
 	/// <summary>
+	/// Reference to the Inventory UI canvas.
+	/// </summary>
+	[SerializeField]
+	private GameObject _inventoryObjectReference;
+
+	/// <summary>
 	/// Indicates whether or not a block is being broken.
 	/// </summary>
 	private bool _breakingBlock = false;
@@ -37,6 +43,12 @@ public class PlayerController : MonoBehaviour
 
 		if (Input.GetMouseButtonDown(1))
 			this.Interact();
+
+		if (Input.GetKeyDown(KeyCode.E))
+			this.HandleInventoryKey();
+
+		if (Input.GetKeyDown(KeyCode.Escape) && GameState.inventoryOpen)
+			this.CloseInventory();
     }
 
 	private void HandleMouseLeftClickDown()
@@ -52,6 +64,14 @@ public class PlayerController : MonoBehaviour
 	private void HandleMouseLeftClickUp()
 	{
 		this.EndBreak();
+	}
+
+	private void HandleInventoryKey()
+	{
+		if (GameState.inventoryOpen)
+			this.CloseInventory();
+		else
+			this.OpenInventory();
 	}
 
 	/// <summary>
@@ -174,8 +194,32 @@ public class PlayerController : MonoBehaviour
 
 		if (InventoryManager.IsActiveItemConsumable())
 		{
-			InventoryManager.ConsumeActive();
-			Debug.Log("Attempted to consume.");
+			bool consumed = InventoryManager.ConsumeActive();
+			Debug.Log("Attempted to consume: " + consumed);
 		}
+	}
+
+	/// <summary>
+	/// Opens the inventory GUI.
+	/// </summary>
+	private void OpenInventory()
+	{
+		GameState.inventoryOpen = true;
+		this._inventoryObjectReference.SetActive(true);
+
+		Cursor.lockState 	= CursorLockMode.None;
+		Cursor.visible		= true;
+	}
+
+	/// <summary>
+	/// Closes the inventory GUI!
+	/// </summary>
+	private void CloseInventory()
+	{
+		GameState.inventoryOpen = false;
+		this._inventoryObjectReference.SetActive(false);
+
+		Cursor.lockState 	= CursorLockMode.Locked;
+		Cursor.visible		= false;
 	}
 }

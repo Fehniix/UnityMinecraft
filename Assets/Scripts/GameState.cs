@@ -5,6 +5,8 @@ public class GameState
 {
     public static bool isPaused = false;
 
+	public static bool inventoryOpen = false;
+
 	public static Player player;
 
 	public static Clock clock;

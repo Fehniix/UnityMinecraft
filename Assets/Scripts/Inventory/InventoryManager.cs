@@ -9,7 +9,7 @@ public static class InventoryManager
 	public static InventoryItem[] hotbarItems;
 
 	/// <summary>
-	/// Reference to the inventory items.
+	/// Reference to the inventory items. Order matters.
 	/// </summary>
 	public static InventoryItem[] inventoryItems;
 
