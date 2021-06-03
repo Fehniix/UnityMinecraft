@@ -95,8 +95,5 @@ public class Item: IInteractable
 		GameObject.Destroy(this.prefab);
 	}
 
-	public virtual void Interact()
-	{
-
-	}
+	public virtual void Interact() {}
 }
