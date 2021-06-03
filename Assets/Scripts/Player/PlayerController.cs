@@ -100,6 +100,14 @@ public class PlayerController : MonoBehaviour
 	/// </summary>
 	private void KeepBreaking()
 	{
+		// Don't do anything if the inventory is open.
+		if (GameState.inventoryOpen)
+		{
+			if (this._breakingBlock)
+				this.ResetBreaking();
+			return;
+		}
+
 		object obj 	= TargetObject.Get();
 		Block block = obj as Block;
 		Item item 	= obj as Item;
@@ -182,6 +190,9 @@ public class PlayerController : MonoBehaviour
 	/// </summary>
 	private void Interact()
 	{
+		if (GameState.inventoryOpen)
+			return;
+			
 		IInteractable obj = TargetObject.Get() as IInteractable;
 		
 		if (obj?.interactable == true)

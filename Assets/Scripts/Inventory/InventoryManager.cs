@@ -82,7 +82,6 @@ public static class InventoryManager
 	/// </summary>
 	public static bool IsActiveItemConsumable()
 	{
-		Debug.Log(hotbarItems[activeItemIndex].placeable + " " + hotbarItems[activeItemIndex].usable);
 		if (hotbarItems[activeItemIndex] == null)
 			return false;
 			
