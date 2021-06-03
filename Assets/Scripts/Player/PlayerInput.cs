@@ -45,10 +45,7 @@ public class PlayerInput : MonoBehaviour
 	void Update()
 	{
 		if (Input.GetKeyDown(KeyCode.Space))
-		{
 			this.jumping = true;
-			Debug.Log("Space pressed");
-		}
 	}
 
     // Update is called once per frame

@@ -121,7 +121,7 @@ public abstract class Block: BaseBlock, IInteractable
 		if (!this.breakable)
 			return;
 			
-		Debug.Log("[Block Breaking] Initiating block breaking... " + this.blockName);
+		//Debug.Log("[Block Breaking] Initiating block breaking... " + this.blockName);
 
 		this._breakingProgress = 0;
 
@@ -156,7 +156,7 @@ public abstract class Block: BaseBlock, IInteractable
 		if (!this.breakable)
 			return;
 
-		Debug.Log("[Block Breaking] User either lifted the break button, broke the block or moved outside block view: " + this.blockName);
+		//Debug.Log("[Block Breaking] User either lifted the break button, broke the block or moved outside block view: " + this.blockName);
 
 		this._breakingProgress = 0;
 

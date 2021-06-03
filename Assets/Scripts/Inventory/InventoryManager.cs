@@ -45,6 +45,9 @@ public static class InventoryManager
 		// Active item is an item.
 		if (block == null)
 		{
+			if (!item.placeable)
+				return false;
+
 			bool hitOtherItem;
 			Vector4? placement 		= GetPlacementCoordinates(out hitOtherItem);
 
@@ -63,13 +66,13 @@ public static class InventoryManager
 				return false;
 
 			block.Place();
-
-			hotbarItems[activeItemIndex].quantity--;
-			if (hotbarItems[activeItemIndex].quantity == 0)
-				hotbarItems[activeItemIndex] = null;
-
-			InventoryManager.hotbarRef.UpdateHotbarItems();
 		}
+
+		hotbarItems[activeItemIndex].quantity--;
+		if (hotbarItems[activeItemIndex].quantity == 0)
+			hotbarItems[activeItemIndex] = null;
+
+		InventoryManager.hotbarRef.UpdateHotbarItems();
 
 		return true;
 	}
@@ -79,18 +82,11 @@ public static class InventoryManager
 	/// </summary>
 	public static bool IsActiveItemConsumable()
 	{
+		Debug.Log(hotbarItems[activeItemIndex].placeable + " " + hotbarItems[activeItemIndex].usable);
 		if (hotbarItems[activeItemIndex] == null)
 			return false;
 			
 		return hotbarItems[activeItemIndex].placeable || hotbarItems[activeItemIndex].usable;
-	}
-
-	/// <summary>
-	/// Allows the player to place a placeable block from the currently active item in the hotbar.
-	/// </summary>
-	public static void PlaceBlock()
-	{
-
 	}
 
 	/// <summary>

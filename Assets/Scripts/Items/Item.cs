@@ -26,6 +26,11 @@ public class Item: IInteractable
 	public Vector3 coordinates;
 
 	/// <summary>
+	/// Whether the item is placeable or not.
+	/// </summary>
+	public bool placeable = false;
+
+	/// <summary>
 	/// Whether the item can be placed only on the top face of a block.
 	/// </summary>
 	public bool placeableOnlyOnTop = false;
@@ -84,14 +89,10 @@ public class Item: IInteractable
 	/// </summary>
 	public virtual void Break()
 	{
+		if (this.dropsItself)
+			Dropper.DropItem(this.itemName, this.coordinates);
+
 		GameObject.Destroy(this.prefab);
-
-		// if (this.dropsItself)
-		// 	Dropper.DropItem(this.blockName, this.coordinates);
-
-		// foreach(Drop drop in this.drops)
-		// 	if (Random.Range(0, 101) > drop.probability * 100)
-		// 		Dropper.DropItem(drop.itemName, this.coordinates, drop.quantity);
 	}
 
 	public virtual void Interact()

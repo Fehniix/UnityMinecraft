@@ -82,9 +82,10 @@ public class TargetObject : MonoBehaviour
 		else
 		{
 			ItemObject itemObj = hit.transform.gameObject.GetComponent<ItemObject>();
-			
+
 			Item item = Registry.Instantiate(itemObj.itemName) as Item;
 			item.prefab = hit.transform.gameObject;
+			item.coordinates = Utils.FloorVector3(hit.transform.position - hit.normal / 4);
 
 			return item;
 		}

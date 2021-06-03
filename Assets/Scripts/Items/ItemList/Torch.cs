@@ -8,6 +8,7 @@ public class Torch: Item
     {
         this.itemName 				= "torch";
 		this.itemTextureName 		= "torch";
+		this.placeable				= true;
 		this.placeableOnlyOnTop 	= true;
 		this.placeableOnOtherItems 	= false;
 		this.LoadPrefab();

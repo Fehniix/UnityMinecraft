@@ -14,8 +14,12 @@ public class InventoryItem
 			this.isBlock 	= true;
 			this.placeable 	= block.placeable;
 		}
-			
-		//TODO implement items.
+		else
+		{
+			Item item		= Registry.Instantiate(itemName) as Item;
+			this.isBlock	= false;
+			this.placeable	= item.placeable;
+		}
 	}
 
 	/// <summary>
