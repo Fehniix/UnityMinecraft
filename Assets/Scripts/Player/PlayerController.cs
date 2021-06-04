@@ -192,7 +192,7 @@ public class PlayerController : MonoBehaviour
 	{
 		if (GameState.inventoryOpen)
 			return;
-			
+
 		IInteractable obj = TargetObject.Get() as IInteractable;
 		
 		if (obj?.interactable == true)
@@ -218,6 +218,8 @@ public class PlayerController : MonoBehaviour
 		GameState.inventoryOpen = true;
 		this._inventoryObjectReference.SetActive(true);
 
+		InventoryManager.hotbarRef.gameObject.SetActive(false);
+
 		Cursor.lockState 	= CursorLockMode.None;
 		Cursor.visible		= true;
 	}
@@ -229,6 +231,9 @@ public class PlayerController : MonoBehaviour
 	{
 		GameState.inventoryOpen = false;
 		this._inventoryObjectReference.SetActive(false);
+
+		InventoryManager.hotbarRef.gameObject.SetActive(true);
+		InventoryManager.hotbarRef.UpdateHotbarItems();
 
 		Cursor.lockState 	= CursorLockMode.Locked;
 		Cursor.visible		= false;

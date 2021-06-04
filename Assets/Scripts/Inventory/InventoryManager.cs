@@ -14,6 +14,31 @@ public static class InventoryManager
 	public static InventoryItem[] inventoryItems;
 
 	/// <summary>
+	/// Reference to the item being dragged.
+	/// </summary>
+	public static InventoryItemImage sourceDraggingItemImage;
+
+	/// <summary>
+	/// The item reference that is currently being dragged.
+	/// </summary>
+	public static InventoryItem draggingItem;
+
+	/// <summary>
+	/// Reference to the hotbar items in the inventory.
+	/// </summary>
+	public static InventoryItem[] inventoryHotbarItems;
+
+	/// <summary>
+	/// Reference to the crafting grid items.
+	/// </summary>
+	public static InventoryItem[] craftingGrid;
+
+	/// <summary>
+	/// Reference to the result of the crafting recipe provided.
+	/// </summary>
+	public static InventoryItem craftingResult;
+
+	/// <summary>
 	/// Represents the index of the currently active item.
 	/// </summary>
 	public static int activeItemIndex;
@@ -73,6 +98,7 @@ public static class InventoryManager
 			hotbarItems[activeItemIndex] = null;
 
 		InventoryManager.hotbarRef.UpdateHotbarItems();
+		InventoryManager.inventoryRef.UpdateInventoryItems();
 
 		return true;
 	}
@@ -142,7 +168,7 @@ public static class InventoryManager
 			hotbarRef.UpdateHotbarItems();
 		}
 
-		//TODO implement inventory.
+		// TODO implement inventory.
 	}
 
 	/// <summary>

@@ -9,10 +9,14 @@ public class Controller : MonoBehaviour
     {
 		GameObject.Find("Player").transform.position = new Vector3(8, 80, 8);
 
-		InventoryManager.hotbarRef.UpdateHotbarItems();
-
 		InventoryManager.hotbarItems[0] = new InventoryItem("torch");
 		InventoryManager.hotbarItems[0].placeable = true;
+
+		InventoryManager.inventoryItems[0] = new InventoryItem("torch");
+
+		InventoryManager.hotbarRef.UpdateHotbarItems();
+		InventoryManager.inventoryRef.UpdateInventoryItems();
+
 		// Texture2D tex = CachedResources.Load<Texture2D>("Textures/Stitch/dirt");
 		// GameObject.Find("item0").GetComponent<Image>().sprite = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), new Vector2(0.5f, 0.5f));
     }
@@ -20,7 +24,6 @@ public class Controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-		if (Input.GetMouseButtonDown(0))
-			Debug.Log(TargetObject.Get());
+		
     }
 }
