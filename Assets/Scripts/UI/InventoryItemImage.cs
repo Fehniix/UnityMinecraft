@@ -41,6 +41,9 @@ public class InventoryItemImage : MonoBehaviour, IPointerDownHandler
 			case "Crafting":
 				this.slotType = InventorySlotType.CRAFTING;
 				break;
+			default:
+				this.slotType = InventorySlotType.INVENTORY;
+				break;
 		}
 	}
 
