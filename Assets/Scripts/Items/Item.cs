@@ -62,6 +62,11 @@ public class Item: IInteractable
 	}
 
 	/// <summary>
+	/// Maximum amount of items that can be aggregated in a single item slot.
+	/// </summary>
+	public int maxStack = 64;
+
+	/// <summary>
 	/// Loads the prefab associated to the item name.
 	/// </summary>
 	public void LoadPrefab()

@@ -13,12 +13,14 @@ public class InventoryItem
 			Block block 	= Registry.Instantiate(itemName) as Block;
 			this.isBlock 	= true;
 			this.placeable 	= block.placeable;
+			this.maxStack	= block.maxStack;
 		}
 		else
 		{
 			Item item		= Registry.Instantiate(itemName) as Item;
 			this.isBlock	= false;
 			this.placeable	= item.placeable;
+			this.maxStack	= item.maxStack;
 		}
 	}
 
@@ -46,4 +48,9 @@ public class InventoryItem
 	/// The number of items.
 	/// </summary>
 	public int quantity = 1;
+
+	/// <summary>
+	/// Maximum amount of items that can be aggregated in a single item slot.
+	/// </summary>
+	public int maxStack = 64;
 }

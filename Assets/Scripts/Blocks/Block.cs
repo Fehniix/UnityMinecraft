@@ -55,6 +55,11 @@ public abstract class Block: BaseBlock, IInteractable
 	/// </summary>
 	public bool dropsItself = true;
 
+	/// <summary>
+	/// Maximum amount of items that can be aggregated in a single item slot.
+	/// </summary>
+	public int maxStack = 64;
+
 	public Block()
 	{
 		this.id 	= System.Guid.NewGuid().ToString();
