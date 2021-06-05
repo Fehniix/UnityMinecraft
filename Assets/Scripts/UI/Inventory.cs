@@ -13,47 +13,7 @@ public class Inventory : MonoBehaviour
 
     void Awake()
     {
-		this.draggingItem 				= this.transform.Find("InventoryBG/DraggingItem").gameObject;
-		InventoryManager.inventoryItems = new InventoryItem[27];
-        InventoryManager.inventoryRef 	= this;
-
 		this.gameObject.SetActive(false);
-    }
-
-    void Update()
-    {
-		/**
-		* A bit of an explanation is due - the following code doesn't forgive.
-		* REVIEW needs to be cleaned.
-		* `this.draggingItem` is the GameObject that contains the UI.Image GameObject that represents the item following the cursor.
-		* If an item is currently being dragged (fetched from the static InventoryManager),
-		* have it follow Input.mousePosition and, if still inactive, initialize its image and quantity text.
-		* Otherwise, if the an item is not being dragged any longer and `this.draggingItem` is still active, deactivate it.
-		*/
-		if (InventoryManager.draggingItem != null)
-		{
-			if (!this.draggingItem.activeSelf)
-			{
-				this.draggingItem.SetActive(true);
-				
-				this.draggingItem.GetComponentInChildren<Image>().sprite 	= TextureStitcher.instance.GetBlockItemSprite(InventoryManager.draggingItem.itemName);
-				this.draggingItem.GetComponentInChildren<Image>().color 	= Color.white;
-
-				GameObject textObj = this.draggingItem.transform.GetChild(1).gameObject;
-
-				if (InventoryManager.draggingItem.quantity != 1)
-				{
-					textObj.SetActive(true);
-					textObj.GetComponent<Text>().text = InventoryManager.draggingItem.quantity.ToString();
-				}
-				else
-					textObj.SetActive(false);
-			}
-
-			this.draggingItem.transform.position = Input.mousePosition;
-		}
-		else if (this.draggingItem.activeSelf)
-			this.draggingItem.SetActive(false);
     }
 
 	/// <summary>
@@ -93,7 +53,7 @@ public class Inventory : MonoBehaviour
 
 		if (item == null) 
 		{
-			inventoryItemGameObject.GetComponent<InventoryItemImage>().itemName = null;
+			inventoryItemGameObject.GetComponent<InventoryItemSlot>().itemName = null;
 			image.color = Color.clear;
 			quantityText.SetActive(false);
 			return;
@@ -101,7 +61,7 @@ public class Inventory : MonoBehaviour
 
 		string itemName = item.itemName;
 
-		inventoryItemGameObject.GetComponent<InventoryItemImage>().itemName = itemName;
+		inventoryItemGameObject.GetComponent<InventoryItemSlot>().itemName = itemName;
 		image.sprite = TextureStitcher.instance.GetBlockItemSprite(itemName);
 		image.color = Color.white;
 

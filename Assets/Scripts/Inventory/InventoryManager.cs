@@ -14,16 +14,6 @@ public static class InventoryManager
 	public static InventoryItem[] inventoryItems;
 
 	/// <summary>
-	/// Reference to the item being dragged.
-	/// </summary>
-	public static InventoryItemImage sourceDraggingItemImage;
-
-	/// <summary>
-	/// The item reference that is currently being dragged.
-	/// </summary>
-	public static InventoryItem draggingItem;
-
-	/// <summary>
 	/// Reference to the hotbar items in the inventory.
 	/// </summary>
 	public static InventoryItem[] inventoryHotbarItems;

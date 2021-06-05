@@ -10,4 +10,14 @@ public static class InventoryContainers
 	/// The inventory containers. Registered and accessible by UUID.
 	/// </summary>
     public static Dictionary<string, InventoryContainer> containers = new Dictionary<string, InventoryContainer>();
+
+	/// <summary>
+	/// The item reference that is currently being dragged.
+	/// </summary>
+	public static InventoryItem draggingItem;
+
+	/// <summary>
+	/// Reference to the item being dragged.
+	/// </summary>
+	public static UnityEngine.GameObject draggingItemObject;
 }

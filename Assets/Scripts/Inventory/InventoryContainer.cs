@@ -12,9 +12,14 @@ public class InventoryContainer : MonoBehaviour
 	private string id;
 
 	/// <summary>
-	/// Reference to the items grid.
+	/// Reference to the item objects in the grid.
 	/// </summary>
-	private GameObject[] items;
+	public GameObject[] itemObjects;
+
+	/// <summary>
+	/// Reference to the inventory items.
+	/// </summary>
+	public InventoryItem[] items;
 
 	/// <summary>
 	/// The number of items the inventory will contain.
@@ -37,17 +42,75 @@ public class InventoryContainer : MonoBehaviour
 		layoutGroup.cellSize 		= new Vector2(32, 32);
 		layoutGroup.spacing 		= new Vector2(4, 3);
 
-        // Get the reference to the inventory grid.
-		this.items = new GameObject[this.itemsCount];
+        // Initialize the inventory item objects.
+		this.itemObjects = new GameObject[this.itemsCount];
+
+		// Initialize the inventory items.
+		this.items = new InventoryItem[this.itemsCount];
 
 		for (int i = 0; i < this.itemsCount; i++)
-			this.items[i] = this.CreateItemSlotObject(i);
+			this.itemObjects[i] = this.CreateItemSlotObject(i);
     }
+
+	void Start()
+	{
+		this.items[0] = new InventoryItem("torch");
+		this.UpdateGUI();
+	}
 
     void Update()
     {
         
     }
+
+	/// <summary>
+	/// Updates the inventory container GUI.
+	/// </summary>
+	public void UpdateGUI()
+	{
+		for(int i = 0; i < this.itemsCount; i++)
+		{
+			InventoryItem item 		= this.items[i];
+			GameObject itemObj 		= this.itemObjects[i];
+			
+			this.UpdateSingleItem(item, itemObj);
+		}
+	}
+
+	/// <summary>
+	/// Given an `InventoryItem` and its inventory GameObject (object that contains the the image & quantity text),
+	/// updates the single item's texture and quantity text.
+	/// </summary>
+	private void UpdateSingleItem(InventoryItem item, GameObject inventoryItemGameObject)
+	{
+		Image image				= inventoryItemGameObject.GetComponent<Image>();
+		GameObject quantityText	= inventoryItemGameObject.transform.GetChild(0).gameObject;
+
+		if (item == null) 
+		{
+			inventoryItemGameObject.GetComponent<InventoryItemSlot>().itemName = null;
+			image.color = Color.clear;
+			quantityText.SetActive(false);
+			return;
+		}
+
+		string itemName = item.itemName;
+
+		inventoryItemGameObject.GetComponent<InventoryItemSlot>().itemName = itemName;
+		image.sprite = TextureStitcher.instance.GetBlockItemSprite(itemName);
+		image.color = Color.white;
+
+		if (item.quantity != 1)
+		{
+			quantityText.SetActive(true);
+			quantityText.GetComponent<Text>().text = item.quantity.ToString();
+
+			int fontSize = item.quantity > 99 ? 18 : 22;
+			quantityText.GetComponent<Text>().fontSize = fontSize;
+		}
+		else
+			quantityText.SetActive(false);
+	}
 
 	/// <summary>
 	/// Allows to create an item slot object to append to the grid.
@@ -57,6 +120,24 @@ public class InventoryContainer : MonoBehaviour
 		GameObject itemSlotObject = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/UIItemSlot"));
 		itemSlotObject.name = String.Format("item{0}", index);
 		itemSlotObject.transform.SetParent(this.transform, false);
+
+		switch(this.name)
+		{
+			case "Items":
+				itemSlotObject.GetComponent<InventoryItemSlot>().slotType = InventorySlotType.INVENTORY;
+				break;
+			case "Hotbar":
+				itemSlotObject.GetComponent<InventoryItemSlot>().slotType = InventorySlotType.HOTBAR;
+				break;
+			case "Crafting":
+				itemSlotObject.GetComponent<InventoryItemSlot>().slotType = InventorySlotType.CRAFTING;
+				break;
+			default:
+				itemSlotObject.GetComponent<InventoryItemSlot>().slotType = InventorySlotType.INVENTORY;
+				break;
+		}
+
+		itemSlotObject.GetComponent<InventoryItemSlot>().slotIndex = index;
 
 		return itemSlotObject;
 	}
