@@ -84,6 +84,9 @@ public class Hotbar : MonoBehaviour
 			{
 				hotbarImage.transform.GetChild(0).gameObject.SetActive(true);
 				hotbarImage.transform.GetChild(0).gameObject.GetComponent<Text>().text = item.quantity.ToString();
+
+				int fontSize = item.quantity > 99 ? 18 : 22;
+				hotbarImage.transform.GetChild(0).gameObject.GetComponent<Text>().fontSize = fontSize;
 			}
 			else
 				hotbarImage.transform.GetChild(0).gameObject.SetActive(false);

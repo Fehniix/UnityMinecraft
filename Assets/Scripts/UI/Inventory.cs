@@ -32,9 +32,9 @@ public class Inventory : MonoBehaviour
 		*/
 		if (InventoryManager.draggingItem != null)
 		{
-			if (!this.draggingItem.gameObject.activeSelf)
+			if (!this.draggingItem.activeSelf)
 			{
-				this.draggingItem.gameObject.SetActive(true);
+				this.draggingItem.SetActive(true);
 				
 				this.draggingItem.GetComponentInChildren<Image>().sprite 	= TextureStitcher.instance.GetBlockItemSprite(InventoryManager.draggingItem.itemName);
 				this.draggingItem.GetComponentInChildren<Image>().color 	= Color.white;
@@ -52,8 +52,8 @@ public class Inventory : MonoBehaviour
 
 			this.draggingItem.transform.position = Input.mousePosition;
 		}
-		else if (this.draggingItem.gameObject.activeSelf)
-			this.draggingItem.gameObject.SetActive(false);
+		else if (this.draggingItem.activeSelf)
+			this.draggingItem.SetActive(false);
     }
 
 	/// <summary>
@@ -77,7 +77,7 @@ public class Inventory : MonoBehaviour
 		{
 			InventoryItem item 		= InventoryManager.hotbarItems[i];
 			GameObject itemObj 		= hotbarContainer.gameObject.transform.GetChild(i).gameObject;
-			
+
 			this.UpdateSingleItem(item, itemObj);
 		}
 	}
@@ -109,6 +109,9 @@ public class Inventory : MonoBehaviour
 		{
 			quantityText.SetActive(true);
 			quantityText.GetComponent<Text>().text = item.quantity.ToString();
+
+			int fontSize = item.quantity > 99 ? 18 : 22;
+			quantityText.GetComponent<Text>().fontSize = fontSize;
 		}
 		else
 			quantityText.SetActive(false);
