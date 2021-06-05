@@ -154,21 +154,39 @@ public static class InventoryManager
 	/// <summary>
 	/// Given the item name, instantiates a new item from the registry and adds it to the first available slot in inventory.
 	/// </summary>
-	public static void AddItem(string itemName, int quantity = 1)
+	public static bool AddItem(string itemName, int quantity = 1)
 	{
 		int hotbarPosition = GetHotbarPositionForItem(itemName);
+		int inventoryPosition = GetInventoryPositionForItem(itemName);
 
-		if (hotbarPosition != -1)
+		if (hotbarPosition == -1 && inventoryPosition == -1)
+			return false;
+
+		InventoryItem hotbarItem = hotbarItems[hotbarPosition];
+		InventoryItem inventoryItem = inventoryItems[inventoryPosition];
+
+		// The highest placement priority is given to any slot that already has the item.
+		if ((hotbarItem?.quantity < hotbarItem?.maxStack) || (inventoryItem?.quantity < inventoryItem?.maxStack))
 		{
-			if (hotbarItems[hotbarPosition] == null)
-				hotbarItems[hotbarPosition] = new InventoryItem(itemName);
-			else
+			if (hotbarItems[hotbarPosition] != null)
 				hotbarItems[hotbarPosition].quantity++;
-
-			hotbarRef.UpdateHotbarItems();
+			else
+				inventoryItems[inventoryPosition].quantity++;
+		}
+		else
+		{
+			InventoryItem item = new InventoryItem(itemName);
+			
+			if (hotbarPosition != -1)
+				hotbarItems[hotbarPosition] = item;
+			else
+				inventoryItems[inventoryPosition] = item;
 		}
 
-		// TODO implement inventory.
+		hotbarRef.UpdateHotbarItems();
+		inventoryRef.UpdateInventoryItems();
+
+		return true;
 	}
 
 	/// <summary>
@@ -181,13 +199,40 @@ public static class InventoryManager
 
 		for (int i = 0; i < 9; i++)
 		{
+			// Save first empty position.
 			if (hotbarItems[i] == null && firstAvailable == -1)
 			{
 				firstAvailable = i;
 				continue;
 			}
 
-			if (hotbarItems[i] != null && hotbarItems[i].itemName == itemName)
+			// Keep iterating: if there is a slot that already has the item in question, adding to it has priority.
+			if (hotbarItems[i] != null && hotbarItems[i].itemName == itemName && hotbarItems[i].quantity < hotbarItems[i].maxStack)
+				return i;
+		}
+
+		return firstAvailable;
+	}
+
+	/// <summary>
+	/// Determines whether the item identified by itemName can be placed inside the inventory.
+	/// Returns the position at which the item can be first placed, `-1` if the item cannot be placed.
+	/// </summary>
+	private static int GetInventoryPositionForItem(string itemName)
+	{
+		int firstAvailable = -1;
+
+		for (int i = 0; i < 27; i++)
+		{
+			// Save first empty position.
+			if (inventoryItems[i] == null && firstAvailable == -1)
+			{
+				firstAvailable = i;
+				continue;
+			}
+
+			// Keep iterating: if there is a slot that already has the item in question, adding to it has priority.
+			if (inventoryItems[i] != null && inventoryItems[i].itemName == itemName && inventoryItems[i].quantity < inventoryItems[i].maxStack)
 				return i;
 		}
 
