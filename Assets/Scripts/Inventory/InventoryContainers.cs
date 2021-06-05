@@ -12,6 +12,16 @@ public static class InventoryContainers
     public static Dictionary<string, InventoryContainer> containers = new Dictionary<string, InventoryContainer>();
 
 	/// <summary>
+	/// Static reference to the hotbar container.
+	/// </summary>
+	public static InventoryContainer hotbar;
+
+	/// <summary>
+	/// Static reference to the inventory container.
+	/// </summary>
+	public static InventoryContainer inventory;
+
+	/// <summary>
 	/// The item reference that is currently being dragged.
 	/// </summary>
 	public static InventoryItem draggingItem;

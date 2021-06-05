@@ -57,7 +57,9 @@ public class TargetObject : MonoBehaviour
 		if (isChunk)
 		{
 			if (PCTerrain.GetInstance().blocks.ContainsKey(objCoords))
+			{
 				return PCTerrain.GetInstance().blocks[objCoords];
+			}
 			
 			string blockName = PCTerrain.GetInstance().chunks[chunkPosition].blocks[
 				(int)objCoords.x % 16, 

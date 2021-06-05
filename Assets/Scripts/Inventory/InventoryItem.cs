@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class InventoryItem
 {
+	public InventoryItem() {}
+
 	public InventoryItem(string name)
 	{
 		this.itemName = name;
@@ -22,6 +24,22 @@ public class InventoryItem
 			this.placeable	= item.placeable;
 			this.maxStack	= item.maxStack;
 		}
+	}
+
+	/// <summary>
+	/// Returns a deep copy of the InventoryItem.
+	/// </summary>
+	public InventoryItem Clone()
+	{
+		InventoryItem clone = new InventoryItem();
+		clone.itemName = this.itemName;
+		clone.placeable = this.placeable;
+		clone.usable = this.usable;
+		clone.isBlock = this.isBlock;
+		clone.quantity = this.quantity;
+		clone.maxStack = this.maxStack;
+
+		return clone;
 	}
 
 	/// <summary>

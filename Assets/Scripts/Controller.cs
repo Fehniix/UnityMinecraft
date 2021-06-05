@@ -9,10 +9,9 @@ public class Controller : MonoBehaviour
     {
 		GameObject.Find("Player").transform.position = new Vector3(8, 80, 8);
 
-		InventoryManager.hotbarItems[0] = new InventoryItem("torch");
-		InventoryManager.hotbarItems[0].placeable = true;
+		InventoryContainers.hotbar.items[0] = new InventoryItem("torch");
 
-		InventoryManager.hotbarRef.UpdateHotbarItems();
+		PlayerInventoryManager.hotbarRef.UpdateGUI();
     }
 
     // Update is called once per frame

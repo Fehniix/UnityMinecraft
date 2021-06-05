@@ -1,33 +1,8 @@
 ﻿using UnityEngine;
 using Extensions;
 
-public static class InventoryManager
+public static class PlayerInventoryManager
 {
-	/// <summary>
-	/// The hotbar items.
-	/// </summary>
-	public static InventoryItem[] hotbarItems;
-
-	/// <summary>
-	/// Reference to the inventory items. Order matters.
-	/// </summary>
-	public static InventoryItem[] inventoryItems;
-
-	/// <summary>
-	/// Reference to the hotbar items in the inventory.
-	/// </summary>
-	public static InventoryItem[] inventoryHotbarItems;
-
-	/// <summary>
-	/// Reference to the crafting grid items.
-	/// </summary>
-	public static InventoryItem[] craftingGrid;
-
-	/// <summary>
-	/// Reference to the result of the crafting recipe provided.
-	/// </summary>
-	public static InventoryItem craftingResult;
-
 	/// <summary>
 	/// Represents the index of the currently active item.
 	/// </summary>
@@ -41,13 +16,14 @@ public static class InventoryManager
 	/// <summary>
 	/// Reference to the inventory component.
 	/// </summary>
-	public static Inventory inventoryRef;
+	public static PlayerInventory playerInventoryRef;
 
 	/// <summary>
 	/// Tries to place or use the currently active item.
 	/// </summary>
 	public static bool ConsumeActive()
 	{
+		InventoryItem[] hotbarItems = InventoryContainers.hotbar.items;
 		InventoryItem activeItem = hotbarItems[activeItemIndex];
 
 		if (!activeItem.placeable)
@@ -87,8 +63,7 @@ public static class InventoryManager
 		if (hotbarItems[activeItemIndex].quantity == 0)
 			hotbarItems[activeItemIndex] = null;
 
-		InventoryManager.hotbarRef.UpdateHotbarItems();
-		InventoryManager.inventoryRef.UpdateInventoryItems();
+		PlayerInventoryManager.hotbarRef.UpdateGUI();
 
 		return true;
 	}
@@ -98,6 +73,8 @@ public static class InventoryManager
 	/// </summary>
 	public static bool IsActiveItemConsumable()
 	{
+		InventoryItem[] hotbarItems = InventoryContainers.hotbar.items;
+
 		if (hotbarItems[activeItemIndex] == null)
 			return false;
 			
@@ -146,6 +123,9 @@ public static class InventoryManager
 	/// </summary>
 	public static bool AddItem(string itemName, int quantity = 1)
 	{
+		InventoryItem[] hotbarItems = InventoryContainers.hotbar.items;
+		InventoryItem[] inventoryItems = InventoryContainers.inventory.items;
+
 		int hotbarPosition = GetHotbarPositionForItem(itemName);
 		int inventoryPosition = GetInventoryPositionForItem(itemName);
 
@@ -173,8 +153,8 @@ public static class InventoryManager
 				inventoryItems[inventoryPosition] = item;
 		}
 
-		hotbarRef.UpdateHotbarItems();
-		inventoryRef.UpdateInventoryItems();
+		hotbarRef.UpdateGUI();
+		playerInventoryRef.UpdateGUI();
 
 		return true;
 	}
@@ -185,6 +165,8 @@ public static class InventoryManager
 	/// </summary>
 	private static int GetHotbarPositionForItem(string itemName)
 	{
+		InventoryItem[] hotbarItems = InventoryContainers.hotbar.items;
+
 		int firstAvailable = -1;
 
 		for (int i = 0; i < 9; i++)
@@ -210,6 +192,9 @@ public static class InventoryManager
 	/// </summary>
 	private static int GetInventoryPositionForItem(string itemName)
 	{
+		InventoryItem[] hotbarItems = InventoryContainers.hotbar.items;
+		InventoryItem[] inventoryItems = InventoryContainers.inventory.items;
+
 		int firstAvailable = -1;
 
 		for (int i = 0; i < 27; i++)

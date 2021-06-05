@@ -16,7 +16,7 @@ public class Entity : MonoBehaviour
 
 		Entity entity = this.GetComponent<Entity>();
 		
-		if (InventoryManager.AddItem(this.entityName, 1))
+		if (PlayerInventoryManager.AddItem(this.entityName, 1))
 			Destroy(this.transform.gameObject);
 	}
 }

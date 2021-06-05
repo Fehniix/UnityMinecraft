@@ -32,11 +32,22 @@ public class InventoryContainer : MonoBehaviour
 	/// </summary>
 	public bool itemsDraggable = true;
 
+	/// <summary>
+	/// The name of the item container.
+	/// </summary>
+	public string itemContainerName;
+
     void Awake()
     {
 		// Register inventory in InventoryContainers
 		this.id = System.Guid.NewGuid().ToString();
 		InventoryContainers.containers[this.id] = this;
+
+		if (this.itemContainerName == "hotbar")
+			InventoryContainers.hotbar = this;
+
+		if (this.itemContainerName == "items")
+			InventoryContainers.inventory = this;
 
 		GridLayoutGroup layoutGroup = this.GetComponent<GridLayoutGroup>();
 		layoutGroup.cellSize 		= new Vector2(32, 32);
@@ -50,18 +61,14 @@ public class InventoryContainer : MonoBehaviour
 
 		for (int i = 0; i < this.itemsCount; i++)
 			this.itemObjects[i] = this.CreateItemSlotObject(i);
+
+		this.UpdateGUI();
     }
 
 	void Start()
 	{
-		this.items[0] = new InventoryItem("torch");
-		this.UpdateGUI();
+		
 	}
-
-    void Update()
-    {
-        
-    }
 
 	/// <summary>
 	/// Updates the inventory container GUI.

@@ -109,6 +109,7 @@ public class PlayerController : MonoBehaviour
 		}
 
 		object obj 	= TargetObject.Get();
+		Debug.Log(obj);
 		Block block = obj as Block;
 		Item item 	= obj as Item;
 
@@ -203,9 +204,9 @@ public class PlayerController : MonoBehaviour
 
 		Debug.Log("Target block non interactable.");
 
-		if (InventoryManager.IsActiveItemConsumable())
+		if (PlayerInventoryManager.IsActiveItemConsumable())
 		{
-			bool consumed = InventoryManager.ConsumeActive();
+			bool consumed = PlayerInventoryManager.ConsumeActive();
 			Debug.Log("Attempted to consume: " + consumed);
 		}
 	}
@@ -217,8 +218,9 @@ public class PlayerController : MonoBehaviour
 	{
 		GameState.inventoryOpen = true;
 		this._inventoryObjectReference.SetActive(true);
+		this._inventoryObjectReference.GetComponent<PlayerInventory>().UpdateGUI();
 
-		InventoryManager.hotbarRef.gameObject.SetActive(false);
+		PlayerInventoryManager.hotbarRef.gameObject.SetActive(false);
 
 		Cursor.lockState 	= CursorLockMode.None;
 		Cursor.visible		= true;
@@ -232,8 +234,8 @@ public class PlayerController : MonoBehaviour
 		GameState.inventoryOpen = false;
 		this._inventoryObjectReference.SetActive(false);
 
-		InventoryManager.hotbarRef.gameObject.SetActive(true);
-		InventoryManager.hotbarRef.UpdateHotbarItems();
+		PlayerInventoryManager.hotbarRef.gameObject.SetActive(true);
+		PlayerInventoryManager.hotbarRef.UpdateGUI();
 
 		Cursor.lockState 	= CursorLockMode.Locked;
 		Cursor.visible		= false;

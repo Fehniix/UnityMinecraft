@@ -26,12 +26,11 @@ public class Hotbar : MonoBehaviour
 
     void Awake()
     {
-		InventoryManager.hotbarItems		= new InventoryItem[9];
-		InventoryManager.activeItemIndex 	= 4;
-		this.activeItemImgReference 		= this.transform.GetChild(0).gameObject;
-		this.activeItemImgFirstX			= this.transform.position.x - itemCellSize * 4;
+		PlayerInventoryManager.activeItemIndex 	= 4;
+		this.activeItemImgReference 			= this.transform.GetChild(0).gameObject;
+		this.activeItemImgFirstX				= this.transform.position.x - itemCellSize * 4;
 
-		InventoryManager.hotbarRef 			= this;
+		PlayerInventoryManager.hotbarRef 		= this;
     }
 
     // Update is called once per frame
@@ -47,15 +46,15 @@ public class Hotbar : MonoBehaviour
 	void UpdateActiveItem()
 	{
 		int scrollDirection = Input.mouseScrollDelta.y > 0 ? 1 : -1;
-		InventoryManager.activeItemIndex += scrollDirection;
+		PlayerInventoryManager.activeItemIndex += scrollDirection;
 
-		if (InventoryManager.activeItemIndex == -1)
-			InventoryManager.activeItemIndex = 8;
+		if (PlayerInventoryManager.activeItemIndex == -1)
+			PlayerInventoryManager.activeItemIndex = 8;
 
-		InventoryManager.activeItemIndex %= 9;
+		PlayerInventoryManager.activeItemIndex %= 9;
 
 		Vector3 currentPosition = this.activeItemImgReference.transform.position;
-		currentPosition.x = itemCellSize * InventoryManager.activeItemIndex + this.activeItemImgFirstX;
+		currentPosition.x = itemCellSize * PlayerInventoryManager.activeItemIndex + this.activeItemImgFirstX;
 		
 		this.activeItemImgReference.transform.position = currentPosition;
 	}
@@ -63,11 +62,11 @@ public class Hotbar : MonoBehaviour
 	/// <summary>
 	/// Updates item images.
 	/// </summary>
-	public void UpdateHotbarItems()
+	public void UpdateGUI()
 	{
 		for(int i = 0; i < 9; i++)
 		{
-			InventoryItem item 		= InventoryManager.hotbarItems[i];
+			InventoryItem item 		= InventoryContainers.hotbar.items[i];
 			GameObject hotbarImage 	= GameObject.Find(String.Format("item{0}", i));
 
 			if (item == null) 
