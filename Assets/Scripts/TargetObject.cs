@@ -56,7 +56,7 @@ public class TargetObject : MonoBehaviour
 
 		if (isChunk)
 		{
-			if (PCTerrain.GetInstance().blocks.ContainsKey(objCoords))
+			if (PCTerrain.GetInstance().blocks.ContainsKey(objCoords) && PCTerrain.GetInstance().blocks[objCoords] != null)
 			{
 				return PCTerrain.GetInstance().blocks[objCoords];
 			}
@@ -68,7 +68,10 @@ public class TargetObject : MonoBehaviour
 			].blockName;
 
 			if (blockName == "air")
+			{
+				Debug.Log("Block is air.");
 				return null;
+			}
 
 			Block blockInstance = Registry.Instantiate(blockName) as Block;
 			blockInstance.coordinates = objCoords;

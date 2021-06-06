@@ -20,6 +20,12 @@ public class DraggingItem : MonoBehaviour
 	/// </summary>
 	public void UpdateTexture()
 	{
+		if (InventoryContainers.draggingItem == null)
+		{
+			this.gameObject.SetActive(false);
+			return;
+		}
+
 		this.gameObject.SetActive(true);
 
 		this.gameObject.GetComponentInChildren<Image>().sprite 	= TextureStitcher.instance.GetBlockItemSprite(InventoryContainers.draggingItem.itemName);

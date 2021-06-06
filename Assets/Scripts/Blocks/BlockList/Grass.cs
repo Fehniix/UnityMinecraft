@@ -4,7 +4,7 @@
 	{
 		this.blockName = "grass";
 		this.textureName = "grass_block";
-		this.hardness = 3 * 20;
+		this.hardness = 1 * 20;
 		this.hasSidedTextures = true;
 	}
 }

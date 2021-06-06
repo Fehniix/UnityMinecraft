@@ -93,6 +93,62 @@ public class InventoryItemSlot : MonoBehaviour, IPointerDownHandler
 		}
 	}
 
+	private void OnRightMouseButtonClick()
+	{
+		InventoryContainer inventoryContainer = this.GetComponentInParent<InventoryContainer>();
+		InventoryItem inventoryItem = inventoryContainer.items[this.slotIndex];
+		InventoryItem draggingItem 	= InventoryContainers.draggingItem;
+
+		if (inventoryItem == null && draggingItem == null)
+			return;
+
+		if (draggingItem == null)
+		{
+			if (inventoryItem.quantity == 1)
+				this.SwapDraggable();
+			else
+			{
+				int quantity = inventoryItem.quantity;
+
+				inventoryItem.quantity = quantity / 2 + quantity % 2;
+				InventoryContainers.draggingItem = inventoryItem.Clone();
+				InventoryContainers.draggingItem.quantity -= quantity % 2;
+			}
+		}
+		else
+		{
+			if (inventoryItem == null)
+			{
+				inventoryContainer.items[this.slotIndex] = draggingItem.Clone();
+				inventoryContainer.items[this.slotIndex].quantity = 1;
+				draggingItem.quantity--;
+			}
+			else 
+			{
+				// * Both items are not null. Check for same name and max item stack.
+			
+				int currentSlotQuantity 	= inventoryItem.quantity;
+				bool sameName 				= inventoryItem.itemName == draggingItem.itemName;
+				bool tooManyIfCombined 		= currentSlotQuantity + 1 > inventoryItem.maxStack;
+
+				if (sameName && !tooManyIfCombined)
+				{
+					inventoryItem.quantity++;
+					draggingItem.quantity--;
+				}
+			}
+		}
+
+		if (draggingItem?.quantity == 0)
+			InventoryContainers.draggingItem = null;
+
+		if (inventoryItem?.quantity == 0)
+			inventoryContainer.items[this.slotIndex] = null;
+
+		InventoryContainers.draggingItemObject.GetComponent<DraggingItem>().UpdateTexture();
+		inventoryContainer.UpdateGUI();
+	}
+
 	/// <summary>
 	/// Allows to swap the currently dragging item with the target item slot item.
 	/// </summary>
@@ -104,37 +160,5 @@ public class InventoryItemSlot : MonoBehaviour, IPointerDownHandler
 		inventoryContainer.items[this.slotIndex] 	= InventoryContainers.draggingItem;
 		InventoryContainers.draggingItem 			= tmp;
 		InventoryContainers.draggingItemObject.GetComponent<DraggingItem>().UpdateTexture();
-	}
-
-	private void OnRightMouseButtonClick()
-	{
-		InventoryContainer inventoryContainer = this.GetComponentInParent<InventoryContainer>();
-		// ANCHOR Start from here.
-		if (inventoryContainer.items[this.slotIndex] != null)
-		{
-			if (InventoryContainers.draggingItem == null)
-			{
-				// * Pick up half of the items in the item slot.
-
-				InventoryContainers.draggingItem = inventoryContainer.items[this.slotIndex].Clone();
-				InventoryContainers.draggingItem.quantity /= 2;
-			}
-			else
-			{
-				// * Put down a single
-				inventoryContainer.items[this.slotIndex].quantity++;
-				InventoryContainers.draggingItem.quantity--;
-			}
-
-			if (inventoryContainer.items[this.slotIndex].quantity == 0)
-				inventoryContainer.items[this.slotIndex] = null;
-		}
-		else
-		{
-
-		}
-
-		InventoryContainers.draggingItemObject.GetComponent<DraggingItem>().UpdateTexture();
-		inventoryContainer.UpdateGUI();
 	}
 }
