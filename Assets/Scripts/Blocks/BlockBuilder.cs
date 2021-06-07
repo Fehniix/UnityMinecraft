@@ -16,7 +16,7 @@ public static class BlockBuilder
 	/// <summary>
 	/// Given a block name, creates a new block entity.
 	/// </summary>
-    public static GameObject Build(string blockName, bool meshOnly = false)
+    public static GameObject Build(string blockName, int entityQuantity = 1, bool meshOnly = false)
 	{
 		Block block 		= Registry.Instantiate(blockName) as Block;
 		GameObject entity 	= new GameObject(System.String.Format("entity_{0}", blockName));
@@ -84,6 +84,7 @@ public static class BlockBuilder
 			entity.GetComponent<SphereCollider>().isTrigger	= true;
 
 			entity.GetComponent<Entity>().entityName 		= blockName;
+			entity.GetComponent<Entity>().quantity			= entityQuantity;
 
 			entity.GetComponent<Rigidbody>().constraints 	= RigidbodyConstraints.FreezeRotation;
 		}

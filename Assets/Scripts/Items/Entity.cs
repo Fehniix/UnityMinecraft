@@ -9,14 +9,75 @@ public class Entity : MonoBehaviour
 	/// </summary>
 	public string entityName;
 
+	/// <summary>
+	/// The number of items contained within the entity.
+	/// </summary>
+	public int quantity = 1;
+
+	/// <summary>
+	/// Determines whether the item can be currently picked up or not.
+	/// Used to allow the player to drop a block/item and not pick it up immediately after.
+	/// </summary>
+	public bool pickupCooldownActive = false;
+
+	/// <summary>
+	/// Duration of the pickup cooldown expressed in ticks.
+	/// </summary>
+	public int pickupCooldownDuration = 20 * 2;
+
+	/// <summary>
+	/// Measure of elapsed time (ticks).
+	/// </summary>
+	private int elapsedTicks = 0;
+
     void OnTriggerEnter(Collider hitObject)
 	{
 		if (hitObject.GetComponent<Player>() == null)
 			return;
 
-		Entity entity = this.GetComponent<Entity>();
+		while(this.quantity > 0)
+		{
+			if (this.pickupCooldownActive)
+				return;
+
+			if (!PlayerInventoryManager.AddItem(this.entityName))
+				break;
+			else
+				this.quantity--;
+		}
+
+		Debug.Log("Quantity of entity " + this.entityName + ": " + this.quantity);
 		
-		if (PlayerInventoryManager.AddItem(this.entityName, 1))
+		if (this.quantity == 0)
 			Destroy(this.transform.gameObject);
+	}
+
+	/// <summary>
+	/// Starts and enables the pickup cooldown. The player will not be able to pick up the entity before the cooldown duration expires.
+	/// </summary>
+	public void StartPickupCooldown()
+	{
+		Debug.Log("Pickup cooldown started. (" + this.entityName + ")");
+		this.pickupCooldownActive = true;
+		this.elapsedTicks = 0;
+
+		Clock.instance.AddTickDelegate(this.CooldownTicked);
+	}
+
+	/// <summary>
+	/// TickDelegate function. Keeping a hard reference inside the class to be able to remove the delegate from the Clock.
+	/// </summary>
+	private void CooldownTicked()
+	{
+		this.elapsedTicks++;
+
+		if (this.elapsedTicks >= this.pickupCooldownDuration)
+		{
+			this.pickupCooldownActive = false;
+			this.elapsedTicks = 0;
+			Debug.Log("Pickup cooldown ended. (" + this.entityName + ")");
+
+			Clock.instance.RemoveTickDelegate(this.CooldownTicked);
+		}
 	}
 }

@@ -7,6 +7,7 @@ public class Registrar : MonoBehaviour
     {
 		this.RegisterBlocks();
 		this.RegisterItems();
+		this.RegisterCraftingRecipes();
     }
 
 	void RegisterBlocks()
@@ -22,5 +23,26 @@ public class Registrar : MonoBehaviour
 	void RegisterItems()
 	{
 		Registry.RegisterItem<Torch>("torch");
+	}
+
+	void RegisterCraftingRecipes()
+	{
+		CraftingRecipeRegistry.RegisterRecipe(
+			new CraftingRecipe(new string[3,3] {
+				{"coal", null, null},
+				{"stick", null, null},
+				{null, null, null}
+			}, 
+			new CraftingResult("torch", 1)
+		));
+
+		CraftingRecipeRegistry.RegisterRecipe(
+			new CraftingRecipe(new string[3,3] {
+				{"log", null, null},
+				{null, null, null},
+				{null, null, null}
+			}, 
+			new CraftingResult("plank", 4)
+		));
 	}
 }

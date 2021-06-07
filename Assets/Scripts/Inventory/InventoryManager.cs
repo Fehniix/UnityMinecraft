@@ -121,7 +121,7 @@ public static class PlayerInventoryManager
 	/// <summary>
 	/// Given the item name, instantiates a new item from the registry and adds it to the first available slot in inventory.
 	/// </summary>
-	public static bool AddItem(string itemName, int quantity = 1)
+	public static bool AddItem(string itemName)
 	{
 		InventoryItem[] hotbarItems = InventoryContainers.hotbar.items;
 		InventoryItem[] inventoryItems = InventoryContainers.inventory.items;

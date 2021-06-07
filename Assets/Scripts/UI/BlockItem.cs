@@ -7,7 +7,7 @@ public static class BlockItem
 	/// </summary>
 	public static void Render(string blockName, Transform parent, Vector3 position)
 	{
-		GameObject blockItem 				= BlockBuilder.Build(blockName, true);
+		GameObject blockItem 				= BlockBuilder.Build(blockName, 1, true);
 		blockItem.transform.parent 			= parent;
 		blockItem.transform.localPosition 	= new Vector3(0.0f + position.x, 0.0f + position.y, -27.0f);
 		blockItem.transform.localRotation 	= Quaternion.Euler(0.0f, -45.0f, 0.0f);

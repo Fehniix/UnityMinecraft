@@ -6,6 +6,16 @@ using UnityEngine.EventSystems;
 
 public class PlayerInventory : MonoBehaviour
 {
+	/// <summary>
+	/// Reference to the crafting container. Set in Editor.
+	/// </summary>
+	public InventoryContainer craftingGrid;
+
+	/// <summary>
+	/// Reference to the crafting result object. Set in Editor.
+	/// </summary>
+	public GameObject craftingResultObject;
+
     void Start()
     {
 		PlayerInventoryManager.playerInventoryRef = this;
