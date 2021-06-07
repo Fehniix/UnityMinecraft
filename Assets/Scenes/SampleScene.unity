@@ -561,7 +561,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemObjects: []
   itemsCount: 9
-  itemsDraggable: 1
+  is2x2CraftingGrid: 0
   itemContainerName: hotbar
 --- !u!1 &432623926
 GameObject:
@@ -978,6 +978,7 @@ GameObject:
   - component: {fileID: 488664742}
   - component: {fileID: 488664743}
   - component: {fileID: 488664744}
+  - component: {fileID: 488664745}
   m_Layer: 5
   m_Name: CraftingGrid
   m_TagString: Untagged
@@ -1042,8 +1043,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemObjects: []
   itemsCount: 4
-  itemsDraggable: 1
+  is2x2CraftingGrid: 1
   itemContainerName: craftingGrid
+--- !u!114 &488664745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 488664741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e114ef0d3274854996690658d39c421, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slotCount: 4
+  craftingGridResultSlot: {fileID: 2072724213}
 --- !u!1 &603055693
 GameObject:
   m_ObjectHideFlags: 0
@@ -1560,6 +1575,100 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 715111568}
+  m_CullTransparentMesh: 0
+--- !u!1 &837703273
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 837703274}
+  - component: {fileID: 837703277}
+  - component: {fileID: 837703276}
+  - component: {fileID: 837703275}
+  m_Layer: 5
+  m_Name: quantity
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &837703274
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837703273}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2072724210}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 1, y: -10}
+  m_SizeDelta: {x: 34, y: 14}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &837703275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837703273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0.23921569, g: 0.23921569, b: 0.23921569, a: 1}
+  m_EffectDistance: {x: 2, y: -2}
+  m_UseGraphicAlpha: 1
+--- !u!114 &837703276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837703273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: ce9d80967a6a0ab4691e5891e70227b9, type: 3}
+    m_FontSize: 22
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 0
+    m_MaxSize: 128
+    m_Alignment: 8
+    m_AlignByGeometry: 1
+    m_RichText: 1
+    m_HorizontalOverflow: 1
+    m_VerticalOverflow: 1
+    m_LineSpacing: 1
+  m_Text: 123
+--- !u!222 &837703277
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837703273}
   m_CullTransparentMesh: 0
 --- !u!1 &839231514
 GameObject:
@@ -2552,7 +2661,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemObjects: []
   itemsCount: 27
-  itemsDraggable: 1
+  is2x2CraftingGrid: 0
   itemContainerName: items
 --- !u!1 &1627078616
 GameObject:
@@ -3119,8 +3228,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6ff2586f0987324a94c21b332065ffd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  craftingGrid: {fileID: 0}
-  craftingResultObject: {fileID: 0}
+  craftingGrid: {fileID: 488664744}
+  craftingResultObject: {fileID: 2072724209}
 --- !u!1 &1958976097
 GameObject:
   m_ObjectHideFlags: 0
@@ -3332,13 +3441,14 @@ GameObject:
   - component: {fileID: 2072724210}
   - component: {fileID: 2072724212}
   - component: {fileID: 2072724211}
+  - component: {fileID: 2072724213}
   m_Layer: 5
-  m_Name: result
+  m_Name: CraftingResultSlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2072724210
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3349,7 +3459,8 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 837703274}
   m_Father: {fileID: 883024910}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3371,7 +3482,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -3395,6 +3506,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2072724209}
   m_CullTransparentMesh: 0
+--- !u!114 &2072724213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2072724209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cdd1ecc487df0c4198aa3d5eb883192, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  craftingGrid: {fileID: 488664745}
 --- !u!1 &2083174392
 GameObject:
   m_ObjectHideFlags: 0

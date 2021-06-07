@@ -18,6 +18,7 @@ public class Registrar : MonoBehaviour
 		Registry.RegisterItem<Dirt>("dirt");
 		Registry.RegisterItem<Grass>("grass");
 		Registry.RegisterItem<Bedrock>("bedrock");
+		Registry.RegisterItem<CraftingTable>("craftingTable");
 	}
 
 	void RegisterItems()
@@ -43,6 +44,15 @@ public class Registrar : MonoBehaviour
 				{null, null, null}
 			}, 
 			new CraftingResult("plank", 4)
+		));
+
+		CraftingRecipeRegistry.RegisterRecipe(
+			new CraftingRecipe(new string[3,3] {
+				{"cobblestone", "cobblestone", "cobblestone"},
+				{"cobblestone", null, "cobblestone"},
+				{"cobblestone", "cobblestone", "cobblestone"}
+			}, 
+			new CraftingResult("furnace", 1)
 		));
 	}
 }
