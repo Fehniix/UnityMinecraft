@@ -198,6 +198,14 @@ public static class PlayerInventoryManager
 	}
 
 	/// <summary>
+	/// Calls the `UpdateGUI()` method on the player inventory reference.
+	/// </summary>
+	public static void UpdateGUI()
+	{
+		PlayerInventoryManager.playerInventoryRef.UpdateGUI();
+	}
+
+	/// <summary>
 	/// Determines whether the item identified by itemName can be placed inside the container.
 	/// Returns a tuple made of three integers:
 	/// 1. The position at which the item can be placed (-1 is the item cannot be placed),

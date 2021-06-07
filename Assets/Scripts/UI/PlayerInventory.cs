@@ -7,12 +7,14 @@ using UnityEngine.EventSystems;
 public class PlayerInventory : MonoBehaviour
 {
 	/// <summary>
-	/// Reference to the crafting container. Set in Editor.
+	/// Reference to the crafting container. 
+	/// Set in Unity Editor.
 	/// </summary>
 	public InventoryContainer craftingGrid;
 
 	/// <summary>
-	/// Reference to the crafting result object. Set in Editor.
+	/// Reference to the crafting result object. 
+	/// Set in Unity Editor.
 	/// </summary>
 	public GameObject craftingResultObject;
 
@@ -30,5 +32,6 @@ public class PlayerInventory : MonoBehaviour
 	{
 		InventoryContainers.hotbar.UpdateGUI();
 		InventoryContainers.inventory.UpdateGUI();
+		this.craftingGrid.UpdateGUI();
 	}
 }

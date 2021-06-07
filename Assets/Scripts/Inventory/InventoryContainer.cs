@@ -28,9 +28,9 @@ public class InventoryContainer : MonoBehaviour
 	private int itemsCount;
 
 	/// <summary>
-	/// Whether all the items contained are draggable.
+	/// Determines whether the inventory container is used for a 2x2 crafting grid (or 3x3 if `false`).
 	/// </summary>
-	public bool itemsDraggable = true;
+	public bool is2x2CraftingGrid;
 
 	/// <summary>
 	/// The name of the item container.
@@ -76,11 +76,6 @@ public class InventoryContainer : MonoBehaviour
 		this.UpdateGUI();
     }
 
-	void Start()
-	{
-		
-	}
-
 	/// <summary>
 	/// Updates the inventory container GUI.
 	/// </summary>
@@ -90,9 +85,27 @@ public class InventoryContainer : MonoBehaviour
 		{
 			InventoryItem item 		= this.items[i];
 			GameObject itemObj 		= this.itemObjects[i];
+
+			if (item == null || item?.quantity == 0)
+				this.items[i] = null;
 			
 			this.UpdateSingleItem(item, itemObj);
 		}
+	}
+
+	/// <summary>
+	/// Returns a 3x3 string matrix representing the inv. items as crafting requirements.
+	/// </summary>
+	public string[,] ItemsToCraftingRequirements()
+	{
+		string[,] requirements 	= new string[3,3];
+		int matrixLength 		= this.is2x2CraftingGrid ? 2 : 3;
+
+		for (int row = 0; row < matrixLength; row++)
+				for (int column = 0; column < matrixLength; column++)
+					requirements[row,column] = this.items[row + column*matrixLength]?.itemName;
+
+		return requirements;
 	}
 
 	/// <summary>
@@ -113,7 +126,7 @@ public class InventoryContainer : MonoBehaviour
 		Image image				= inventoryItemGameObject.GetComponent<Image>();
 		GameObject quantityText	= inventoryItemGameObject.transform.GetChild(0).gameObject;
 
-		if (item == null) 
+		if (item == null || item?.quantity == 0) 
 		{
 			inventoryItemGameObject.GetComponent<InventoryItemSlot>().itemName = null;
 			image.color = Color.clear;

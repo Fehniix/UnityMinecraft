@@ -42,10 +42,10 @@ public static class CraftingRecipeRegistry
 			for (int j = 0; j < 3; j++)
 				normalized[i,j] = requirements[i,j];
 
-		while(MatrixUtils.IsMatrixRowEmpty(normalized, 0))
+		while(MatrixUtils.IsMatrixRowEmpty(normalized, 0) && !MatrixUtils.IsMatrixEmpty(normalized))
 			MatrixUtils.UpShiftMatrix(normalized);
 
-		while(MatrixUtils.IsMatrixColumnEmpty(normalized, 0))
+		while(MatrixUtils.IsMatrixColumnEmpty(normalized, 0) && !MatrixUtils.IsMatrixEmpty(normalized))
 			MatrixUtils.LeftShiftMatrix(normalized);
 
 		return normalized;
