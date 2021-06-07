@@ -42,6 +42,11 @@ public class InventoryItem
 		return clone;
 	}
 
+	public override string ToString()
+	{
+		return System.String.Format("InventoryItem ({0}, {1}/{2})", this.itemName, this.quantity, this.maxStack);
+	}
+
 	/// <summary>
 	/// The name of the item.
 	/// </summary>
