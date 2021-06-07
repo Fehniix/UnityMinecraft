@@ -91,6 +91,8 @@ public class InventoryItemSlot : MonoBehaviour, IPointerDownHandler
 
 			inventoryContainer.UpdateGUI();
 		}
+
+		inventoryContainer.TriggerItemsChangedEvent();
 	}
 
 	private void OnRightMouseButtonClick()
@@ -147,6 +149,7 @@ public class InventoryItemSlot : MonoBehaviour, IPointerDownHandler
 
 		InventoryContainers.draggingItemObject.GetComponent<DraggingItem>().UpdateTexture();
 		inventoryContainer.UpdateGUI();
+		inventoryContainer.TriggerItemsChangedEvent();
 	}
 
 	/// <summary>
