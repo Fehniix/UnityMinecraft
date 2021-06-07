@@ -1,6 +1,18 @@
 ﻿public static class MatrixUtils
 {
 	/// <summary>
+	/// Determines whether the matrix is empty or not.
+	/// </summary>
+	public static bool IsMatrixEmpty(object[,] matrix)
+	{
+		for (int i = 0; i < matrix.GetLength(0); i++)
+			for (int j = 0; j < matrix.GetLength(1); j++)
+				if (matrix[i,j] != null)
+					return false;
+		return true;
+	}
+
+	/// <summary>
 	/// Returns `true` if the given row of the given matrix is null.
 	/// </summary>
 	public static bool IsMatrixRowEmpty(object[,] matrix, int row)
