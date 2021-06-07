@@ -248,34 +248,6 @@ public static class PlayerInventoryManager
 	}
 
 	/// <summary>
-	/// Determines whether the item identified by itemName can be placed inside the inventory.
-	/// Returns the position at which the item can be first placed, `-1` if the item cannot be placed.
-	/// </summary>
-	private static int GetInventoryPositionForItem(string itemName)
-	{
-		InventoryItem[] hotbarItems = InventoryContainers.hotbar.items;
-		InventoryItem[] inventoryItems = InventoryContainers.inventory.items;
-
-		int firstAvailable = -1;
-
-		for (int i = 0; i < 27; i++)
-		{
-			// Save first empty position.
-			if (inventoryItems[i] == null && firstAvailable == -1)
-			{
-				firstAvailable = i;
-				continue;
-			}
-
-			// Keep iterating: if there is a slot that already has the item in question, adding to it has priority.
-			if (inventoryItems[i] != null && inventoryItems[i].itemName == itemName && inventoryItems[i].quantity < inventoryItems[i].maxStack)
-				return i;
-		}
-
-		return firstAvailable;
-	}
-
-	/// <summary>
 	/// Determines whether an item is placeable at the position-th position of the provided container.
 	/// </summary>
 	private static bool IsSameItemPlaceableAt(InventoryItem[] container, int position, string itemName)
