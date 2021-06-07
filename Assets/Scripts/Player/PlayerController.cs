@@ -215,15 +215,11 @@ public class PlayerController : MonoBehaviour
 	/// Opens the inventory GUI.
 	/// </summary>
 	private void OpenInventory()
-	{
-		GameState.inventoryOpen = true;
+	{		
 		this._inventoryObjectReference.SetActive(true);
 		this._inventoryObjectReference.GetComponent<PlayerInventory>().UpdateGUI();
 
-		PlayerInventoryManager.hotbarRef.gameObject.SetActive(false);
-
-		Cursor.lockState 	= CursorLockMode.None;
-		Cursor.visible		= true;
+		GUI.ShowGUIElements();
 	}
 
 	/// <summary>
@@ -231,13 +227,8 @@ public class PlayerController : MonoBehaviour
 	/// </summary>
 	private void CloseInventory()
 	{
-		GameState.inventoryOpen = false;
 		this._inventoryObjectReference.SetActive(false);
 
-		PlayerInventoryManager.hotbarRef.gameObject.SetActive(true);
-		PlayerInventoryManager.hotbarRef.UpdateGUI();
-
-		Cursor.lockState 	= CursorLockMode.Locked;
-		Cursor.visible		= false;
+		GUI.HideGUIElements();
 	}
 }

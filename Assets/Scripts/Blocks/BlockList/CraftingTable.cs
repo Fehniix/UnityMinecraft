@@ -1,4 +1,6 @@
-﻿public class CraftingTable: Block
+﻿using UnityEngine;
+
+public class CraftingTable: Block
 {
     public CraftingTable(): base()
 	{
@@ -13,6 +15,9 @@
 	{
 		base.Interact();
 
-		UnityEngine.Debug.Log("test!");
+		CraftingTableUI ui = GUI.craftingTableUI;
+		ui.gameObject.SetActive(true);
+		GUI.ShowGUIElements();
+		// NOTE keep working on this.
 	}
 }

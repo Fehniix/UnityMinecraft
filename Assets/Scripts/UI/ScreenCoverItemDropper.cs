@@ -14,6 +14,10 @@ public class ScreenCoverItemDropper : MonoBehaviour
 		Vector3[] corners = new Vector3[4];
 		GameObject.Find("InventoryBG").GetComponent<RectTransform>().GetWorldCorners(corners);
 		this.inventoryBGRect = new Rect(corners[0], corners[2] - corners[0]);
+
+		GUI.screenCoverRef = this;
+		
+		this.gameObject.SetActive(false);
 	}
 
     // Update is called once per frame

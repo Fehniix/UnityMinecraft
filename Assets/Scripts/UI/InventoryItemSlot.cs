@@ -40,6 +40,9 @@ public class InventoryItemSlot : MonoBehaviour, IPointerDownHandler
 	{
 		InventoryContainer inventoryContainer = this.GetComponentInParent<InventoryContainer>();
 
+		if (this.GetComponentInParent<PlayerInventoryItems>() != null)
+			inventoryContainer = InventoryContainers.inventory;
+
 		if (InventoryContainers.draggingItem == null)
 		{
 			// * Item picked up.
@@ -98,6 +101,10 @@ public class InventoryItemSlot : MonoBehaviour, IPointerDownHandler
 	private void OnRightMouseButtonClick()
 	{
 		InventoryContainer inventoryContainer = this.GetComponentInParent<InventoryContainer>();
+
+		if (this.GetComponentInParent<PlayerInventoryItems>() != null)
+			inventoryContainer = InventoryContainers.inventory;
+		
 		InventoryItem inventoryItem = inventoryContainer.items[this.slotIndex];
 		InventoryItem draggingItem 	= InventoryContainers.draggingItem;
 
@@ -158,6 +165,9 @@ public class InventoryItemSlot : MonoBehaviour, IPointerDownHandler
 	private void SwapDraggable()
 	{
 		InventoryContainer inventoryContainer = this.GetComponentInParent<InventoryContainer>();
+		
+		if (this.GetComponentInParent<PlayerInventoryItems>() != null)
+			inventoryContainer = InventoryContainers.inventory;
 
 		InventoryItem tmp 							= inventoryContainer.items[this.slotIndex];
 		inventoryContainer.items[this.slotIndex] 	= InventoryContainers.draggingItem;

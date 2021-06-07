@@ -9,19 +9,23 @@ public class Controller : MonoBehaviour
     {
 		GameObject.Find("Player").transform.position = new Vector3(8, 40, 8);
 
-		InventoryContainers.hotbar.items[0] = new InventoryItem("torch");
-	
 		for (int i = 0; i < 9; i++)
 			InventoryContainers.hotbar.items[i] = new InventoryItem("torch");
 
 		for (int i = 0; i < 26; i++)
 			InventoryContainers.inventory.items[i] = new InventoryItem("torch");
 
+		InventoryContainers.hotbar.items[0] = new InventoryItem("craftingTable");
+
 		PlayerInventoryManager.hotbarRef.UpdateGUI();
 
-		string[,] requirements = new string[3,3];
-		requirements[2,2] = "log";
-		Debug.Log(CraftingRecipeRegistry.GetCraftingResult(requirements));
+		string[,] requirements = new string[3,3] {
+				{"torch", "torch", null},
+				{"torch", "torch", null},
+				{null, null, null}
+		};
+		
+		CraftingRecipeRegistry.RegisterRecipe(new CraftingRecipe(requirements, new CraftingResult("cobblestone", 64)));
     }
 
     // Update is called once per frame

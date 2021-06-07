@@ -67,7 +67,7 @@ public class Hotbar : MonoBehaviour
 		for(int i = 0; i < 9; i++)
 		{
 			InventoryItem item 		= InventoryContainers.hotbar.items[i];
-			GameObject hotbarImage 	= GameObject.Find(String.Format("item{0}", i));
+			GameObject hotbarImage 	= this.transform.Find(String.Format("HotbarItems/item{0}", i)).gameObject;
 
 			if (item == null) 
 			{
