@@ -120,70 +120,129 @@ public static class PlayerInventoryManager
 
 	/// <summary>
 	/// Given the item name, instantiates a new item from the registry and adds it to the first available slot in inventory.
+	/// Returns the number of items that could be added to the player inventory.
 	/// </summary>
-	public static bool AddItem(string itemName)
+	public static int AddItem(string itemName, int quantity = 1)
 	{
 		InventoryItem[] hotbarItems = InventoryContainers.hotbar.items;
 		InventoryItem[] inventoryItems = InventoryContainers.inventory.items;
 
-		int hotbarPosition = GetHotbarPositionForItem(itemName);
-		int inventoryPosition = GetInventoryPositionForItem(itemName);
+		(int position, int quantity, bool sameItem) hotbarPlacement = GetPositionForItemInContainer(hotbarItems, itemName, quantity);
+		(int position, int quantity, bool sameItem) inventoryPlacement = GetPositionForItemInContainer(inventoryItems, itemName, quantity);
 
-		if (hotbarPosition == -1 && inventoryPosition == -1)
-			return false;
+		if (hotbarPlacement.position == -1 && inventoryPlacement.position == -1)
+			return 0;
 
-		InventoryItem hotbarItem = hotbarItems[hotbarPosition];
-		InventoryItem inventoryItem = inventoryItems[inventoryPosition];
+		System.Func<InventoryItem[], int, InventoryItem> NormalizeItem = (InventoryItem[] container, int position) => {
+			if (position == -1)
+				return null;
+			return container[position];
+		}; 
 
-		// The highest placement priority is given to any slot that already has the item.
-		if ((hotbarItem?.quantity < hotbarItem?.maxStack) || (inventoryItem?.quantity < inventoryItem?.maxStack))
+		InventoryItem hotbarItem 	= NormalizeItem(hotbarItems, hotbarPlacement.position);
+		InventoryItem inventoryItem = NormalizeItem(inventoryItems, inventoryPlacement.position);
+
+		int quantityPlaced = 0;
+
+		/**
+		* Placement truth table.
+		* Hotbar	Inventory	Result placement
+		* null		null		return 0;
+		* null		new			inv;
+		* null		same		inv;
+		* new		null		hot;
+		* new		new			hot;
+		* new		same		inv;
+		* same		null		hot;
+		* same		new			hot;
+		* same		same		hot;
+		*/
+
+		if (hotbarPlacement.position == -1 && inventoryPlacement.position == -1)
+			return 0;
+
+		if (
+			(hotbarPlacement.position == -1 && inventoryPlacement.position != -1) || 
+			(!hotbarPlacement.sameItem && inventoryPlacement.sameItem)
+		)
 		{
-			if (hotbarItems[hotbarPosition] != null)
-				hotbarItems[hotbarPosition].quantity++;
+			// Place in inventory
+			quantityPlaced = inventoryPlacement.quantity;
+
+			if (!inventoryPlacement.sameItem)
+			{
+				inventoryItems[inventoryPlacement.position] = new InventoryItem(itemName);
+				inventoryItems[inventoryPlacement.position].quantity = quantityPlaced;
+			}
 			else
-				inventoryItems[inventoryPosition].quantity++;
+				inventoryItems[inventoryPlacement.position].quantity += quantityPlaced;
 		}
 		else
 		{
-			InventoryItem item = new InventoryItem(itemName);
-			
-			if (hotbarPosition != -1)
-				hotbarItems[hotbarPosition] = item;
+			// Place in hotbar
+			quantityPlaced = hotbarPlacement.quantity;
+
+			if (!hotbarPlacement.sameItem)
+			{
+				hotbarItems[hotbarPlacement.position] = new InventoryItem(itemName);
+				hotbarItems[hotbarPlacement.position].quantity = quantityPlaced;
+			}
 			else
-				inventoryItems[inventoryPosition] = item;
+				hotbarItems[hotbarPlacement.position].quantity += quantityPlaced;
 		}
 
 		hotbarRef.UpdateGUI();
 		playerInventoryRef.UpdateGUI();
 
-		return true;
+		return quantityPlaced;
 	}
 
 	/// <summary>
-	/// Determines whether the item identified by itemName can be placed inside the hotbar.
-	/// Returns the position at which the item can be first placed, `-1` if the item cannot be placed.
+	/// Determines whether the item identified by itemName can be placed inside the container.
+	/// Returns a tuple made of three integers:
+	/// 1. The position at which the item can be placed (-1 is the item cannot be placed),
+	/// 2. The quantity of items that can be placed,
+	/// 3. Whether placement was prioritary or not (same item aggregation).
 	/// </summary>
-	private static int GetHotbarPositionForItem(string itemName)
+	private static (int,int,bool) GetPositionForItemInContainer(InventoryItem[] container, string itemName, int quantity)
 	{
-		InventoryItem[] hotbarItems = InventoryContainers.hotbar.items;
+		int firstEmptyPosition = -1;
 
-		int firstAvailable = -1;
+		int sameItemPosition = -1;
+		int quantityPlaced = 0;
 
-		for (int i = 0; i < 9; i++)
+		for (int i = 0; i < container.Length; i++)
 		{
-			// Save first empty position.
-			if (hotbarItems[i] == null && firstAvailable == -1)
+			InventoryItem item = container[i];
+
+			// Save the first empty position.
+			// Keep iterating: if there is another item that shares the same name *AND* 
+			// has enough room for at least on more, give priority to aggregating it.
+			if (item == null && firstEmptyPosition == -1)
 			{
-				firstAvailable = i;
+				int maxStack = new InventoryItem(itemName).maxStack;
+
+				firstEmptyPosition = i;
+				quantityPlaced = quantity > maxStack ? maxStack : quantity;
 				continue;
 			}
 
-			// Keep iterating: if there is a slot that already has the item in question, adding to it has priority.
-			if (hotbarItems[i] != null && hotbarItems[i].itemName == itemName && hotbarItems[i].quantity < hotbarItems[i].maxStack)
-				return i;
+			// Aggregate here.
+			if (IsSameItemPlaceableAt(container, i, itemName))
+			{
+				sameItemPosition = i;
+				
+				if (item.quantity + quantity > item.maxStack)
+					quantityPlaced = item.maxStack - item.quantity;
+				else
+					quantityPlaced = quantity;
+			}
 		}
 
-		return firstAvailable;
+		if (sameItemPosition != -1)
+			return (sameItemPosition, quantityPlaced, true);
+		else
+			return (firstEmptyPosition, quantityPlaced, false);
 	}
 
 	/// <summary>
@@ -212,5 +271,15 @@ public static class PlayerInventoryManager
 		}
 
 		return firstAvailable;
+	}
+
+	/// <summary>
+	/// Determines whether an item is placeable at the position-th position of the provided container.
+	/// </summary>
+	private static bool IsSameItemPlaceableAt(InventoryItem[] container, int position, string itemName)
+	{
+		return 	container[position] != null &&
+				container[position].itemName == itemName &&
+				container[position].quantity != container[position].maxStack;
 	}
 }
