@@ -30,25 +30,24 @@ public class Entity : MonoBehaviour
 	/// </summary>
 	private int elapsedTicks = 0;
 
-    void OnTriggerEnter(Collider hitObject)
+    void OnTriggerStay(Collider hitObject)
 	{
 		if (hitObject.GetComponent<Player>() == null)
 			return;
 
-		while(this.quantity > 0)
-		{
-			if (this.pickupCooldownActive)
-				return;
+		if (this.pickupCooldownActive)
+			return;
 
-			if (!PlayerInventoryManager.AddItem(this.entityName))
+		int quantityPlaced;
+		do {
+			quantityPlaced = PlayerInventoryManager.AddItem(this.entityName, this.quantity);
+			this.quantity -= quantityPlaced;
+
+			if (quantityPlaced == 0)
 				break;
-			else
-				this.quantity--;
-		}
+		} while(this.quantity > 0);
 
-		Debug.Log("Quantity of entity " + this.entityName + ": " + this.quantity);
-		
-		if (this.quantity == 0)
+		if (quantityPlaced != 0)
 			Destroy(this.transform.gameObject);
 	}
 

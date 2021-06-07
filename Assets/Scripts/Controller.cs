@@ -10,6 +10,12 @@ public class Controller : MonoBehaviour
 		GameObject.Find("Player").transform.position = new Vector3(8, 40, 8);
 
 		InventoryContainers.hotbar.items[0] = new InventoryItem("torch");
+	
+		for (int i = 0; i < 9; i++)
+			InventoryContainers.hotbar.items[i] = new InventoryItem("torch");
+
+		for (int i = 0; i < 26; i++)
+			InventoryContainers.inventory.items[i] = new InventoryItem("torch");
 
 		PlayerInventoryManager.hotbarRef.UpdateGUI();
 
