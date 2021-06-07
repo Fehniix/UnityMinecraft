@@ -33,11 +33,16 @@ public abstract class Block: BaseBlock, IInteractable
 	public bool placeable = true;
 
 	/// <summary>
+	/// Used to store accessors' value.
+	/// </summary>
+	private bool _interactable = false;
+
+	/// <summary>
 	/// Whether the block is interactable or not.
 	/// </summary>
 	public bool interactable { 
-		get { return false; } 
-		set{}
+		get { return this._interactable; } 
+		set{ this._interactable = value; }
 	}
 
 	/// <summary>
