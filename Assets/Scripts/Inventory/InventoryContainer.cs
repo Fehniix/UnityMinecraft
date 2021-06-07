@@ -37,6 +37,17 @@ public class InventoryContainer : MonoBehaviour
 	/// </summary>
 	public string itemContainerName;
 
+	/// <summary>
+	/// Signature for the ItemsChanged event.
+	/// Called when the items within the inventory container change.
+	/// </summary>
+	public delegate void ItemsChangedDelegate();
+
+	/// <summary>
+	/// Contains listeners to the ItemsChanged event.
+	/// </summary>
+	public ItemsChangedDelegate itemsChangedEvent;
+
     void Awake()
     {
 		// Register inventory in InventoryContainers
@@ -82,6 +93,15 @@ public class InventoryContainer : MonoBehaviour
 			
 			this.UpdateSingleItem(item, itemObj);
 		}
+	}
+
+	/// <summary>
+	/// Allows to trigger the ItemsChanged event.
+	/// </summary>
+	public void TriggerItemsChangedEvent()
+	{
+		if (this.itemsChangedEvent != null)
+			this.itemsChangedEvent();
 	}
 
 	/// <summary>
