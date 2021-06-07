@@ -236,6 +236,8 @@ public static class PlayerInventoryManager
 					quantityPlaced = item.maxStack - item.quantity;
 				else
 					quantityPlaced = quantity;
+
+				break;
 			}
 		}
 

@@ -25,8 +25,10 @@ public class ScreenCoverItemDropper : MonoBehaviour
 			Dropper.DropItem(draggingItem.itemName, Player.instance.transform.position, draggingItem.quantity, new Vector3(
 				0,
 				4.0f,
-				2.0f
-			), true);	
+				0
+			) + Player.instance.transform.forward * 8, true);
+			InventoryContainers.draggingItem = null;
+			InventoryContainers.draggingItemObject.GetComponent<DraggingItem>().UpdateTexture();
 		}
     }
 }
