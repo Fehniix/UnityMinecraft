@@ -18,8 +18,10 @@ public struct Drop
 	/// </summary>
     public float probability;
 
-	/// <summary>
-	/// The registry item (either Item or Block) to drop.
-	/// </summary>
-	public RegistryItem itemToDrop;
+	public Drop(string itemName, int quantity, float probability)
+	{
+		this.itemName = itemName;
+		this.quantity = quantity;
+		this.probability = probability;
+	}
 }
