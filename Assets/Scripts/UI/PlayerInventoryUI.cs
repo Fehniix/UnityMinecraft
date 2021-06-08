@@ -30,7 +30,7 @@ public class PlayerInventoryUI : UserInterface
 	/// <summary>
 	/// Updates the inventory container GUI.
 	/// </summary>
-	public void UpdateGUI()
+	public override void UpdateGUI()
 	{
 		InventoryContainers.hotbar.UpdateGUI();
 		InventoryContainers.inventory.UpdateGUI();

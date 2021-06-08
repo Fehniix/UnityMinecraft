@@ -11,4 +11,9 @@ public class UserInterface: MonoBehaviour
 	/// the stored & hidden GUI gets shown back to the user.
 	/// </summary>
 	public bool canBeOverlapped = false;
+
+	/// <summary>
+	/// Updates all textures.
+	/// </summary>
+	public virtual void UpdateGUI() {}
 }
