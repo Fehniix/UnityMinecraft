@@ -100,7 +100,7 @@ public abstract class Block: BaseBlock, IInteractable
 			Dropper.DropItem(this.blockName, this.coordinates);
 
 		foreach(Drop drop in this.drops)
-			if (Random.Range(0, 101) > drop.probability * 100)
+			if (Random.Range(0, 101) > (1.0f - drop.probability) * 100)
 				Dropper.DropItem(drop.itemName, this.coordinates, drop.quantity);
 	}
 
