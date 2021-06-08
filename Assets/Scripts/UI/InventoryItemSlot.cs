@@ -47,6 +47,9 @@ public class InventoryItemSlot : MonoBehaviour, IPointerDownHandler
 		if (this.GetComponentInParent<PlayerInventoryItems>() != null)
 			inventoryContainer = InventoryContainers.inventory;
 
+		if (this.GetComponentInParent<PlayerInventoryHotbar>() != null)
+			inventoryContainer = InventoryContainers.hotbar;
+
 		if (InventoryContainers.draggingItem == null)
 		{
 			// * Item picked up.
@@ -59,8 +62,6 @@ public class InventoryItemSlot : MonoBehaviour, IPointerDownHandler
 			InventoryContainers.draggingItemObject.GetComponent<DraggingItem>().UpdateTexture();
 
 			inventoryContainer.items[this.slotIndex] = null;
-
-			inventoryContainer.UpdateGUI();
 		}
 		else
 		{
@@ -95,10 +96,9 @@ public class InventoryItemSlot : MonoBehaviour, IPointerDownHandler
 				InventoryContainers.draggingItemObject.SetActive(false);
 				InventoryContainers.draggingItem = null;
 			}
-
-			inventoryContainer.UpdateGUI();
 		}
 
+		inventoryContainer.UpdateGUI();
 		inventoryContainer.TriggerItemsChangedEvent();
 	}
 
@@ -108,6 +108,9 @@ public class InventoryItemSlot : MonoBehaviour, IPointerDownHandler
 
 		if (this.GetComponentInParent<PlayerInventoryItems>() != null)
 			inventoryContainer = InventoryContainers.inventory;
+
+		if (this.GetComponentInParent<PlayerInventoryHotbar>() != null)
+			inventoryContainer = InventoryContainers.hotbar;
 		
 		InventoryItem inventoryItem = inventoryContainer.items[this.slotIndex];
 		InventoryItem draggingItem 	= InventoryContainers.draggingItem;
@@ -160,6 +163,7 @@ public class InventoryItemSlot : MonoBehaviour, IPointerDownHandler
 
 		InventoryContainers.draggingItemObject.GetComponent<DraggingItem>().UpdateTexture();
 		inventoryContainer.UpdateGUI();
+
 		inventoryContainer.TriggerItemsChangedEvent();
 	}
 

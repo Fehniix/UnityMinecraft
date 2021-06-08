@@ -132,6 +132,7 @@ GameObject:
   - component: {fileID: 8188067}
   - component: {fileID: 8188066}
   - component: {fileID: 8188065}
+  - component: {fileID: 8188064}
   m_Layer: 5
   m_Name: CraftingGrid
   m_TagString: Untagged
@@ -139,6 +140,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &8188064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8188063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e114ef0d3274854996690658d39c421, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slotCount: 9
+  craftingGridResultSlot: {fileID: 60420423}
 --- !u!114 &8188065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -209,6 +224,7 @@ GameObject:
   - component: {fileID: 60420422}
   - component: {fileID: 60420425}
   - component: {fileID: 60420424}
+  - component: {fileID: 60420423}
   m_Layer: 5
   m_Name: CraftingResultSlot
   m_TagString: Untagged
@@ -236,6 +252,19 @@ RectTransform:
   m_AnchoredPosition: {x: 88, y: 80.5}
   m_SizeDelta: {x: 32, y: 32}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &60420423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 60420421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cdd1ecc487df0c4198aa3d5eb883192, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  craftingGrid: {fileID: 8188064}
 --- !u!114 &60420424
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2292,6 +2321,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10feb216f5fc57745bc6effa38068ce2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canBeOverlapped: 0
 --- !u!1 &1261546365
 GameObject:
   m_ObjectHideFlags: 0
@@ -3036,6 +3066,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ecdf5b821b64f4459be972284c38cdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemSlotsClickable: 1
 --- !u!114 &1627078621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3509,6 +3540,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6ff2586f0987324a94c21b332065ffd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canBeOverlapped: 0
   craftingGrid: {fileID: 488664744}
   craftingResultObject: {fileID: 2072724209}
 --- !u!1 &1941065304

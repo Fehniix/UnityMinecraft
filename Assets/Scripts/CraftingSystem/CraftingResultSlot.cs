@@ -29,7 +29,7 @@ public class CraftingResultSlot : MonoBehaviour, IPointerDownHandler
 
 		if (Input.GetKey(KeyCode.LeftShift))
 		{
-			while(PlayerInventoryManager.AddItem(result.itemName, result.quantity) > 0 && resultCraftingItem != null)
+			while(resultCraftingItem != null && PlayerInventoryManager.AddItem(result.itemName, result.quantity) > 0)
 				this.ConsumeRequirementItems();
 		}
 		else
@@ -49,11 +49,11 @@ public class CraftingResultSlot : MonoBehaviour, IPointerDownHandler
 	private void ConsumeRequirementItems()
 	{
 		foreach(InventoryItem requirement in this.craftingGrid.gameObject.GetComponent<InventoryContainer>().items)
-			requirement.quantity--;
+			if (requirement != null)
+				requirement.quantity--;
 
-		// NOTE Okay, this is honestly pretty bad. `UpdateGUI()` should only update the GUI. This method however additionally clears items
-		// from the inventory given that their quantity is equal to zero.
-		PlayerInventoryManager.UpdateGUI();
+		if (GUI.isAGUIShown)
+			GUI.activeGUI.UpdateGUI();
 
 		this.craftingGrid.OnItemsChanged();
 	}

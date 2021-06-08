@@ -68,7 +68,7 @@ public class PlayerController : MonoBehaviour
 
 	private void HandleInventoryKey()
 	{
-		if (GUI.isAGUIShown && GUI.activeGUI.GetComponent<PlayerInventoryUI>() != null)
+		if (GUI.isAGUIShown)
 			this.CloseInventory();
 		else
 			this.OpenInventory();
@@ -224,6 +224,6 @@ public class PlayerController : MonoBehaviour
 	/// </summary>
 	private void CloseInventory()
 	{
-		GUI.HidePlayerInventory();
+		GUI.HideActiveUI();
 	}
 }

@@ -50,16 +50,8 @@ public static class GUI
 	/// Shows the given user interface.
 	/// If the `noOverlapOverride` flag is set to `true`, the currently active GUI will not be saved when overlapped. 
 	/// </summary>
-	private static void ShowBase(UserInterface gui, bool noOverlapOverride = false)
+	private static void ShowBase(UserInterface gui)
 	{
-		if (isAGUIShown)
-		{
-			activeGUI.gameObject.SetActive(false);
-
-			if (gui.canBeOverlapped && !noOverlapOverride)
-				previouslyActiveGUI = activeGUI;
-		}
-
 		activeGUI = gui;
 		activeGUI.gameObject.SetActive(true);
 		activeGUI.UpdateGUI();
@@ -75,14 +67,10 @@ public static class GUI
 		if (!isAGUIShown)
 			return;
 
-		if (activeGUI.canBeOverlapped)
-			ShowBase(previouslyActiveGUI, true);
-		else {
-			activeGUI.gameObject.SetActive(false);
-			activeGUI = null;
+		activeGUI.gameObject.SetActive(false);
+		activeGUI = null;
 
-			HideGUIElements();
-		}
+		HideGUIElements();
 	}
 
 	/// <summary>
@@ -115,6 +103,14 @@ public static class GUI
 	public static void HideCraftingTableUI()
 	{
 		HideBase(craftingTableUI);
+	}
+
+	/// <summary>
+	/// Hides the active UI.
+	/// </summary>
+	public static void HideActiveUI()
+	{
+		HideBase(activeGUI);
 	}
 
 	/// <summary>

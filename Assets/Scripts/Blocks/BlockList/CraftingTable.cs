@@ -15,9 +15,6 @@ public class CraftingTable: Block
 	{
 		base.Interact();
 
-		CraftingTableUI ui = GUI.craftingTableUI;
-		ui.gameObject.SetActive(true);
-		GUI.ShowGUIElements();
-		// NOTE keep working on this.
+		GUI.ShowCraftingTableUI();
 	}
 }
