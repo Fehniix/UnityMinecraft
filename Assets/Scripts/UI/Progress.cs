@@ -53,8 +53,6 @@ public class Progress : MonoBehaviour
 				this.hidePanelTransform.pivot = new Vector2(1.0f, 0.5f);
 				break;
 		}
-
-		this.UpdateProgress(75);
     }
 
 	/// <summary>
