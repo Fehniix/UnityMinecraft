@@ -9,3 +9,5 @@
 
 Basic `BaseObject` information (`Block` and `Item`) should be stored inside JSON files. At load time, every JSON file gets parsed and cached cutting info access time to its bone, given each parsed instance would be stored in a hashtable.
 Since `BaseObject`'s are now available, the `BaseObject` hash could be used during terrain generation.
+
+GUI texture updates as of right now do not take into account textures that do *not* need to be redrawn: diffing would be very beneficial.
