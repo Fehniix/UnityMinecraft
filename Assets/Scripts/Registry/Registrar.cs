@@ -19,6 +19,7 @@ public class Registrar : MonoBehaviour
 		Registry.RegisterItem<Grass>("grass");
 		Registry.RegisterItem<Bedrock>("bedrock");
 		Registry.RegisterItem<CraftingTable>("craftingTable");
+		Registry.RegisterItem<Furnace>("furnace");
 	}
 
 	void RegisterItems()

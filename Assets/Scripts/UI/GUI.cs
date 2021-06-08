@@ -29,6 +29,11 @@ public static class GUI
 	public static CraftingTableUI craftingTableUI;
 
 	/// <summary>
+	/// Reference to the furnace UI.
+	/// </summary>
+	public static FurnaceUI furnaceUI;
+
+	/// <summary>
 	/// Reference to the currently active GUI.
 	/// </summary>
 	public static UserInterface activeGUI;
@@ -103,6 +108,22 @@ public static class GUI
 	public static void HideCraftingTableUI()
 	{
 		HideBase(craftingTableUI);
+	}
+
+	/// <summary>
+	/// Shows the furnace UI.
+	/// </summary>
+	public static void ShowFurnaceUI()
+	{
+		
+	}
+
+	/// <summary>
+	/// Hides the furnace UI.
+	/// </summary>
+	public static void HideFurnaceUI()
+	{
+
 	}
 
 	/// <summary>

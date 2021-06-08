@@ -15,7 +15,7 @@ public class Controller : MonoBehaviour
 		for (int i = 0; i < 26; i++)
 			InventoryContainers.inventory.items[i] = new InventoryItem("torch");
 
-		InventoryContainers.hotbar.items[0] = new InventoryItem("craftingTable");
+		InventoryContainers.hotbar.items[0] = new InventoryItem("furnace");
 
 		GUI.hotbar.UpdateGUI();
 

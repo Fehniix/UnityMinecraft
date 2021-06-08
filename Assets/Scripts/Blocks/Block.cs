@@ -107,10 +107,7 @@ public abstract class Block: BaseBlock, IInteractable
 	/// <summary>
 	/// Allows the player to interact with the block.
 	/// </summary>
-	public virtual void Interact()
-	{
-		
-	}
+	public virtual void Interact() {}
 
 	/// <summary>
 	/// Allows to place the block where the player is currently looking at.
