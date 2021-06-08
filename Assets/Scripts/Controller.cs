@@ -17,7 +17,7 @@ public class Controller : MonoBehaviour
 
 		InventoryContainers.hotbar.items[0] = new InventoryItem("craftingTable");
 
-		PlayerInventoryManager.hotbarRef.UpdateGUI();
+		GUI.hotbar.UpdateGUI();
 
 		string[,] requirements = new string[3,3] {
 				{"torch", "torch", null},
