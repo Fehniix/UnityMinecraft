@@ -44,6 +44,9 @@ public class PlayerInput : MonoBehaviour
 
 	void Update()
 	{
+		if (GUI.isAGUIShown)
+			return;
+			
 		if (Input.GetKeyDown(KeyCode.Space))
 			this.jumping = true;
 	}
@@ -51,6 +54,9 @@ public class PlayerInput : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+		if (GUI.isAGUIShown)
+			return;
+
 		float deltaX = Input.GetAxis("Horizontal");
 		float deltaY = Input.GetAxis("Vertical");
 
