@@ -46,7 +46,7 @@ public class PlayerInput : MonoBehaviour
 	{
 		if (GUI.isAGUIShown)
 			return;
-			
+
 		if (Input.GetKeyDown(KeyCode.Space))
 			this.jumping = true;
 	}
@@ -54,11 +54,14 @@ public class PlayerInput : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-		if (GUI.isAGUIShown)
-			return;
-
 		float deltaX = Input.GetAxis("Horizontal");
 		float deltaY = Input.GetAxis("Vertical");
+
+		if (GUI.isAGUIShown)
+		{
+			deltaX = 0;
+			deltaY = 0;
+		}
 
 		if (deltaX == 0 && deltaY == 0 && !this.jumping && false)
 			this._rigidbody.velocity = Vector3.zero;
@@ -75,7 +78,7 @@ public class PlayerInput : MonoBehaviour
 		// When moving diagonally, ||i+k|| > speed; "clamping" the movement vector's magnitude solves the issue.
 		movement_xz = Vector3.ClampMagnitude(movement_xz, this.speed);
 
-		if (grounded && this.jumping)
+		if (grounded && this.jumping && !GUI.isAGUIShown)
 		{
 			this.jumping = false;
 
