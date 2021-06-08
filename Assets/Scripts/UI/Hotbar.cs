@@ -5,11 +5,6 @@ using UnityEngine.UI;
 public class Hotbar : MonoBehaviour
 {
 	/// <summary>
-	/// Static instance to the hotbar component.
-	/// </summary>
-	public static Hotbar instance;
-
-	/// <summary>
 	/// The size of each item cell in the hotbar.
 	/// </summary>
 	private const float itemCellSize = 40.0f;
@@ -24,13 +19,18 @@ public class Hotbar : MonoBehaviour
 	/// </summary>
 	private float activeItemImgFirstX;
 
+	/// <summary>
+	/// Determines whether 
+	/// </summary>
+	public bool itemSlotsClickable = true;
+
     void Awake()
     {
 		PlayerInventoryManager.activeItemIndex 	= 4;
 		this.activeItemImgReference 			= this.transform.GetChild(0).gameObject;
 		this.activeItemImgFirstX				= this.transform.position.x - itemCellSize * 4;
 
-		PlayerInventoryManager.hotbarRef 		= this;
+		GUI.hotbar = this;
     }
 
     // Update is called once per frame

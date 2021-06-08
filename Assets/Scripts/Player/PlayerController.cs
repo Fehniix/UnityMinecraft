@@ -217,7 +217,7 @@ public class PlayerController : MonoBehaviour
 	private void OpenInventory()
 	{		
 		this._inventoryObjectReference.SetActive(true);
-		this._inventoryObjectReference.GetComponent<PlayerInventory>().UpdateGUI();
+		this._inventoryObjectReference.GetComponent<PlayerInventoryUI>().UpdateGUI();
 
 		GUI.ShowGUIElements();
 	}

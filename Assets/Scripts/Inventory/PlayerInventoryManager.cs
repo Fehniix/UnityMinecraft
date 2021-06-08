@@ -9,16 +9,6 @@ public static class PlayerInventoryManager
 	public static int activeItemIndex;
 
 	/// <summary>
-	/// Reference to the hotbar component.
-	/// </summary>
-	public static Hotbar hotbarRef;
-
-	/// <summary>
-	/// Reference to the inventory component.
-	/// </summary>
-	public static PlayerInventory playerInventoryRef;
-
-	/// <summary>
 	/// Tries to place or use the currently active item.
 	/// </summary>
 	public static bool ConsumeActive()
@@ -63,7 +53,7 @@ public static class PlayerInventoryManager
 		if (hotbarItems[activeItemIndex].quantity == 0)
 			hotbarItems[activeItemIndex] = null;
 
-		PlayerInventoryManager.hotbarRef.UpdateGUI();
+		GUI.hotbar.UpdateGUI();
 
 		return true;
 	}
@@ -191,8 +181,8 @@ public static class PlayerInventoryManager
 				hotbarItems[hotbarPlacement.position].quantity += quantityPlaced;
 		}
 
-		hotbarRef.UpdateGUI();
-		playerInventoryRef.UpdateGUI();
+		GUI.hotbar.UpdateGUI();
+		GUI.playerInventoryUI.UpdateGUI();
 
 		return quantityPlaced;
 	}
@@ -202,7 +192,7 @@ public static class PlayerInventoryManager
 	/// </summary>
 	public static void UpdateGUI()
 	{
-		PlayerInventoryManager.playerInventoryRef.UpdateGUI();
+		GUI.playerInventoryUI.UpdateGUI();
 	}
 
 	/// <summary>

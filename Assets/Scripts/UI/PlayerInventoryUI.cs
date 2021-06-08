@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class PlayerInventory : MonoBehaviour
+public class PlayerInventoryUI : UserInterface
 {
 	/// <summary>
 	/// Reference to the crafting container. 
@@ -20,7 +20,9 @@ public class PlayerInventory : MonoBehaviour
 
     void Start()
     {
-		PlayerInventoryManager.playerInventoryRef = this;
+		this.canBeOverlapped = false;
+
+		GUI.playerInventoryUI = this;
 		
 		this.gameObject.SetActive(false);
     }
