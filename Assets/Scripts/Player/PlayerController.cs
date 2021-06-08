@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour
 		if (Input.GetKeyDown(KeyCode.E))
 			this.HandleInventoryKey();
 
-		if (Input.GetKeyDown(KeyCode.Escape) && GameState.inventoryOpen)
+		if (Input.GetKeyDown(KeyCode.Escape) && GUI.isAGUIShown)
 			this.CloseInventory();
     }
 
@@ -68,7 +68,7 @@ public class PlayerController : MonoBehaviour
 
 	private void HandleInventoryKey()
 	{
-		if (GameState.inventoryOpen)
+		if (GUI.isAGUIShown && GUI.activeGUI.GetComponent<PlayerInventoryUI>() != null)
 			this.CloseInventory();
 		else
 			this.OpenInventory();
@@ -101,7 +101,7 @@ public class PlayerController : MonoBehaviour
 	private void KeepBreaking()
 	{
 		// Don't do anything if the inventory is open.
-		if (GameState.inventoryOpen)
+		if (GUI.isAGUIShown)
 		{
 			if (this._breakingBlock)
 				this.ResetBreaking();
@@ -191,7 +191,7 @@ public class PlayerController : MonoBehaviour
 	/// </summary>
 	private void Interact()
 	{
-		if (GameState.inventoryOpen)
+		if (GUI.isAGUIShown)
 			return;
 
 		IInteractable obj = TargetObject.Get() as IInteractable;
@@ -216,10 +216,7 @@ public class PlayerController : MonoBehaviour
 	/// </summary>
 	private void OpenInventory()
 	{		
-		this._inventoryObjectReference.SetActive(true);
-		this._inventoryObjectReference.GetComponent<PlayerInventoryUI>().UpdateGUI();
-
-		GUI.ShowGUIElements();
+		GUI.ShowPlayerInventory();
 	}
 
 	/// <summary>
@@ -227,8 +224,6 @@ public class PlayerController : MonoBehaviour
 	/// </summary>
 	private void CloseInventory()
 	{
-		this._inventoryObjectReference.SetActive(false);
-
-		GUI.HideGUIElements();
+		GUI.HidePlayerInventory();
 	}
 }

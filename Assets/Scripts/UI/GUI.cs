@@ -62,6 +62,7 @@ public static class GUI
 
 		activeGUI = gui;
 		activeGUI.gameObject.SetActive(true);
+		activeGUI.UpdateGUI();
 
 		ShowGUIElements();
 	}
@@ -92,9 +93,28 @@ public static class GUI
 		ShowBase(playerInventoryUI);
 	}
 
+	/// <summary>
+	/// Hides the player inventory.
+	/// </summary>
 	public static void HidePlayerInventory()
 	{
 		HideBase(playerInventoryUI);
+	}
+
+	/// <summary>
+	/// Shows the crafting table UI.
+	/// </summary>
+	public static void ShowCraftingTableUI()
+	{
+		ShowBase(craftingTableUI);
+	}
+
+	/// <summary>
+	/// Hides the crafting table UI.
+	/// </summary>
+	public static void HideCraftingTableUI()
+	{
+		HideBase(craftingTableUI);
 	}
 
 	/// <summary>
@@ -102,7 +122,6 @@ public static class GUI
 	/// </summary>
 	public static void ShowGUIElements()
 	{
-		GameState.inventoryOpen = true;
 		screenCoverRef.gameObject.SetActive(true);
 		GUI.hotbar.gameObject.SetActive(false);
 		
@@ -115,7 +134,6 @@ public static class GUI
 	/// </summary>
 	public static void HideGUIElements()
 	{
-		GameState.inventoryOpen = false;
 		screenCoverRef.gameObject.SetActive(false);
 
 		GUI.hotbar.gameObject.SetActive(true);
