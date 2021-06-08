@@ -62,6 +62,19 @@ public class Item: IInteractable
 	}
 
 	/// <summary>
+	/// Whether the item is smeltable or not.
+	/// </summary>
+	private bool _smeltable = false;
+
+	/// <summary>
+	/// Whether the item is smeltable or not.
+	/// </summary>
+	public bool smeltable {
+		get { return this._smeltable; }
+		set { this._smeltable = value; }
+	}
+
+	/// <summary>
 	/// Maximum amount of items that can be aggregated in a single item slot.
 	/// </summary>
 	public int maxStack = 64;

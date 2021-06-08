@@ -46,6 +46,24 @@ public abstract class Block: BaseBlock, IInteractable
 	}
 
 	/// <summary>
+	/// Whether the item is smeltable or not.
+	/// </summary>
+	private bool _smeltable = false;
+
+	/// <summary>
+	/// Whether the item is smeltable or not.
+	/// </summary>
+	public bool smeltable {
+		get { return this._smeltable; }
+		set { this._smeltable = value; }
+	}
+
+	/// <summary>
+	/// Item result when smelted.
+	/// </summary>
+	public CraftingResult? smeltedResult;
+
+	/// <summary>
 	/// Whether the block was broken or not.
 	/// </summary>
 	public bool broken = false;

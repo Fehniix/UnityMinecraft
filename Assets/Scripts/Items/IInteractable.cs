@@ -8,6 +8,11 @@ public interface IInteractable
 	/// </summary>
 	bool interactable { get; set; }
 
+	/// <summary>
+	/// Whether the item can be smelted or not.
+	/// </summary>
+	bool smeltable { get; set; }
+
 	void Place();
 
 	void Break();

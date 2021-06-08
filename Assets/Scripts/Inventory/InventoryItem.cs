@@ -12,17 +12,19 @@ public class InventoryItem
 
 		if (Registry.IsBlock(itemName))
 		{
-			Block block 	= Registry.Instantiate(itemName) as Block;
-			this.isBlock 	= true;
-			this.placeable 	= block.placeable;
-			this.maxStack	= block.maxStack;
+			Block block 		= Registry.Instantiate(itemName) as Block;
+			this.isBlock 		= true;
+			this.placeable 		= block.placeable;
+			this.maxStack		= block.maxStack;
+			this.itemInstance 	= block;
 		}
 		else
 		{
-			Item item		= Registry.Instantiate(itemName) as Item;
-			this.isBlock	= false;
-			this.placeable	= item.placeable;
-			this.maxStack	= item.maxStack;
+			Item item			= Registry.Instantiate(itemName) as Item;
+			this.isBlock		= false;
+			this.placeable		= item.placeable;
+			this.maxStack		= item.maxStack;
+			this.itemInstance 	= item;
 		}
 	}
 
@@ -76,4 +78,9 @@ public class InventoryItem
 	/// Maximum amount of items that can be aggregated in a single item slot.
 	/// </summary>
 	public int maxStack = 64;
+
+	/// <summary>
+	/// `Block` or `Item` instance created at construction time.
+	/// </summary>
+	public object itemInstance;
 }
