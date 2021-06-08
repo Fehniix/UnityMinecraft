@@ -109,7 +109,6 @@ public class PlayerController : MonoBehaviour
 		}
 
 		object obj 	= TargetObject.Get();
-		Debug.Log(obj);
 		Block block = obj as Block;
 		Item item 	= obj as Item;
 
