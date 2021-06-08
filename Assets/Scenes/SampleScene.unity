@@ -1923,7 +1923,7 @@ GameObject:
   - component: {fileID: 761160728}
   - component: {fileID: 761160727}
   m_Layer: 5
-  m_Name: HidePanel
+  m_Name: Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1961,13 +1961,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.77647066, g: 0.7803922, b: 0.77647066, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: -6347146411262858938, guid: bd1d812d75cc7ec4ab1be775953c7b14,
+    type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2430,6 +2431,7 @@ GameObject:
   - component: {fileID: 1062001043}
   - component: {fileID: 1062001042}
   - component: {fileID: 1062001044}
+  - component: {fileID: 1062001045}
   m_Layer: 5
   m_Name: ProgressIcon
   m_TagString: Untagged
@@ -2476,8 +2478,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -6347146411262858938, guid: bd1d812d75cc7ec4ab1be775953c7b14,
-    type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2508,6 +2509,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   orientation: 3
+--- !u!114 &1062001045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1062001040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShowMaskGraphic: 1
 --- !u!1 &1105133783
 GameObject:
   m_ObjectHideFlags: 0
@@ -4229,8 +4243,9 @@ GameObject:
   - component: {fileID: 2009406196}
   - component: {fileID: 2009406194}
   - component: {fileID: 2009406195}
+  - component: {fileID: 2009406197}
   m_Layer: 5
-  m_Name: BurningIcon
+  m_Name: BurningIconMask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4253,7 +4268,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -49, y: 80}
+  m_AnchoredPosition: {x: -49, y: 79}
   m_SizeDelta: {x: 28, y: 28}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2009406194
@@ -4275,7 +4290,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 79428771065933987, guid: bd1d812d75cc7ec4ab1be775953c7b14, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4306,6 +4321,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2009406192}
   m_CullTransparentMesh: 1
+--- !u!114 &2009406197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2009406192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShowMaskGraphic: 1
 --- !u!1 &2009529257
 GameObject:
   m_ObjectHideFlags: 0
@@ -4443,7 +4471,7 @@ GameObject:
   - component: {fileID: 2034460792}
   - component: {fileID: 2034460791}
   m_Layer: 5
-  m_Name: HidePanel
+  m_Name: Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4481,13 +4509,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.77647066, g: 0.7803922, b: 0.77647066, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 79428771065933987, guid: bd1d812d75cc7ec4ab1be775953c7b14, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
