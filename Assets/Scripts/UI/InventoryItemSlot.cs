@@ -28,6 +28,10 @@ public class InventoryItemSlot : MonoBehaviour, IPointerDownHandler
 	/// </summary>
 	public void OnPointerDown(PointerEventData data)
 	{
+		Hotbar hotbar = this.gameObject.GetComponentInParent<Hotbar>();
+		if (hotbar?.itemSlotsClickable == false)
+			return;
+			
 		// pointerId: -1 indicates the left mouse button was pressed.
 		if (data.pointerId == -1)
 			this.OnLeftMouseButtonClick();
