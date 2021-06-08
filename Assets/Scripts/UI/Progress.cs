@@ -84,18 +84,19 @@ public class Progress : MonoBehaviour
 		this.progress = progress;
 		this.progress = this.progress / 100.0f;
 
+		/**
+		* Note to future self who's going to forget all these empirical formulas.
+		* "Be as big as progress", quoting. Lol.
+		* The size of the mask directly reflects progress: 10% -> mask is 1/10 its original size.
+		* The position of the icon itself (within the mask) changes by half the progress towards the opposite direction
+		* to reflect the new mask size:
+		* Progress is 25%. Mask size gets reduced to 1/4.
+		* Before changing position, the icon is now positioned at the center of the smaller mask.
+		* Moving the icon down by half the new size of the mask, the icon is placed correctly.
+		*/
+
 		if (this.orientation == ProgressOrientation.TOP)
 		{
-			/**
-			* Note to future self who's going to forget all these empirical formulas.
-			* "Be as big as progress", quoting. Lol.
-			* The size of the mask directly reflects progress: 10% -> mask is 1/10 its original size.
-			* The position of the icon itself (within the mask) changes by half the progress towards the opposite direction
-			* to reflect the new mask size:
-			* Progress is 25%. Mask size gets reduced to 1/4.
-			* Before changing position, the icon is now positioned at the center of the smaller mask.
-			* Moving the icon down by half the new size of the mask, the icon is placed correctly.
-			*/
 			this.mask.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, this.fullSize.y * this.progress);
 			this.icon.Translate(new Vector3(0, -this.mask.rect.height / 2, 0));
 		}
