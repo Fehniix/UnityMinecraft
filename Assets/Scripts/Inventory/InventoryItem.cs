@@ -33,13 +33,14 @@ public class InventoryItem
 	/// </summary>
 	public InventoryItem Clone()
 	{
-		InventoryItem clone = new InventoryItem();
-		clone.itemName = this.itemName;
-		clone.placeable = this.placeable;
-		clone.usable = this.usable;
-		clone.isBlock = this.isBlock;
-		clone.quantity = this.quantity;
-		clone.maxStack = this.maxStack;
+		InventoryItem clone 	= new InventoryItem();
+		clone.itemName 			= this.itemName;
+		clone.placeable 		= this.placeable;
+		clone.usable 			= this.usable;
+		clone.isBlock 			= this.isBlock;
+		clone.quantity 			= this.quantity;
+		clone.maxStack 			= this.maxStack;
+		clone.itemInstance		= Registry.Instantiate(this.itemName);
 
 		return clone;
 	}
