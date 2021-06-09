@@ -83,8 +83,13 @@ public class Progress : MonoBehaviour
 	/// </summary>
     public void UpdateProgress(int progress)
 	{
+		if (this.mask == null || this.icon == null)
+			return;
+		
 		this.progress = progress;
-		this.progress = this.progress / 100.0f;
+		this.progress /= 100.0f;
+
+		//Debug.Log("Progress: " + progress + ", this progress: " + this.progress + ", fullSize.y: " + this.fullSize.y + ", mask rect height: " + this.mask.rect.height);
 
 		/**
 		* Note to future self who's going to forget all these empirical formulas.

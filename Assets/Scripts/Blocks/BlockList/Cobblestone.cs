@@ -10,5 +10,7 @@ public class Cobblestone: Block
 		this.hardness 		= 3 * 20;
 		this.smeltable 		= true;
 		this.smeltedResult	= new CraftingResult("stone", 1);
+		this.burnable 		= true;
+		this.burnTime		= 300;
 	}
 }

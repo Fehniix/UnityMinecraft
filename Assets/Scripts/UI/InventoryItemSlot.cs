@@ -22,6 +22,11 @@ public class InventoryItemSlot : MonoBehaviour, IPointerDownHandler
 	public InventorySlotType slotType;
 
 	/// <summary>
+	/// The inventory container.
+	/// </summary>
+	private InventoryContainer inventoryContainer;
+
+	/// <summary>
 	/// This method gets called for both source and target slot.
 	/// When dragging an item around (source), its name is saved in the InventoryManager.
 	/// The target item is thus aware of it and can replace its image with the saved instance.
@@ -42,13 +47,7 @@ public class InventoryItemSlot : MonoBehaviour, IPointerDownHandler
 
 	private void OnLeftMouseButtonClick()
 	{
-		InventoryContainer inventoryContainer = this.GetComponentInParent<InventoryContainer>();
-
-		if (this.GetComponentInParent<PlayerInventoryItems>() != null)
-			inventoryContainer = InventoryContainers.inventory;
-
-		if (this.GetComponentInParent<PlayerInventoryHotbar>() != null)
-			inventoryContainer = InventoryContainers.hotbar;
+		this.InitializeInventoryContainer();
 
 		if (InventoryContainers.draggingItem == null)
 		{
@@ -61,7 +60,7 @@ public class InventoryItemSlot : MonoBehaviour, IPointerDownHandler
 			InventoryContainers.draggingItemObject.SetActive(true);
 			InventoryContainers.draggingItemObject.GetComponent<DraggingItem>().UpdateTexture();
 
-			inventoryContainer.items[this.slotIndex] = null;
+			this.inventoryContainer.items[this.slotIndex] = null;
 		}
 		else
 		{
@@ -84,33 +83,27 @@ public class InventoryItemSlot : MonoBehaviour, IPointerDownHandler
 					InventoryContainers.draggingItemObject.SetActive(false);
 					InventoryContainers.draggingItem = null;
 
-					inventoryContainer.items[this.slotIndex].quantity += draggableQuantity;
+					this.inventoryContainer.items[this.slotIndex].quantity += draggableQuantity;
 				}
 			}
 			else
 			{
 				// * Target item is null.
 
-				inventoryContainer.items[this.slotIndex] = InventoryContainers.draggingItem;
+				this.inventoryContainer.items[this.slotIndex] = InventoryContainers.draggingItem;
 			
 				InventoryContainers.draggingItemObject.SetActive(false);
 				InventoryContainers.draggingItem = null;
 			}
 		}
 
-		inventoryContainer.UpdateGUI();
-		inventoryContainer.TriggerItemsChangedEvent();
+		this.inventoryContainer.UpdateGUI();
+		this.inventoryContainer.TriggerItemsChangedEvent();
 	}
 
 	private void OnRightMouseButtonClick()
 	{
-		InventoryContainer inventoryContainer = this.GetComponentInParent<InventoryContainer>();
-
-		if (this.GetComponentInParent<PlayerInventoryItems>() != null)
-			inventoryContainer = InventoryContainers.inventory;
-
-		if (this.GetComponentInParent<PlayerInventoryHotbar>() != null)
-			inventoryContainer = InventoryContainers.hotbar;
+		this.InitializeInventoryContainer();
 		
 		InventoryItem inventoryItem = inventoryContainer.items[this.slotIndex];
 		InventoryItem draggingItem 	= InventoryContainers.draggingItem;
@@ -135,8 +128,8 @@ public class InventoryItemSlot : MonoBehaviour, IPointerDownHandler
 		{
 			if (inventoryItem == null)
 			{
-				inventoryContainer.items[this.slotIndex] = draggingItem.Clone();
-				inventoryContainer.items[this.slotIndex].quantity = 1;
+				this.inventoryContainer.items[this.slotIndex] = draggingItem.Clone();
+				this.inventoryContainer.items[this.slotIndex].quantity = 1;
 				draggingItem.quantity--;
 			}
 			else 
@@ -159,12 +152,12 @@ public class InventoryItemSlot : MonoBehaviour, IPointerDownHandler
 			InventoryContainers.draggingItem = null;
 
 		if (inventoryItem?.quantity == 0)
-			inventoryContainer.items[this.slotIndex] = null;
+			this.inventoryContainer.items[this.slotIndex] = null;
 
 		InventoryContainers.draggingItemObject.GetComponent<DraggingItem>().UpdateTexture();
-		inventoryContainer.UpdateGUI();
+		this.inventoryContainer.UpdateGUI();
 
-		inventoryContainer.TriggerItemsChangedEvent();
+		this.inventoryContainer.TriggerItemsChangedEvent();
 	}
 
 	/// <summary>
@@ -172,14 +165,28 @@ public class InventoryItemSlot : MonoBehaviour, IPointerDownHandler
 	/// </summary>
 	private void SwapDraggable()
 	{
-		InventoryContainer inventoryContainer = this.GetComponentInParent<InventoryContainer>();
-		
-		if (this.GetComponentInParent<PlayerInventoryItems>() != null)
-			inventoryContainer = InventoryContainers.inventory;
+		this.InitializeInventoryContainer();
 
 		InventoryItem tmp 							= inventoryContainer.items[this.slotIndex];
-		inventoryContainer.items[this.slotIndex] 	= InventoryContainers.draggingItem;
+		this.inventoryContainer.items[this.slotIndex] 	= InventoryContainers.draggingItem;
 		InventoryContainers.draggingItem 			= tmp;
 		InventoryContainers.draggingItemObject.GetComponent<DraggingItem>().UpdateTexture();
+	}
+
+	/// <summary>
+	/// Initializes the inventory container for this item slot.
+	/// </summary>
+	private void InitializeInventoryContainer()
+	{
+		if (this.inventoryContainer != null)
+			return;
+
+		this.inventoryContainer = this.GetComponentInParent<InventoryContainer>();
+
+		if (this.GetComponentInParent<PlayerInventoryItems>() != null)
+			this.inventoryContainer = InventoryContainers.inventory;
+
+		if (this.GetComponentInParent<PlayerInventoryHotbar>() != null)
+			this.inventoryContainer = InventoryContainers.hotbar;
 	}
 }

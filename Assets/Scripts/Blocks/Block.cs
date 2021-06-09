@@ -74,12 +74,23 @@ public abstract class Block: BaseBlock, IInteractable
 	/// <summary>
 	/// The number of ticks the fuel item lasts for as a burnable item.
 	/// </summary>
-	public int burnTime = 1000;
+	public int burnTime {
+		get { return 300; }
+		set {}
+	}
 
 	/// <summary>
 	/// Item result when smelted.
 	/// </summary>
-	public CraftingResult? smeltedResult;
+	private CraftingResult? _smeltedResult;
+
+	/// <summary>
+	/// Item result when smelted.
+	/// </summary>
+	public CraftingResult? smeltedResult {
+		get { return this._smeltedResult; }
+		set { this._smeltedResult = value; }
+	}
 
 	/// <summary>
 	/// Whether the block was broken or not.

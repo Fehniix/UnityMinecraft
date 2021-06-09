@@ -13,7 +13,14 @@ public interface IInteractable
 	/// </summary>
 	bool smeltable { get; set; }
 
+	CraftingResult? smeltedResult { get; set; }
+
 	bool burnable { get; set; }
+
+	/// <summary>
+	/// The number of ticks it takes to deplete the item used as a fuel source.
+	/// </summary>
+	int burnTime { get; set; }
 
 	void Place();
 

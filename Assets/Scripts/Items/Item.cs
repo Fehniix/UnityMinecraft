@@ -75,6 +75,14 @@ public class Item: IInteractable
 	}
 
 	/// <summary>
+	/// Item result when smelted.
+	/// </summary>
+	public CraftingResult? smeltedResult {
+		get { return null; }
+		set {}
+	}
+
+	/// <summary>
 	/// Whether the item can be burned to produce heat or not.
 	/// </summary>
 	private bool _burnable = false;
@@ -90,7 +98,10 @@ public class Item: IInteractable
 	/// <summary>
 	/// The number of ticks the fuel item lasts for as a burnable item.
 	/// </summary>
-	public int burnTime = 1000;
+	public int burnTime {
+		get { return 300; }
+		set {}
+	}
 
 	/// <summary>
 	/// Maximum amount of items that can be aggregated in a single item slot.

@@ -115,7 +115,7 @@ public static class GUI
 	/// </summary>
 	public static void ShowFurnaceUI()
 	{
-		
+		ShowBase(furnaceUI);
 	}
 
 	/// <summary>
@@ -123,7 +123,7 @@ public static class GUI
 	/// </summary>
 	public static void HideFurnaceUI()
 	{
-
+		HideBase(furnaceUI);
 	}
 
 	/// <summary>
