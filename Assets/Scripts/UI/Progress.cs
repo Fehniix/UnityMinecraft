@@ -74,6 +74,8 @@ public class Progress : MonoBehaviour
 				this.icon.pivot = new Vector2(0.0f, 0.5f);
 				break;
 		}
+
+		this.UpdateProgress(0);
     }
 
 	/// <summary>
