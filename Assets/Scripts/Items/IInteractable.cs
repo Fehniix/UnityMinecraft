@@ -13,6 +13,8 @@ public interface IInteractable
 	/// </summary>
 	bool smeltable { get; set; }
 
+	bool burnable { get; set; }
+
 	void Place();
 
 	void Break();

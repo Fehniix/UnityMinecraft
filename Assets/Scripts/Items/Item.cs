@@ -75,6 +75,24 @@ public class Item: IInteractable
 	}
 
 	/// <summary>
+	/// Whether the item can be burned to produce heat or not.
+	/// </summary>
+	private bool _burnable = false;
+
+	/// <summary>
+	/// Whether the item can be burned to produce heat or not.
+	/// </summary>
+	public bool burnable {
+		get { return this._burnable; }
+		set { this._burnable = value; }
+	}
+
+	/// <summary>
+	/// The number of ticks the fuel item lasts for as a burnable item.
+	/// </summary>
+	public int burnTime = 1000;
+
+	/// <summary>
 	/// Maximum amount of items that can be aggregated in a single item slot.
 	/// </summary>
 	public int maxStack = 64;
