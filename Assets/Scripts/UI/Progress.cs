@@ -105,25 +105,25 @@ public class Progress : MonoBehaviour
 		if (this.orientation == ProgressOrientation.TOP)
 		{
 			this.mask.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, this.fullSize.y * this.progress);
-			this.icon.Translate(new Vector3(0, -this.mask.rect.height / 2, 0));
+			this.icon.anchoredPosition = new Vector3(0, -(this.mask.rect.height / 2), 0);
 		}
 			
 		if (this.orientation == ProgressOrientation.BOTTOM)
 		{
 			this.mask.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, this.fullSize.y * this.progress);
-			this.icon.Translate(new Vector3(0, this.mask.rect.height / 2, 0));
+			this.icon.anchoredPosition = new Vector3(0, this.mask.rect.height / 2, 0);
 		}
 
 		if (this.orientation == ProgressOrientation.LEFT)
 		{
 			this.mask.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, this.fullSize.x * this.progress);
-			this.icon.Translate(new Vector3(this.mask.rect.width / 2, 0, 0));
+			this.icon.anchoredPosition = new Vector3(this.mask.rect.width / 2, 0, 0);
 		}
 
 		if (this.orientation == ProgressOrientation.RIGHT)
 		{
 			this.mask.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, this.fullSize.x * this.progress);
-			this.icon.Translate(new Vector3(-this.mask.rect.width / 2, 0, 0));
+			this.icon.anchoredPosition = new Vector3(-this.mask.rect.width / 2, 0, 0);
 		}
 	}
 }
