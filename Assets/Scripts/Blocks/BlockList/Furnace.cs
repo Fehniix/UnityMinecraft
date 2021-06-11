@@ -6,6 +6,7 @@
 		this.hasSidedTextures 	= true;
 		this.interactable 		= true;
 		this.hardness 			= 3 * 20;
+		this.stateful 			= true;
 	}
 
 	public override void Interact()
