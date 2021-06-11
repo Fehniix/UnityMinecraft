@@ -114,27 +114,11 @@ public class FurnaceUI : UserInterface
 		this.gameObject.SetActive(false);
     }
 
-	void Update()
-	{
-		if (Input.GetKeyDown(KeyCode.O))
-		{
-			this.fuelProgress.UpdateProgress(80);
-			this.smeltingProgress.UpdateProgress(80);
-		}
-	}
-
 	/// <summary>
 	/// Allows the furnace UI to get noticed about an item update within it.
 	/// </summary>
 	public void TriggerItemUpdate()
 	{
-		/**
-		* Upon an item update, the following scenarios could play out:
-		* - No fuel remaining. Item not smeltable/burnable 	-> not smelting.
-		* - No fuel remaining. Smeltable present.			-> consume fuel & start smelting.
-		* - Fuel remaining, smeltable taken out 			-> reset smelting progress.
-		* - Fuel remaining, no smeltable, one inserted 		-> begin smelting.
-		*/
 		bool isFuelBurnable 	= this.fuelItem?.burnable == true;
 		bool isItemSmeltable 	= this.smeltingItem?.smeltable == true;
 			
@@ -184,7 +168,7 @@ public class FurnaceUI : UserInterface
 			}
 			else
 				this.smeltedSlot.item.quantity++;
-				
+
 			this.ResetSmeltingProgress();
 			this.UpdateGUI();
 
