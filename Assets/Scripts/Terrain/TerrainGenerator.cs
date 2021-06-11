@@ -32,8 +32,8 @@ public class TerrainGenerator : MonoBehaviour
 
 		this.noise = new FastNoise();
 
-		for (int _i = 0; _i < 2; _i++)
-			for (int _k = 0; _k < 2; _k++)
+		for (int _i = 0; _i < 4; _i++)
+			for (int _k = 0; _k < 4; _k++)
 			{
 				Chunk chunk = new Chunk();
 				chunk.x = _i;
