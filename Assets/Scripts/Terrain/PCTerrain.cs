@@ -158,4 +158,37 @@ public struct ChunkPosition
 	}
 
 	public static implicit operator ChunkPosition((int x, int z) t) => new ChunkPosition(t.x, t.z);
+
+	public static bool operator ==(ChunkPosition a, ChunkPosition b)
+	{
+		return a.x == b.x && a.z == b.z;
+	}
+
+	public static bool operator !=(ChunkPosition a, ChunkPosition b)
+	{
+		return a.x != b.x || a.z != b.z;
+	}
+
+	public override bool Equals(object obj)
+	{
+		if (obj == null)
+			return false;
+
+		ChunkPosition cp = (ChunkPosition)obj;
+		return this.x == cp.x && this.z == cp.z;
+	}
+
+	public override int GetHashCode()
+	{
+		int result = 17;
+		
+		result = result * 23 + this.x * this.z;
+
+		return result;
+	}
+
+	public override string ToString()
+	{
+		return "ChunkPosition(" + this.x + ", " + this.z + ")";
+	}
 }

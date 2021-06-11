@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Extensions;
+using System.Linq;
 
 public class TerrainGenerator : MonoBehaviour
 {
@@ -23,17 +24,30 @@ public class TerrainGenerator : MonoBehaviour
 		
 	}
 
+	/// <summary>
+	/// Creates a ChunkPosition[] neighbourhood.
+	/// </summary>
+	private List<ChunkPosition> GetNeighbourhood(int x, int z)
+	{
+		List<ChunkPosition> positionsAroundPlayer = new List<ChunkPosition>();
+		for (int i = x - 1; i < x + 2; i++)
+			for (int k = z - 1; k < z + 2; k++)
+				positionsAroundPlayer.Add(new ChunkPosition(i,k));
+
+		return positionsAroundPlayer;
+	}
+
 	public void GenerateTerrain()
 	{
-		foreach(var chunk in PCTerrain.GetInstance().chunks)
-		{
-			chunk.Value.Destroy();
-		}
+		foreach(Chunk chunk in PCTerrain.GetInstance().chunks.Values)
+			chunk.Destroy();
 
 		this.noise = new FastNoise();
 
-		for (int _i = 0; _i < 2; _i++)
-			for (int _k = 0; _k < 2; _k++)
+		System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
+
+		for (int _i = 0; _i < 3; _i++)
+			for (int _k = 0; _k < 3; _k++)
 			{
 				Chunk chunk = new Chunk();
 				chunk.x = _i;
@@ -54,6 +68,10 @@ public class TerrainGenerator : MonoBehaviour
 
 				PCTerrain.GetInstance().chunks[(chunk.x, chunk.z)] = chunk;
 			}
+		
+		stopwatch.Stop();
+
+		Debug.Log("Terrain generated in: " + stopwatch.Elapsed.TotalMilliseconds + "ms");
 	}
 
 	private BaseBlock GenerateTerrainBlockType(int i, int j, int k)

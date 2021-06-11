@@ -31,4 +31,15 @@ public class Player : MonoBehaviour
 			Mathf.FloorToInt(this.transform.position.z)
 		);
 	}
+
+	/// <summary>
+	/// Returns the ChunkPosition where the player is currently standing.
+	/// </summary>
+	public ChunkPosition GetVoxelChunk()
+	{
+		return new ChunkPosition(
+			Mathf.FloorToInt(this.transform.position.x / 16.0f),
+			Mathf.FloorToInt(this.transform.position.z / 16.0f)	
+		);
+	}
 }

@@ -71,6 +71,8 @@ public class Chunk
 			this.chunkGameObject.AddComponent<MeshCollider>();
 			this.chunkGameObject.AddComponent<ChunkObject>();
 
+			this.chunkGameObject.tag = "chunk";
+
 			this.chunkGameObject.GetComponent<MeshRenderer>().material.mainTexture = texture;
 			this.chunkGameObject.transform.position = new Vector3(this.x * this.chunkSize, 0, this.z * this.chunkSize);
 		}
