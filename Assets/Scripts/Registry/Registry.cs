@@ -12,19 +12,6 @@ public static class Registry
 	private static Dictionary<string, RegistryItem> registryItems = new Dictionary<string, RegistryItem>();
 
 	/// <summary>
-	/// Used to create a one-to-one relationship between block/items and their name.
-	/// I am assuming no more than 256 blocks will be implemented - System.Byte is thus sufficient.
-	/// </summary>
-	private static byte incrementalID = 0;
-
-	/// <summary>
-	/// Dictionary of item name -> ID associations. Heart of the 1-1 relationship.
-	/// </summary>
-	private static Dictionary<string, byte> itemIDs = new Dictionary<string, byte>();
-
-	
-
-	/// <summary>
 	/// Given an Item or Block name and its explicit type, it registers the string-Type association.
 	/// </summary>
 	public static void RegisterItem<T>(string itemName)
