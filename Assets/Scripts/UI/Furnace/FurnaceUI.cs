@@ -54,7 +54,7 @@ public class FurnaceUI : UserInterface
 	/// <summary>
 	/// The amount of fuel remaining.
 	/// </summary>
-	private int fuelRemaining = 0;
+	private int remainingFuel = 0;
 
 	/// <summary>
 	/// Returns the current burning progress as a fuelRemaining / initialFuelValue proportion.
@@ -66,7 +66,7 @@ public class FurnaceUI : UserInterface
 			if (this.initialFuelValue == 0)
 				return 0;
 
-			return (int)(this.fuelRemaining / (float)this.initialFuelValue * 100); 
+			return (int)(this.remainingFuel / (float)this.initialFuelValue * 100); 
 		}
 	}
 
@@ -128,16 +128,24 @@ public class FurnaceUI : UserInterface
 	/// </summary>
 	public void TriggerItemUpdate()
 	{
-		bool isFuelBurnable 	= (this.fuelSlot.item?.itemInstance as IInteractable)?.burnable == true;
-		bool isItemSmeltable 	= (this.smeltingSlot.item?.itemInstance as IInteractable)?.smeltable == true;
-		bool smelting			= isFuelBurnable && isItemSmeltable; 
-
-		this.isSmelting = smelting;
-		
-		if (smelting && this.fuelRemaining == 0)
+		/**
+		* Upon an item update, the following scenarios could play out:
+		* - No fuel remaining. Item not smeltable/burnable 	-> not smelting.
+		* - No fuel remaining. Smeltable present.			-> consume fuel & start smelting.
+		* - Fuel remaining, smeltable taken out 			-> reset smelting progress.
+		* - Fuel remaining, no smeltable, one inserted 		-> begin smelting.
+		*/
+		bool isFuelBurnable 	= this.fuelItem?.burnable == true;
+		bool isItemSmeltable 	= this.smeltingItem?.smeltable == true;
+			
+		if (isFuelBurnable && isItemSmeltable && this.remainingFuel == 0)
 			this.ConsumeFuelItem();
-		else
-			this.ResetProgress();
+
+		if (!isItemSmeltable)
+			this.ResetSmeltingProgress();
+
+		if ((isFuelBurnable && isItemSmeltable) || (isItemSmeltable && this.remainingFuel > 0))
+			this.isSmelting = true;
 	}
 
 	/// <summary>
@@ -145,10 +153,10 @@ public class FurnaceUI : UserInterface
 	/// </summary>
 	private void ClockTicked()
 	{
-		if (this.fuelRemaining > 0)
+		if (this.remainingFuel > 0)
 		{
 			// Keep consuming fuel no matter whether we're smelting an item or not.
-			this.fuelRemaining--;
+			this.remainingFuel--;
 			this.UpdateProgressElementsUI();
 		}
 		else if (this.fuelSlot.item != null && this.fuelSlot.item.quantity > 0 && this.isSmelting)
@@ -161,18 +169,27 @@ public class FurnaceUI : UserInterface
 		if (!this.isSmelting)
 			return;
 
-		Debug.Log("Smelting: " + this.smeltingProgress + ", fuel: " + this.fuelProgress);
-
 		this.smeltingTicksElapsed++;
 		
 		if (this.smeltingTicksElapsed >= this.singleOperationTime)
 		{
+			this.isSmelting = false;
+
 			this.smeltingSlot.item.quantity--;
 			
-			this.smeltedSlot.item = new InventoryItem(this.smeltingItem.smeltedResult.Value.itemName);
-			this.smeltedSlot.item.quantity = this.smeltingItem.smeltedResult.Value.quantity;
-
+			if (this.smeltedSlot.item == null)
+			{
+				this.smeltedSlot.item = new InventoryItem(this.smeltingItem.smeltedResult.Value.itemName);
+				this.smeltedSlot.item.quantity = this.smeltingItem.smeltedResult.Value.quantity;
+			}
+			else
+				this.smeltedSlot.item.quantity++;
+				
+			this.ResetSmeltingProgress();
 			this.UpdateGUI();
+
+			if (this.smeltingSlot.item?.quantity > 0 && this.smeltedSlot.item?.quantity < this.smeltedSlot.item?.maxStack)
+				this.isSmelting = true;
 		}
 	}
 
@@ -182,7 +199,7 @@ public class FurnaceUI : UserInterface
 	private void ConsumeFuelItem()
 	{
 		this.initialFuelValue 	= this.fuelItem.burnTime;
-		this.fuelRemaining		= this.fuelItem.burnTime;
+		this.remainingFuel		= this.fuelItem.burnTime;
 
 		this.fuelSlot.item.quantity--;
 		this.fuelSlot.UpdateTexture();
@@ -200,7 +217,7 @@ public class FurnaceUI : UserInterface
 	/// <summary>
 	/// Resets the current progress.
 	/// </summary>
-	private void ResetProgress()
+	private void ResetSmeltingProgress()
 	{
 		this.isSmelting = false;
 		this.smeltingTicksElapsed = 0;
