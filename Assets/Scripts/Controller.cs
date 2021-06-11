@@ -13,6 +13,11 @@ public class Controller : MonoBehaviour
 
 		GameObject.Find("Player").transform.position = new Vector3(8, 40, 8);
 
+		InventoryContainers.hotbar.items[0] = new InventoryItem("furnace");
+		InventoryContainers.hotbar.items[1] = new InventoryItem("craftingTable");
+		InventoryContainers.hotbar.items[2] = new InventoryItem("cobblestone");
+		InventoryContainers.hotbar.items[2].quantity = 64;
+
 		GUI.hotbar.UpdateGUI();
     }
 

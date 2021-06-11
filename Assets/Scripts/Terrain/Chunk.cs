@@ -28,7 +28,7 @@ public class Chunk
 	/// <summary>
 	/// Private reference to the game object first created by BuildMesh().
 	/// </summary>
-	private GameObject chunkGameObject;
+	public GameObject chunkGameObject;
 
 	/// <summary>
 	/// Whether the mesh was already built or not.

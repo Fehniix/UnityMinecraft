@@ -19,6 +19,8 @@ public class TerrainGenerator : MonoBehaviour
 	/// </summary>
 	private ChunkPosition previousPlayerPosition;
 
+	private int chunkMatrixSize = 2;
+
 	/// <summary>
 	/// Used to notify the main thread when a chunk has been generated to rebuild chunk meshes.
 	/// </summary>
@@ -33,10 +35,22 @@ public class TerrainGenerator : MonoBehaviour
 	{
 		this.GenerateTerrain();
 		this.previousPlayerPosition = Player.instance.GetVoxelChunk();
-		this.chunkGeneratedHandlers += this.Test;
+		this.chunkGeneratedHandlers += this.ChunkGenerationCompleted;
+
+		Thread test = new Thread(() => {
+			this.GenerateChunkBlocks(0,0);
+			//this.ChunkGenerationCompleted();
+		});
+
+		test.Start();
+
+		// use coroutines to access Unity API reference value stuff & threads for heavy calculations.
 	}
 
-	void Test()
+	/// <summary>
+	/// Called when a thread finished generating a chunk.
+	/// </summary>
+	void ChunkGenerationCompleted()
 	{
 		Debug.Log("Hello from other thread!");
 	}
@@ -52,21 +66,27 @@ public class TerrainGenerator : MonoBehaviour
 		ChunkPosition diff = currentPlayerPosition - this.previousPlayerPosition;
 
 		if (diff.z == 0)
+			// Chunk position changed across the x-axis.
 			for (int i = -1; i < 2; i++)
 				chunksToDeletePositions.Add(new ChunkPosition(
-					currentPlayerPosition.x - diff.x, 
+					currentPlayerPosition.x - diff.x * 3, 
 					currentPlayerPosition.z + i
 				));
 		else
+			// Chunk position changed across the z-axis.
 			for (int i = -1; i < 2; i++)
 				chunksToDeletePositions.Add(new ChunkPosition(
 					currentPlayerPosition.x + i, 
-					currentPlayerPosition.z - diff.z
+					currentPlayerPosition.z - diff.z * 3
 				));
 
 		foreach(ChunkPosition cp in chunksToDeletePositions)
 		{
-			
+			if (!PCTerrain.GetInstance().chunks.ContainsKey(cp))
+				continue;
+
+			GameObject.Destroy(PCTerrain.GetInstance().chunks[cp].chunkGameObject);
+			PCTerrain.GetInstance().chunks.Remove(cp);
 		}
 
 		this.previousPlayerPosition = currentPlayerPosition;
@@ -81,8 +101,8 @@ public class TerrainGenerator : MonoBehaviour
 
 		System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
 
-		for (int _i = 0; _i < 3; _i++)
-			for (int _k = 0; _k < 3; _k++)
+		for (int _i = 0; _i < chunkMatrixSize; _i++)
+			for (int _k = 0; _k < chunkMatrixSize; _k++)
 			{
 				Chunk chunk = new Chunk();
 				chunk.x = _i;
@@ -109,7 +129,7 @@ public class TerrainGenerator : MonoBehaviour
 		Debug.Log("Terrain generated in: " + stopwatch.Elapsed.TotalMilliseconds + "ms");
 	}
 
-	private BaseBlock[,,] GenerateChunk(int x, int z)
+	private BaseBlock[,,] GenerateChunkBlocks(int x, int z)
 	{
 		BaseBlock[,,] chunkBlocks = new BaseBlock[Chunk.chunkSize, Chunk.chunkHeight, Chunk.chunkSize];
 
@@ -126,7 +146,6 @@ public class TerrainGenerator : MonoBehaviour
 
 		return chunkBlocks;
 	}
-
 	private BaseBlock GenerateTerrainBlockType(int i, int j, int k)
 	{
 		float landSimplex1 = this.noise.GetSimplex(
