@@ -7,7 +7,7 @@ public class Hotbar : MonoBehaviour
 	/// <summary>
 	/// The size of each item cell in the hotbar.
 	/// </summary>
-	private const float itemCellSize = 40.0f;
+	private float itemCellSize = 40.0f;
 
 	/// <summary>
 	/// The active item image reference, to move left or right upon mouse scroll.
@@ -26,6 +26,8 @@ public class Hotbar : MonoBehaviour
 
     void Awake()
     {
+		this.itemCellSize 						= 40.0f * this.GetComponentInParent<Canvas>().transform.localScale.x;
+		
 		PlayerInventoryManager.activeItemIndex 	= 4;
 		this.activeItemImgReference 			= this.transform.GetChild(0).gameObject;
 		this.activeItemImgFirstX				= this.transform.position.x - itemCellSize * 4;
@@ -38,6 +40,9 @@ public class Hotbar : MonoBehaviour
     {
         if (Input.mouseScrollDelta.y != 0)
 			this.UpdateActiveItem();
+
+		if (!GUI.isAGUIShown && Input.GetKeyDown(KeyCode.Escape))
+			Application.Quit();
     }
 
 	/// <summary>

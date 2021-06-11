@@ -9,7 +9,7 @@ public class Controller : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-		this.positionText = GameObject.Find("UI/Position").GetComponent<Text>();
+		this.positionText = GameObject.Find("UI/StaticWrapper/Position").GetComponent<Text>();
 
 		GameObject.Find("Player").transform.position = new Vector3(8, 40, 8);
 
