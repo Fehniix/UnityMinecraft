@@ -18,19 +18,22 @@ public class Chunk
 	/// <summary>
 	/// (x,z) size of the chunk.
 	/// </summary>
-	[SerializeField] 
-	private int chunkSize = 16;
+	public static int chunkSize = 16;
 
 	/// <summary>
 	/// y-size of the chunk.
 	/// </summary>
-	[SerializeField]
-	private int chunkHeight = 256;
+	public static int chunkHeight = 128;
 
 	/// <summary>
 	/// Private reference to the game object first created by BuildMesh().
 	/// </summary>
 	private GameObject chunkGameObject;
+
+	/// <summary>
+	/// Whether the mesh was already built or not.
+	/// </summary>
+	public bool meshBuilt = false;
 
 	/// <summary>
 	/// x-position of the chunk.
@@ -52,7 +55,7 @@ public class Chunk
 
 	public Chunk()
 	{
-		this.blocks = new BaseBlock[this.chunkSize, this.chunkHeight, this.chunkSize];
+		this.blocks = new BaseBlock[chunkSize, chunkHeight, chunkSize];
 	}
 
 	public void BuildMesh()
@@ -74,7 +77,7 @@ public class Chunk
 			this.chunkGameObject.tag = "chunk";
 
 			this.chunkGameObject.GetComponent<MeshRenderer>().material.mainTexture = texture;
-			this.chunkGameObject.transform.position = new Vector3(this.x * this.chunkSize, 0, this.z * this.chunkSize);
+			this.chunkGameObject.transform.position = new Vector3(this.x * chunkSize, 0, this.z * chunkSize);
 		}
 
 		Mesh mesh = new Mesh();
@@ -86,9 +89,9 @@ public class Chunk
 		// Keeps track of the number of faces already built.
 		int builtFaces = 0;
 
-		for (int i = 0; i < this.chunkSize; i++)
-			for (int j = 0; j < this.chunkHeight; j++)
-				for (int k = 0; k < this.chunkSize; k++)
+		for (int i = 0; i < chunkSize; i++)
+			for (int j = 0; j < chunkHeight; j++)
+				for (int k = 0; k < chunkSize; k++)
 				{
 					// Determine block adjacency with air. For each adjacent block face, render the face.
 
@@ -97,34 +100,34 @@ public class Chunk
 						continue;
 
 					// Top face adjacency
-					if (j >= 0 && j <= this.chunkHeight - 1)
-						if (j == this.chunkHeight - 1 || this.blocks[i, j + 1, k].blockName == "air")
+					if (j >= 0 && j <= chunkHeight - 1)
+						if (j == chunkHeight - 1 || this.blocks[i, j + 1, k].blockName == "air")
 							// Always render the top most face, OR if the top-adjacent block is "air".
 							this.AddFace(i, j, k, builtFaces++, "top", CubeMeshFaces.top, vertices, uvs, triangles);
 
 					// Bottom face adjacency
-					if (j >= 0 && j < this.chunkHeight)
+					if (j >= 0 && j < chunkHeight)
 						if (j == 0 || this.blocks[i, j - 1, k].blockName == "air")
 							this.AddFace(i, j, k, builtFaces++, "bottom", CubeMeshFaces.bottom, vertices, uvs, triangles);
 					
 					// West face adjacency
-					if (i >= 0 && i < this.chunkSize)
+					if (i >= 0 && i < chunkSize)
 						if (i == 0 || this.blocks[i - 1, j, k].blockName == "air")
 							this.AddFace(i, j, k, builtFaces++, "west", CubeMeshFaces.west, vertices, uvs, triangles);
 
 					// East face adjacency
-					if (i >= 0 && i <= this.chunkSize)
-						if (i == this.chunkSize - 1 || this.blocks[i + 1, j, k].blockName == "air")
+					if (i >= 0 && i <= chunkSize)
+						if (i == chunkSize - 1 || this.blocks[i + 1, j, k].blockName == "air")
 							this.AddFace(i, j, k, builtFaces++, "east", CubeMeshFaces.east, vertices, uvs, triangles);
 
 					// Front face adjacency
-					if (k >= 0 && k < this.chunkSize)
+					if (k >= 0 && k < chunkSize)
 						if (k == 0 || this.blocks[i, j, k - 1].blockName == "air")
 							this.AddFace(i, j, k, builtFaces++, "front", CubeMeshFaces.front, vertices, uvs, triangles);
 
 					// Back face adjacency
-					if (k >= 0 && k <= this.chunkSize)
-						if (k == this.chunkSize - 1 || this.blocks[i, j, k + 1].blockName == "air")
+					if (k >= 0 && k <= chunkSize)
+						if (k == chunkSize - 1 || this.blocks[i, j, k + 1].blockName == "air")
 							this.AddFace(i, j, k, builtFaces++, "back", CubeMeshFaces.back, vertices, uvs, triangles);
 				}
 
@@ -137,6 +140,8 @@ public class Chunk
 		this.chunkGameObject.GetComponent<MeshFilter>().mesh = mesh;
 		this.chunkGameObject.GetComponent<MeshCollider>().sharedMesh = mesh;
 		this.chunkGameObject.GetComponent<MeshCollider>().material = CachedResources.Load<PhysicMaterial>("PhysicsMaterials/FrictionLess");
+
+		this.meshBuilt = true;
 	}
 
 	/// <summary>

@@ -169,6 +169,14 @@ public struct ChunkPosition
 		return a.x != b.x || a.z != b.z;
 	}
 
+	public static ChunkPosition operator -(ChunkPosition a, ChunkPosition b)
+	{
+		ChunkPosition cp = new ChunkPosition();
+		cp.x = a.x - b.x;
+		cp.z = a.z - b.z;
+		return cp;
+	}
+
 	public override bool Equals(object obj)
 	{
 		if (obj == null)

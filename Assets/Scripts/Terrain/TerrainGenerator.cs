@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Extensions;
-using System.Linq;
+using System.Threading;
 
 public class TerrainGenerator : MonoBehaviour
 {
@@ -14,27 +14,62 @@ public class TerrainGenerator : MonoBehaviour
 	// Private instance of the FastNoise library by Jordan Peck.
 	private FastNoise noise;
 
+	/// <summary>
+	/// Stores the previous player position.
+	/// </summary>
+	private ChunkPosition previousPlayerPosition;
+
+	/// <summary>
+	/// Used to notify the main thread when a chunk has been generated to rebuild chunk meshes.
+	/// </summary>
+	private delegate void ChunkGenerated();
+
+	/// <summary>
+	/// Handlers that subscribed to the ChunkGenerated event.
+	/// </summary>
+	private ChunkGenerated chunkGeneratedHandlers;
+
 	void Start()
 	{
 		this.GenerateTerrain();
+		this.previousPlayerPosition = Player.instance.GetVoxelChunk();
+		this.chunkGeneratedHandlers += this.Test;
+	}
+
+	void Test()
+	{
+		Debug.Log("Hello from other thread!");
 	}
 
 	void Update()
 	{
-		
-	}
+		ChunkPosition currentPlayerPosition = Player.instance.GetVoxelChunk();
 
-	/// <summary>
-	/// Creates a ChunkPosition[] neighbourhood.
-	/// </summary>
-	private List<ChunkPosition> GetNeighbourhood(int x, int z)
-	{
-		List<ChunkPosition> positionsAroundPlayer = new List<ChunkPosition>();
-		for (int i = x - 1; i < x + 2; i++)
-			for (int k = z - 1; k < z + 2; k++)
-				positionsAroundPlayer.Add(new ChunkPosition(i,k));
+		if (this.previousPlayerPosition == currentPlayerPosition)
+			return;
 
-		return positionsAroundPlayer;
+		List<ChunkPosition> chunksToDeletePositions = new List<ChunkPosition>();
+		ChunkPosition diff = currentPlayerPosition - this.previousPlayerPosition;
+
+		if (diff.z == 0)
+			for (int i = -1; i < 2; i++)
+				chunksToDeletePositions.Add(new ChunkPosition(
+					currentPlayerPosition.x - diff.x, 
+					currentPlayerPosition.z + i
+				));
+		else
+			for (int i = -1; i < 2; i++)
+				chunksToDeletePositions.Add(new ChunkPosition(
+					currentPlayerPosition.x + i, 
+					currentPlayerPosition.z - diff.z
+				));
+
+		foreach(ChunkPosition cp in chunksToDeletePositions)
+		{
+			
+		}
+
+		this.previousPlayerPosition = currentPlayerPosition;
 	}
 
 	public void GenerateTerrain()
@@ -53,9 +88,9 @@ public class TerrainGenerator : MonoBehaviour
 				chunk.x = _i;
 				chunk.z = _k;
 
-				for (int i = 0; i < 16; i++)
-					for (int j = 0; j < 256; j++)
-						for (int k = 0; k < 16; k++)
+				for (int i = 0; i < Chunk.chunkSize; i++)
+					for (int j = 0; j < Chunk.chunkHeight; j++)
+						for (int k = 0; k < Chunk.chunkSize; k++)
 						{
 							BaseBlock block = this.GenerateTerrainBlockType(i + chunk.x * 16, j, k + chunk.z * 16);
 							chunk.blocks[i,j,k] = block;
@@ -72,6 +107,24 @@ public class TerrainGenerator : MonoBehaviour
 		stopwatch.Stop();
 
 		Debug.Log("Terrain generated in: " + stopwatch.Elapsed.TotalMilliseconds + "ms");
+	}
+
+	private BaseBlock[,,] GenerateChunk(int x, int z)
+	{
+		BaseBlock[,,] chunkBlocks = new BaseBlock[Chunk.chunkSize, Chunk.chunkHeight, Chunk.chunkSize];
+
+		for (int i = 0; i < Chunk.chunkSize; i++)
+			for (int j = 0; j < Chunk.chunkHeight; j++)
+				for (int k = 0; k < Chunk.chunkSize; k++)
+				{
+					BaseBlock block = this.GenerateTerrainBlockType(i + x * 16, j, k + z * 16);
+					chunkBlocks[i,j,k] = block;
+
+					if (chunkBlocks[i,j,k].stateful)
+						PCTerrain.GetInstance().blocks[(i,j,k).ToVector3Int()] = Registry.Instantiate(block.blockName) as Block;
+				}
+
+		return chunkBlocks;
 	}
 
 	private BaseBlock GenerateTerrainBlockType(int i, int j, int k)
@@ -95,8 +148,8 @@ public class TerrainGenerator : MonoBehaviour
 		) * 10;
 
 		float stoneSimplex2 = (this.noise.GetSimplex(
-			i * 5.1f,
-			k * 5.1f
+			i * 2.1f,
+			k * 2.1f
 		) + .7f) * 20 * this.noise.GetSimplex(
 			i * .2f,
 			k * .2f
@@ -113,9 +166,9 @@ public class TerrainGenerator : MonoBehaviour
 			k * .4f	
 		) * .3f;
 
-		float baselineLandHeight = 256 * 0.1f + landSimplex1 + landSimplex2;
-		float baselineStoneHeight = 256 * 0.04f + stoneSimplex1 + stoneSimplex1;
-		float baselineCaveHeight = 256 * 0.066f;
+		float baselineLandHeight 	= Chunk.chunkHeight * 0.2f + landSimplex1 + landSimplex2;
+		float baselineStoneHeight 	= Chunk.chunkHeight * 0.04f + stoneSimplex1 + stoneSimplex1;
+		float baselineCaveHeight 	= Chunk.chunkHeight * 0.066f;
 
 		string blockType = "air";
 

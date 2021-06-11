@@ -4,9 +4,13 @@ using Extensions;
 
 public class Controller : MonoBehaviour
 {
+	public Text positionText;
+
     // Start is called before the first frame update
     void Start()
     {
+		this.positionText = GameObject.Find("UI/Position").GetComponent<Text>();
+
 		GameObject.Find("Player").transform.position = new Vector3(8, 40, 8);
 
 		for (int i = 0; i < 9; i++)
@@ -33,6 +37,8 @@ public class Controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-		
+		Vector3Int p = Player.instance.GetVoxelPosition();
+		ChunkPosition cp = Player.instance.GetVoxelChunk();
+		this.positionText.text = System.String.Format("({0},{1},{2}) ({3},{4})", p.x, p.y, p.z, cp.x, cp.z);
     }
 }
