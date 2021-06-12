@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using Extensions;
 
@@ -58,27 +59,13 @@ public class Chunk
 		this.blocks = new BaseBlock[chunkSize, chunkHeight, chunkSize];
 	}
 
+	/// <summary>
+	/// Builds the chunk's mesh.
+	/// </summary>
 	public void BuildMesh()
 	{
 		if (this.chunkGameObject == null)
-		{
-			// Instantiate the GameObject (and implictly add it to the scene).
-			this.chunkGameObject = new GameObject("Chunk");
-
-			// Get the stitched texture.
-			Texture2D texture = TextureStitcher.instance.StitchedTexture;
-
-			// Add mesh filter and renderer.
-			this.chunkGameObject.AddComponent<MeshFilter>();
-			this.chunkGameObject.AddComponent<MeshRenderer>();
-			this.chunkGameObject.AddComponent<MeshCollider>();
-			this.chunkGameObject.AddComponent<ChunkObject>();
-
-			this.chunkGameObject.tag = "chunk";
-
-			this.chunkGameObject.GetComponent<MeshRenderer>().material.mainTexture = texture;
-			this.chunkGameObject.transform.position = new Vector3(this.x * chunkSize, 0, this.z * chunkSize);
-		}
+			this.SpawnGameObject();
 
 		Mesh mesh = new Mesh();
 
@@ -86,7 +73,67 @@ public class Chunk
 		List<Vector2> uvs		= new List<Vector2>();
 		List<int> triangles 	= new List<int>();
 
-		// Keeps track of the number of faces already built.
+		this.BuildMeshFaces(vertices, uvs, triangles);
+
+		mesh.vertices 	= vertices.ToArray();
+		mesh.uv 		= uvs.ToArray();
+		mesh.triangles 	= triangles.ToArray();
+
+		mesh.RecalculateNormals();
+
+		this.chunkGameObject.GetComponent<MeshFilter>().mesh = mesh;
+		this.chunkGameObject.GetComponent<MeshCollider>().sharedMesh = mesh;
+		this.chunkGameObject.GetComponent<MeshCollider>().material = CachedResources.Load<PhysicMaterial>("PhysicsMaterials/FrictionLess");
+
+		this.meshBuilt = true;
+	}
+
+	private enum ThreadStatus { STARTED, FINISHED };
+	private ThreadStatus status = ThreadStatus.STARTED;
+	/// <summary>
+	/// Allows to build a chunk mesh almost entirely asynchronously.
+	/// This has to be run on the main thread!
+	/// Mesh building is done in parallel, spawning a new thread. GameObject instantiation & Unity API calls are executed by the coroutine
+	/// on the main thread.
+	/// </summary>
+	public IEnumerator BuildMeshAsync()
+	{
+		if (this.chunkGameObject == null)
+			this.SpawnGameObject();
+		
+		Mesh mesh = new Mesh();
+
+		List<Vector3> vertices	= new List<Vector3>();
+		List<Vector2> uvs		= new List<Vector2>();
+		List<int> triangles 	= new List<int>();
+
+		Thread meshBuildingThread = new Thread(() => {
+			this.BuildMeshFaces(vertices, uvs, triangles);
+			this.status = ThreadStatus.FINISHED;
+		});
+		meshBuildingThread.Start();
+		
+		while (this.status == ThreadStatus.STARTED)
+			yield return new WaitForEndOfFrame();
+
+		mesh.vertices 	= vertices.ToArray();
+		mesh.uv 		= uvs.ToArray();
+		mesh.triangles 	= triangles.ToArray();
+
+		mesh.RecalculateNormals();
+
+		this.chunkGameObject.GetComponent<MeshFilter>().mesh = mesh;
+		this.chunkGameObject.GetComponent<MeshCollider>().sharedMesh = mesh;
+		this.chunkGameObject.GetComponent<MeshCollider>().material = CachedResources.Load<PhysicMaterial>("PhysicsMaterials/FrictionLess");
+
+		this.meshBuilt = true;
+	}
+
+	/// <summary>
+	/// Given the list of vertices, UVs and triangles, this builds the whole chunk's faces writing into the given parameters.
+	/// </summary>
+	void BuildMeshFaces(List<Vector3> vertices, List<Vector2> uvs, List<int> triangles)
+	{
 		int builtFaces = 0;
 
 		for (int i = 0; i < chunkSize; i++)
@@ -101,47 +148,58 @@ public class Chunk
 
 					// Top face adjacency
 					if (j >= 0 && j <= chunkHeight - 1)
-						if (j == chunkHeight - 1 || this.blocks[i, j + 1, k].blockName == "air")
+						if (j == chunkHeight - 1 || this.blocks[i, j + 1, k]?.blockName == "air")
 							// Always render the top most face, OR if the top-adjacent block is "air".
 							this.AddFace(i, j, k, builtFaces++, "top", CubeMeshFaces.top, vertices, uvs, triangles);
 
 					// Bottom face adjacency
 					if (j >= 0 && j < chunkHeight)
-						if (j == 0 || this.blocks[i, j - 1, k].blockName == "air")
+						if (j == 0 || this.blocks[i, j - 1, k]?.blockName == "air")
 							this.AddFace(i, j, k, builtFaces++, "bottom", CubeMeshFaces.bottom, vertices, uvs, triangles);
 					
 					// West face adjacency
 					if (i >= 0 && i < chunkSize)
-						if (i == 0 || this.blocks[i - 1, j, k].blockName == "air")
+						if (i == 0 || this.blocks[i - 1, j, k]?.blockName == "air")
 							this.AddFace(i, j, k, builtFaces++, "west", CubeMeshFaces.west, vertices, uvs, triangles);
 
 					// East face adjacency
 					if (i >= 0 && i <= chunkSize)
-						if (i == chunkSize - 1 || this.blocks[i + 1, j, k].blockName == "air")
+						if (i == chunkSize - 1 || this.blocks[i + 1, j, k]?.blockName == "air")
 							this.AddFace(i, j, k, builtFaces++, "east", CubeMeshFaces.east, vertices, uvs, triangles);
 
 					// Front face adjacency
 					if (k >= 0 && k < chunkSize)
-						if (k == 0 || this.blocks[i, j, k - 1].blockName == "air")
+						if (k == 0 || this.blocks[i, j, k - 1]?.blockName == "air")
 							this.AddFace(i, j, k, builtFaces++, "front", CubeMeshFaces.front, vertices, uvs, triangles);
 
 					// Back face adjacency
 					if (k >= 0 && k <= chunkSize)
-						if (k == chunkSize - 1 || this.blocks[i, j, k + 1].blockName == "air")
+						if (k == chunkSize - 1 || this.blocks[i, j, k + 1]?.blockName == "air")
 							this.AddFace(i, j, k, builtFaces++, "back", CubeMeshFaces.back, vertices, uvs, triangles);
 				}
+	}
 
-		mesh.vertices 	= vertices.ToArray();
-		mesh.uv 		= uvs.ToArray();
-		mesh.triangles 	= triangles.ToArray();
+	/// <summary>
+	/// Generates and spawns the chunk's GameObject.
+	/// </summary>
+	private void SpawnGameObject()
+	{
+		// Instantiate the GameObject (and implictly add it to the scene).
+		this.chunkGameObject = new GameObject("Chunk");
 
-		mesh.RecalculateNormals();
+		// Get the stitched texture.
+		Texture2D texture = TextureStitcher.instance.StitchedTexture;
 
-		this.chunkGameObject.GetComponent<MeshFilter>().mesh = mesh;
-		this.chunkGameObject.GetComponent<MeshCollider>().sharedMesh = mesh;
-		this.chunkGameObject.GetComponent<MeshCollider>().material = CachedResources.Load<PhysicMaterial>("PhysicsMaterials/FrictionLess");
+		// Add mesh filter and renderer.
+		this.chunkGameObject.AddComponent<MeshFilter>();
+		this.chunkGameObject.AddComponent<MeshRenderer>();
+		this.chunkGameObject.AddComponent<MeshCollider>();
+		this.chunkGameObject.AddComponent<ChunkObject>();
 
-		this.meshBuilt = true;
+		this.chunkGameObject.tag = "chunk";
+
+		this.chunkGameObject.GetComponent<MeshRenderer>().material.mainTexture = texture;
+		this.chunkGameObject.transform.position = new Vector3(this.x * chunkSize, 0, this.z * chunkSize);
 	}
 
 	/// <summary>

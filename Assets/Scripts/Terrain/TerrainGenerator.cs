@@ -19,40 +19,27 @@ public class TerrainGenerator : MonoBehaviour
 	/// </summary>
 	private ChunkPosition previousPlayerPosition;
 
-	private int chunkMatrixSize = 2;
+	private int chunkMatrixSize = 5;
+
+	private int chunkRenderDistance = 5;
 
 	/// <summary>
 	/// Used to notify the main thread when a chunk has been generated to rebuild chunk meshes.
 	/// </summary>
-	private delegate void ChunkGenerated();
+	private delegate void ChunkBatchGenerated();
 
 	/// <summary>
 	/// Handlers that subscribed to the ChunkGenerated event.
 	/// </summary>
-	private ChunkGenerated chunkGeneratedHandlers;
+	private ChunkBatchGenerated chunkBatchGeneratedHandlers;
 
 	void Start()
 	{
-		this.GenerateTerrain();
+		this.noise = new FastNoise();
+
+		this.GenerateStartingTerrain();
 		this.previousPlayerPosition = Player.instance.GetVoxelChunk();
-		this.chunkGeneratedHandlers += this.ChunkGenerationCompleted;
-
-		Thread test = new Thread(() => {
-			this.GenerateChunkBlocks(0,0);
-			//this.ChunkGenerationCompleted();
-		});
-
-		test.Start();
-
-		// use coroutines to access Unity API reference value stuff & threads for heavy calculations.
-	}
-
-	/// <summary>
-	/// Called when a thread finished generating a chunk.
-	/// </summary>
-	void ChunkGenerationCompleted()
-	{
-		Debug.Log("Hello from other thread!");
+		this.chunkBatchGeneratedHandlers += this.ChunkGenerationCompleted;
 	}
 
 	void Update()
@@ -62,64 +49,68 @@ public class TerrainGenerator : MonoBehaviour
 		if (this.previousPlayerPosition == currentPlayerPosition)
 			return;
 
-		List<ChunkPosition> chunksToDeletePositions = new List<ChunkPosition>();
-		ChunkPosition diff = currentPlayerPosition - this.previousPlayerPosition;
-
-		if (diff.z == 0)
-			// Chunk position changed across the x-axis.
-			for (int i = -1; i < 2; i++)
-				chunksToDeletePositions.Add(new ChunkPosition(
-					currentPlayerPosition.x - diff.x * 3, 
-					currentPlayerPosition.z + i
-				));
-		else
-			// Chunk position changed across the z-axis.
-			for (int i = -1; i < 2; i++)
-				chunksToDeletePositions.Add(new ChunkPosition(
-					currentPlayerPosition.x + i, 
-					currentPlayerPosition.z - diff.z * 3
-				));
-
-		foreach(ChunkPosition cp in chunksToDeletePositions)
+		GameObject[] chunks = GameObject.FindGameObjectsWithTag("chunk");
+		foreach (GameObject _chunk in chunks)
 		{
-			if (!PCTerrain.GetInstance().chunks.ContainsKey(cp))
-				continue;
+			if (
+				Mathf.Abs(_chunk.transform.position.x / Chunk.chunkSize - currentPlayerPosition.x) >= this.chunkRenderDistance ||
+				Mathf.Abs(_chunk.transform.position.z / Chunk.chunkSize - currentPlayerPosition.z) >= this.chunkRenderDistance
+			)
+			{
+				ChunkPosition chunkPos = new ChunkPosition(
+					(int)_chunk.transform.position.x / Chunk.chunkSize, 
+					(int)_chunk.transform.position.z / Chunk.chunkSize
+				);
 
-			GameObject.Destroy(PCTerrain.GetInstance().chunks[cp].chunkGameObject);
-			PCTerrain.GetInstance().chunks.Remove(cp);
+				if (PCTerrain.GetInstance().chunks.ContainsKey(chunkPos))
+					PCTerrain.GetInstance().chunks.Remove(chunkPos);
+
+				GameObject.Destroy(_chunk);
+			}
 		}
+
+		List<ChunkPosition> chunksToAdd = new List<ChunkPosition>();
+		for (int i = -this.chunkRenderDistance / 2; i < this.chunkRenderDistance / 2; i++)
+			for (int k = -this.chunkRenderDistance / 2; k < this.chunkRenderDistance / 2; k++)
+			{
+				ChunkPosition chunkPos = new ChunkPosition(currentPlayerPosition.x - i, currentPlayerPosition.z - k);
+				if (!PCTerrain.GetInstance().chunks.ContainsKey(chunkPos))
+					chunksToAdd.Add(chunkPos);
+			}
+
+		StartCoroutine(this.GenerateChunkPoolAsync(chunksToAdd.ToArray()));
 
 		this.previousPlayerPosition = currentPlayerPosition;
 	}
 
-	public void GenerateTerrain()
+	/// <summary>
+	/// Called when a thread finished generating a chunk.
+	/// </summary>
+	private void ChunkGenerationCompleted() {}
+
+	public void GenerateStartingTerrain()
 	{
 		foreach(Chunk chunk in PCTerrain.GetInstance().chunks.Values)
 			chunk.Destroy();
 
-		this.noise = new FastNoise();
-
 		System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
 
-		for (int _i = 0; _i < chunkMatrixSize; _i++)
-			for (int _k = 0; _k < chunkMatrixSize; _k++)
+		ChunkPosition playerChunkPos = Player.instance.GetVoxelChunk();
+		int halvedChunkSize = chunkMatrixSize / 2;
+
+		for (int _i = playerChunkPos.x - halvedChunkSize; _i < playerChunkPos.x + halvedChunkSize; _i++)
+			for (int _k = playerChunkPos.z - halvedChunkSize; _k < playerChunkPos.z + halvedChunkSize; _k++)
 			{
 				Chunk chunk = new Chunk();
 				chunk.x = _i;
 				chunk.z = _k;
 
-				for (int i = 0; i < Chunk.chunkSize; i++)
-					for (int j = 0; j < Chunk.chunkHeight; j++)
-						for (int k = 0; k < Chunk.chunkSize; k++)
-						{
-							BaseBlock block = this.GenerateTerrainBlockType(i + chunk.x * 16, j, k + chunk.z * 16);
-							chunk.blocks[i,j,k] = block;
+				BaseBlock[,,] blocks;
+				this.GenerateChunkBlocks(_i, _k, out blocks);
 
-							if (chunk.blocks[i,j,k].stateful)
-								PCTerrain.GetInstance().blocks[(i,j,k).ToVector3Int()] = Registry.Instantiate(block.blockName) as Block;
-						}
-	
-				chunk.BuildMesh();
+				chunk.blocks = blocks;
+
+				StartCoroutine(chunk.BuildMeshAsync());
 
 				PCTerrain.GetInstance().chunks[(chunk.x, chunk.z)] = chunk;
 			}
@@ -129,23 +120,77 @@ public class TerrainGenerator : MonoBehaviour
 		Debug.Log("Terrain generated in: " + stopwatch.Elapsed.TotalMilliseconds + "ms");
 	}
 
-	private BaseBlock[,,] GenerateChunkBlocks(int x, int z)
+	/// <summary>
+	/// 
+	/// </summary>
+	public IEnumerator GenerateChunkPoolAsync(ChunkPosition[] chunkPositions, System.Action callback = null)
 	{
-		BaseBlock[,,] chunkBlocks = new BaseBlock[Chunk.chunkSize, Chunk.chunkHeight, Chunk.chunkSize];
+		List<Coroutine> coroutinePool = new List<Coroutine>();
+
+		foreach(ChunkPosition chunkPos in chunkPositions)
+			coroutinePool.Add(StartCoroutine(this.GenerateChunkAsync(chunkPos.x, chunkPos.z)));
+
+		foreach(Coroutine c in coroutinePool)
+			yield return c;
+
+		if (this.chunkBatchGeneratedHandlers != null)
+			this.chunkBatchGeneratedHandlers();
+
+		if (callback != null)
+			callback();
+	}
+
+	private enum ThreadStatus { STARTED, FINISHED };
+	private Dictionary<ChunkPosition, ThreadStatus> status = new Dictionary<ChunkPosition, ThreadStatus>();
+	private IEnumerator GenerateChunkAsync(int x, int z)
+	{
+		Chunk chunk = new Chunk();
+		chunk.x = x;
+		chunk.z = z;
+
+		ChunkPosition chunkPos = new ChunkPosition(x,z);
+		this.status[chunkPos] = ThreadStatus.STARTED;
+		
+		BaseBlock[,,] blocks = null;
+
+		Thread chunkBlocksGenerationThread = new Thread(() => {
+			this.GenerateChunkBlocks(x, z, out blocks);
+			this.status[chunkPos] = ThreadStatus.FINISHED;
+		});
+		chunkBlocksGenerationThread.Start();
+
+		while(this.status[chunkPos] == ThreadStatus.STARTED)
+			yield return new WaitForEndOfFrame();
+		
+		chunk.blocks = blocks;
+
+		StartCoroutine(chunk.BuildMeshAsync());
+
+		PCTerrain.GetInstance().chunks[(chunk.x, chunk.z)] = chunk;
+	}
+
+	/// <summary>
+	/// Generates a chunk's blocks. The chunk is identified by an (x,y) position. Generated blocks are inserted into the `blocks` out parameter.
+	/// </summary>
+	private void GenerateChunkBlocks(int x, int z, out BaseBlock[,,] blocks)
+	{
+		blocks = new BaseBlock[Chunk.chunkSize, Chunk.chunkHeight, Chunk.chunkSize];
 
 		for (int i = 0; i < Chunk.chunkSize; i++)
 			for (int j = 0; j < Chunk.chunkHeight; j++)
 				for (int k = 0; k < Chunk.chunkSize; k++)
 				{
 					BaseBlock block = this.GenerateTerrainBlockType(i + x * 16, j, k + z * 16);
-					chunkBlocks[i,j,k] = block;
+					blocks[i,j,k] = block;
 
-					if (chunkBlocks[i,j,k].stateful)
+					if (blocks[i,j,k].stateful)
 						PCTerrain.GetInstance().blocks[(i,j,k).ToVector3Int()] = Registry.Instantiate(block.blockName) as Block;
 				}
-
-		return chunkBlocks;
 	}
+
+	/// <summary>
+	/// Given the (i,j,k) space coordinates, generates the single seeded BaseBlock.
+	/// </summary>
 	private BaseBlock GenerateTerrainBlockType(int i, int j, int k)
 	{
 		float landSimplex1 = this.noise.GetSimplex(

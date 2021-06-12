@@ -14,7 +14,7 @@ public class CustomEditorComponents: Editor
 
 		if (GUILayout.Button("Update Values"))
 		{
-			GameObject.Find("Controller").GetComponent<TerrainGenerator>().GenerateTerrain();
+			GameObject.Find("Controller").GetComponent<TerrainGenerator>().GenerateStartingTerrain();
 		}
 	}
 }
