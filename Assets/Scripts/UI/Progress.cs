@@ -29,6 +29,11 @@ public class Progress : MonoBehaviour
 	/// </summary>
 	private RectTransform mask;
 
+	/// <summary>
+	/// The canvas scale dependant on the device screen resolution.
+	/// </summary>
+	private Vector3 scale;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -39,6 +44,8 @@ public class Progress : MonoBehaviour
 			this.mask.rect.width, 
 			this.mask.rect.height
 		);
+
+		this.scale = this.GetComponentInParent<Canvas>().transform.localScale;
 
 		switch(this.orientation)
 		{
@@ -54,22 +61,22 @@ public class Progress : MonoBehaviour
 			*/
 
 			case ProgressOrientation.TOP:
-				this.mask.position -= new Vector3(0, this.fullSize.y / 2 + 0.1f, 0);
+				this.mask.position -= new Vector3(0, this.fullSize.y / 2 * this.scale.y + 0.1f, 0);
 				this.mask.pivot = new Vector2(0.5f, 0.0f);
 				this.icon.pivot = new Vector2(0.5f, 0.0f);
 				break;
 			case ProgressOrientation.BOTTOM:
-				this.mask.position += new Vector3(0, this.fullSize.y / 2 + 0.1f, 0);
+				this.mask.position += new Vector3(0, this.fullSize.y / 2 * this.scale.y + 0.1f, 0);
 				this.mask.pivot = new Vector2(0.5f, 1.0f);
 				this.icon.pivot = new Vector2(0.5f, 1.0f);
 				break;
 			case ProgressOrientation.LEFT:
-				this.mask.position += new Vector3(this.fullSize.x / 2, 0.1f, 0);
+				this.mask.position += new Vector3(this.fullSize.x / 2 * this.scale.x, 0.1f, 0);
 				this.mask.pivot = new Vector2(1.0f, 0.5f);
 				this.icon.pivot = new Vector2(1.0f, 0.5f);
 				break;
 			case ProgressOrientation.RIGHT:
-				this.mask.position -= new Vector3(this.fullSize.x / 2, 0.1f, 0);
+				this.mask.position -= new Vector3(this.fullSize.x / 2 * this.scale.x, 0.1f, 0);
 				this.mask.pivot = new Vector2(0.0f, 0.5f);
 				this.icon.pivot = new Vector2(0.0f, 0.5f);
 				break;

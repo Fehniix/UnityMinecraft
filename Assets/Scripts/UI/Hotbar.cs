@@ -40,9 +40,6 @@ public class Hotbar : MonoBehaviour
     {
         if (Input.mouseScrollDelta.y != 0)
 			this.UpdateActiveItem();
-
-		if (!GUI.isAGUIShown && Input.GetKeyDown(KeyCode.Escape))
-			Application.Quit();
     }
 
 	/// <summary>
