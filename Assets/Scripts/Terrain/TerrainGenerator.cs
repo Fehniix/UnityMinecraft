@@ -186,6 +186,8 @@ public class TerrainGenerator : MonoBehaviour
 					if (blocks[i,j,k].stateful)
 						PCTerrain.GetInstance().blocks[(i,j,k).ToVector3Int()] = Registry.Instantiate(block.blockName) as Block;
 				}
+
+		this.GenerateTrees(x, z, blocks);
 	}
 
 	/// <summary>
@@ -199,11 +201,11 @@ public class TerrainGenerator : MonoBehaviour
 		) * 10f;
 
 		float landSimplex2 = this.noise.GetSimplex(
-			i * 5f, 
-			k * 5f
+			i * 3.5f, 
+			k * 3.5f
 		) * 10f * (this.noise.GetSimplex(
-			i * .5f,
-			k * .5f
+			i * .35f,
+			k * .35f
 		) + .3f);
 
 		float stoneSimplex1 = this.noise.GetSimplex(
@@ -226,8 +228,8 @@ public class TerrainGenerator : MonoBehaviour
 		) * 1.1f;
 
 		float caveFractalMask = this.noise.GetSimplex(
-			i * .4f,
-			k * .4f	
+			i * .45f,
+			k * .45f	
 		) * .3f;
 
 		float baselineLandHeight 	= Chunk.chunkHeight * 0.2f + landSimplex1 + landSimplex2;
@@ -254,5 +256,59 @@ public class TerrainGenerator : MonoBehaviour
 			blockType = "bedrock";
 
 		return Registry.Instantiate(blockType) as BaseBlock;
+	}
+
+	/// <summary>
+	/// Given a chunk's coordinates, generates all trees within the chunk.
+	/// </summary>
+	private void GenerateTrees(int x, int z, BaseBlock[,,] blocks)
+	{
+		// Seeded random number generator. Given the (x,y)-coordinates of a chunk, this will
+		// generate always the same trees.
+		System.Random random = new System.Random(x * z * 8192);
+
+		float treesSimplex = this.noise.GetSimplex(x * 2.5f, z * 2.5f);
+
+		Debug.Log(treesSimplex);
+
+		// The current chunk has... no trees in it!
+		if (treesSimplex < 0)
+			return;
+
+		int treesCount = (int)(((random.NextDouble() * 4) + 1) * (treesSimplex + 1));
+
+		for (int treeNumber = 0; treeNumber < treesCount; treeNumber++)
+		{
+			int tPosX = (int)(random.NextDouble() * 12 + 2);
+			int tPosZ = (int)(random.NextDouble() * 12 + 2);
+			
+			int groundLevel = 0;
+			for (int y = 0; y < Chunk.chunkHeight; y++)
+				if (blocks[tPosX,y,tPosZ].blockName == "grass")
+				{
+					groundLevel = y + 1;
+					break;
+				}
+
+			bool anotherTreeTooClose = false;
+			for (int a = tPosX - 2; a < tPosX + 3; a++)
+				for (int b = groundLevel - 3; b < groundLevel + 7; b++)
+					for (int c = tPosZ - 2; c < tPosZ + 3; c++)
+						if (blocks[a, b, c].blockName == "log")
+							anotherTreeTooClose = true;
+
+			if (anotherTreeTooClose)
+				continue;
+			
+			// Make the trunk!
+			for (int i = 0; i < 5; i++)
+				blocks[tPosX, groundLevel + i, tPosZ] = Registry.Instantiate("log") as BaseBlock;
+
+			// First 5x5 layer of leaves
+			for (int i = tPosX - 2; i < tPosX + 2; i++)
+				for (int j = tPosZ - 2; j < tPosZ + 2; j++)
+					if (blocks[i, groundLevel + 3, j]?.blockName != "log")
+						blocks[i, groundLevel + 3, j] = Registry.Instantiate("leaves") as BaseBlock;
+		}
 	}
 }

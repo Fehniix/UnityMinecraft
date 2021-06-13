@@ -25,6 +25,8 @@ public class Registrar : MonoBehaviour
 		Registry.RegisterItem<OreDiamond>("oreDiamond");
 		Registry.RegisterItem<OreEmerald>("oreEmerald");
 		Registry.RegisterItem<OreGold>("oreGold");
+		Registry.RegisterItem<Log>("log");
+		Registry.RegisterItem<Leaves>("leaves");
 	}
 
 	void RegisterItems()

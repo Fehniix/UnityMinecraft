@@ -198,6 +198,7 @@ public class Chunk
 
 		this.chunkGameObject.tag = "chunk";
 
+		this.chunkGameObject.GetComponent<MeshRenderer>().material = Resources.Load<Material>("ChunkCutout");
 		this.chunkGameObject.GetComponent<MeshRenderer>().material.mainTexture = texture;
 		this.chunkGameObject.transform.position = new Vector3(this.x * chunkSize, 0, this.z * chunkSize);
 	}
