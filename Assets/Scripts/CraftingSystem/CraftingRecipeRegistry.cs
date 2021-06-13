@@ -40,7 +40,7 @@ public static class CraftingRecipeRegistry
 		// Initialize normalized to requirements; effectively making a copy of it.
 		for (int i = 0; i < 3; i++)
 			for (int j = 0; j < 3; j++)
-				normalized[i,j] = requirements[i,j];
+				normalized[j,i] = requirements[i,j];
 
 		while(MatrixUtils.IsMatrixRowEmpty(normalized, 0) && !MatrixUtils.IsMatrixEmpty(normalized))
 			MatrixUtils.UpShiftMatrix(normalized);

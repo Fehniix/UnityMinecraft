@@ -28,6 +28,7 @@ public class Registrar : MonoBehaviour
 		Registry.RegisterItem<Log>("log");
 		Registry.RegisterItem<Planks>("planks");
 		Registry.RegisterItem<Leaves>("leaves");
+		Registry.RegisterItem<IronBlock>("ironBlock");
 		Registry.RegisterItem<GoldBlock>("goldBlock");
 		Registry.RegisterItem<DiamondBlock>("diamondBlock");
 		Registry.RegisterItem<EmeraldBlock>("emeraldBlock");
@@ -153,6 +154,15 @@ public class Registrar : MonoBehaviour
 
 		CraftingRecipeRegistry.RegisterRecipe(
 			new CraftingRecipe(new string[3,3] {
+				{"ironIngot", "ironIngot", "ironIngot"},
+				{"ironIngot", "ironIngot", "ironIngot"},
+				{"ironIngot", "ironIngot", "ironIngot"}
+			}, 
+			new CraftingResult("ironBlock", 1)
+		));
+
+		CraftingRecipeRegistry.RegisterRecipe(
+			new CraftingRecipe(new string[3,3] {
 				{"diamondBlock", null, null},
 				{null, null, null},
 				{null, null, null}
@@ -176,6 +186,15 @@ public class Registrar : MonoBehaviour
 				{null, null, null}
 			}, 
 			new CraftingResult("goldIngot", 9)
+		));
+
+		CraftingRecipeRegistry.RegisterRecipe(
+			new CraftingRecipe(new string[3,3] {
+				{"ironIngot", null, null},
+				{null, null, null},
+				{null, null, null}
+			}, 
+			new CraftingResult("ironIngot", 9)
 		));
 
 		CraftingRecipeRegistry.RegisterRecipe(
