@@ -7,6 +7,8 @@
 		this.interactable 		= true;
 		this.hardness 			= 3 * 20;
 		this.stateful 			= true;
+		this.anyToolRequired 	= true;
+		this.toolTypeRequired	= ToolType.PICKAXE;
 	}
 
 	public override void Interact()

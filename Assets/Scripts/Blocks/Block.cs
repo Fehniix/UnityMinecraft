@@ -33,6 +33,18 @@ public abstract class Block: BaseBlock, IInteractable
 	public bool placeable = true;
 
 	/// <summary>
+	/// The level at which the IInteractable is breakable.
+	/// </summary>
+	private int _miningLevel = 0;
+	/// <summary>
+	/// The level at which the IInteractable is breakable.
+	/// </summary>
+	public int miningLevel {
+		get { return this._miningLevel; }
+		set { this._miningLevel = value; }
+	}
+
+	/// <summary>
 	/// Used to store accessors' value.
 	/// </summary>
 	private bool _interactable = false;
@@ -98,6 +110,16 @@ public abstract class Block: BaseBlock, IInteractable
 	public bool broken = false;
 
 	/// <summary>
+	/// Whether a specific tool type is required or not. 
+	/// </summary>
+	public bool anyToolRequired = false;
+
+	/// <summary>
+	/// The type of tool that might be required to break the block.
+	/// </summary>
+	public ToolType toolTypeRequired = ToolType.ANY;
+
+	/// <summary>
 	/// The list of items to drop.
 	/// </summary>
 	public List<Drop> drops;
@@ -111,6 +133,11 @@ public abstract class Block: BaseBlock, IInteractable
 	/// Maximum amount of items that can be aggregated in a single item slot.
 	/// </summary>
 	public int maxStack = 64;
+
+	/// <summary>
+	/// The temporary variable where to store the original hardness before the activeItem modifies it.
+	/// </summary>
+	private int originalHardness = -1;
 
 	public Block()
 	{
@@ -174,7 +201,28 @@ public abstract class Block: BaseBlock, IInteractable
 	{
 		if (!this.breakable)
 			return;
+
+		InventoryItem activeItem 	= InventoryContainers.hotbar.items[PlayerInventoryManager.activeItemIndex];
+		Item itemInstance 			= activeItem?.itemInstance as Item;
+
+		if (this.miningLevel > 0 || this.toolTypeRequired != ToolType.ANY)
+		{
+			if (itemInstance == null)
+				return;
+
+			if (itemInstance.miningLevel < this.miningLevel)
+				return;
+
+			if (itemInstance.toolType != this.toolTypeRequired)
+				return;
+		}
 			
+		if (itemInstance != null && this.toolTypeRequired == itemInstance.toolType)
+		{
+			this.originalHardness = this.hardness;
+			this.hardness /= (int)itemInstance.breakingSpeedModifier;
+		}
+
 		//Debug.Log("[Block Breaking] Initiating block breaking... " + this.blockName);
 
 		this._breakingProgress = 0;
@@ -209,6 +257,9 @@ public abstract class Block: BaseBlock, IInteractable
 	{
 		if (!this.breakable)
 			return;
+
+		if (this.originalHardness != -1)
+			this.hardness = this.originalHardness;
 
 		//Debug.Log("[Block Breaking] User either lifted the break button, broke the block or moved outside block view: " + this.blockName);
 

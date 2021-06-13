@@ -16,7 +16,7 @@ public class Controller : MonoBehaviour
 		InventoryContainers.hotbar.items[0] = new InventoryItem("furnace");
 		InventoryContainers.hotbar.items[1] = new InventoryItem("craftingTable");
 		InventoryContainers.hotbar.items[2] = new InventoryItem("cobblestone");
-		InventoryContainers.hotbar.items[3] = new InventoryItem("torch");
+		InventoryContainers.hotbar.items[3] = new InventoryItem("diamondPickaxe");
 		InventoryContainers.hotbar.items[2].quantity = 64;
 
 		GUI.hotbar.UpdateGUI();

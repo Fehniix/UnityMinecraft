@@ -26,9 +26,19 @@ public class Item: IInteractable
 	public Vector3 coordinates;
 
 	/// <summary>
+	/// The item's tool type.
+	/// </summary>
+	public ToolType toolType = ToolType.ANY;
+
+	/// <summary>
 	/// Whether the item uses the GenericItem prefab.
 	/// </summary>
 	public bool hasGenericMesh = false;
+
+	/// <summary>
+	/// Whether or not to render the item on the player's hand, to be animated.
+	/// </summary>
+	public bool renderWhenSelected = false;
 
 	/// <summary>
 	/// Whether the item is placeable or not.
@@ -56,8 +66,27 @@ public class Item: IInteractable
 	/// </summary>
 	public bool dropsItself = true;
 
-	private bool _interactable;
+	/// <summary>
+	/// The level at which the IInteractable is breakable.
+	/// </summary>
+	private int _miningLevel = 0;
+	/// <summary>
+	/// The level at which the IInteractable is breakable.
+	/// </summary>
+	public int miningLevel {
+		get { return this._miningLevel; }
+		set { this._miningLevel = value; }
+	}
 
+	/// <summary>
+	/// The breaking speed multiplier. Target block hardness' gets divided by this amount.
+	/// </summary>
+	public float breakingSpeedModifier = 1.0f;
+
+	/// <summary>
+	/// Whether the item is interactable or not.
+	/// </summary>
+	private bool _interactable;
 	/// <summary>
 	/// Whether the item is interactable or not.
 	/// </summary>
@@ -70,7 +99,6 @@ public class Item: IInteractable
 	/// Whether the item is smeltable or not.
 	/// </summary>
 	private bool _smeltable = false;
-
 	/// <summary>
 	/// Whether the item is smeltable or not.
 	/// </summary>

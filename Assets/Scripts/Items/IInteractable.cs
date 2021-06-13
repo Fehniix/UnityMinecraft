@@ -22,6 +22,11 @@ public interface IInteractable
 	/// </summary>
 	int burnTime { get; set; }
 
+	/// <summary>
+	/// The level at which the IInteractable is breakable.
+	/// </summary>
+	int miningLevel { get; set; }
+
 	void Place();
 
 	void Break();

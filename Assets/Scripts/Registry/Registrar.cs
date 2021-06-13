@@ -21,12 +21,21 @@ public class Registrar : MonoBehaviour
 		Registry.RegisterItem<CraftingTable>("craftingTable");
 		Registry.RegisterItem<Furnace>("furnace");
 		Registry.RegisterItem<OreCoal>("oreCoal");
+		Registry.RegisterItem<OreIron>("oreIron");
+		Registry.RegisterItem<OreDiamond>("oreDiamond");
+		Registry.RegisterItem<OreEmerald>("oreEmerald");
+		Registry.RegisterItem<OreGold>("oreGold");
 	}
 
 	void RegisterItems()
 	{
 		Registry.RegisterItem<Torch>("torch");
 		Registry.RegisterItem<Coal>("coal");
+		Registry.RegisterItem<Diamond>("diamond");
+		Registry.RegisterItem<Emerald>("emerald");
+		Registry.RegisterItem<IngotIron>("ironIngot");
+		Registry.RegisterItem<IngotGold>("goldIngot");
+		Registry.RegisterItem<DiamondPickaxe>("diamondPickaxe");
 	}
 
 	void RegisterCraftingRecipes()
