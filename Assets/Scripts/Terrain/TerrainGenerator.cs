@@ -245,9 +245,9 @@ public class TerrainGenerator : MonoBehaviour
 			k * .45f	
 		) * .3f;
 
-		float baselineLandHeight 	= Chunk.chunkHeight * 0.2f + landSimplex1 + landSimplex2;
-		float baselineStoneHeight 	= Chunk.chunkHeight * 0.04f + stoneSimplex1 + stoneSimplex1;
-		float baselineCaveHeight 	= Chunk.chunkHeight * 0.066f;
+		float baselineLandHeight 	= Chunk.chunkHeight * 0.5f + landSimplex1 + landSimplex2;
+		float baselineStoneHeight 	= Chunk.chunkHeight * 0.40f + stoneSimplex1 + stoneSimplex1;
+		float baselineCaveHeight 	= Chunk.chunkHeight * 0.2f;
 
 		string blockType = "air";
 
@@ -293,13 +293,16 @@ public class TerrainGenerator : MonoBehaviour
 			int tPosX = (int)(random.NextDouble() * 12 + 2);
 			int tPosZ = (int)(random.NextDouble() * 12 + 2);
 			
-			int groundLevel = 0;
+			int groundLevel = -1;
 			for (int y = 0; y < Chunk.chunkHeight; y++)
 				if (blocks[tPosX,y,tPosZ].blockName == "grass")
 				{
 					groundLevel = y + 1;
 					break;
 				}
+
+			if (groundLevel == -1)
+				continue;
 
 			bool anotherTreeTooClose = false;
 			for (int a = tPosX - 2; a < tPosX + 3; a++)
@@ -350,17 +353,17 @@ public class TerrainGenerator : MonoBehaviour
 
 		string blockName = "stone";
 		
-		if (probability <= 0.25)
+		if (probability <= 8)
 			blockName = "oreCoal";
 
-		if (probability <= 0.18 && y > 25)
+		if (probability <= 5 && y > 25 && y < 58)
 			blockName = "oreIron";
 
-		if (probability <= 0.10 && y <= 25)
+		if (probability <= 1 && y <= 25)
 			blockName = "oreGold";
 
-		if (probability <= 0.05 && y <= 14)
-			if (probabilityDiamond > 0.5)
+		if (probability <= 1 && y <= 14)
+			if (probabilityDiamond > 50)
 				blockName = "oreDiamond";
 			else
 				blockName = "oreEmerald";

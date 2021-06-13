@@ -11,7 +11,7 @@ public class Controller : MonoBehaviour
     {
 		this.positionText = GameObject.Find("UI/StaticWrapper/Position").GetComponent<Text>();
 
-		GameObject.Find("Player").transform.Translate(new Vector3(512, 40, 512));
+		GameObject.Find("Player").transform.Translate(new Vector3(512, 70, 512));
 
 		InventoryContainers.hotbar.items[0] = new InventoryItem("furnace");
 		InventoryContainers.hotbar.items[1] = new InventoryItem("woodPickaxe");
