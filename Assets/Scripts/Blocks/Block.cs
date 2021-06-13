@@ -209,8 +209,8 @@ public abstract class Block: BaseBlock, IInteractable
 		{
 			if (itemInstance == null)
 				return;
-
-			if (itemInstance.miningLevel < this.miningLevel)
+			
+			if (this.miningLevel > itemInstance.miningLevel)
 				return;
 
 			if (itemInstance.toolType != this.toolTypeRequired)

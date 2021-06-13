@@ -28,6 +28,10 @@ public class Registrar : MonoBehaviour
 		Registry.RegisterItem<Log>("log");
 		Registry.RegisterItem<Planks>("planks");
 		Registry.RegisterItem<Leaves>("leaves");
+		Registry.RegisterItem<GoldBlock>("goldBlock");
+		Registry.RegisterItem<DiamondBlock>("diamondBlock");
+		Registry.RegisterItem<EmeraldBlock>("emeraldBlock");
+		Registry.RegisterItem<RainbowGenerator>("rainbowGenerator");
 	}
 
 	void RegisterItems()
@@ -55,6 +59,24 @@ public class Registrar : MonoBehaviour
 				{null, null, null}
 			}, 
 			new CraftingResult("torch", 4)
+		));
+
+		CraftingRecipeRegistry.RegisterRecipe(
+			new CraftingRecipe(new string[3,3] {
+				{"planks", null, null},
+				{"planks", null, null},
+				{null, null, null}
+			}, 
+			new CraftingResult("stick", 4)
+		));
+
+		CraftingRecipeRegistry.RegisterRecipe(
+			new CraftingRecipe(new string[3,3] {
+				{"log", null, null},
+				{"log", null, null},
+				{null, null, null}
+			}, 
+			new CraftingResult("stick", 16)
 		));
 
 		CraftingRecipeRegistry.RegisterRecipe(
@@ -104,6 +126,60 @@ public class Registrar : MonoBehaviour
 
 		CraftingRecipeRegistry.RegisterRecipe(
 			new CraftingRecipe(new string[3,3] {
+				{"diamond", "diamond", "diamond"},
+				{"diamond", "diamond", "diamond"},
+				{"diamond", "diamond", "diamond"}
+			}, 
+			new CraftingResult("diamondBlock", 1)
+		));
+
+		CraftingRecipeRegistry.RegisterRecipe(
+			new CraftingRecipe(new string[3,3] {
+				{"emerald", "emerald", "emerald"},
+				{"emerald", "emerald", "emerald"},
+				{"emerald", "emerald", "emerald"}
+			}, 
+			new CraftingResult("emeraldBlock", 1)
+		));
+
+		CraftingRecipeRegistry.RegisterRecipe(
+			new CraftingRecipe(new string[3,3] {
+				{"goldIngot", "goldIngot", "goldIngot"},
+				{"goldIngot", "goldIngot", "goldIngot"},
+				{"goldIngot", "goldIngot", "goldIngot"}
+			}, 
+			new CraftingResult("goldBlock", 1)
+		));
+
+		CraftingRecipeRegistry.RegisterRecipe(
+			new CraftingRecipe(new string[3,3] {
+				{"diamondBlock", null, null},
+				{null, null, null},
+				{null, null, null}
+			}, 
+			new CraftingResult("diamond", 9)
+		));
+
+		CraftingRecipeRegistry.RegisterRecipe(
+			new CraftingRecipe(new string[3,3] {
+				{"emeraldBlock", null, null},
+				{null, null, null},
+				{null, null, null}
+			}, 
+			new CraftingResult("emerald", 9)
+		));
+
+		CraftingRecipeRegistry.RegisterRecipe(
+			new CraftingRecipe(new string[3,3] {
+				{"goldBlock", null, null},
+				{null, null, null},
+				{null, null, null}
+			}, 
+			new CraftingResult("goldIngot", 9)
+		));
+
+		CraftingRecipeRegistry.RegisterRecipe(
+			new CraftingRecipe(new string[3,3] {
 				{"log", null, null},
 				{null, null, null},
 				{null, null, null}
@@ -122,11 +198,21 @@ public class Registrar : MonoBehaviour
 
 		CraftingRecipeRegistry.RegisterRecipe(
 			new CraftingRecipe(new string[3,3] {
-				{"plank", "plank", null},
-				{"plank", "plank", null},
+				{"planks", "planks", null},
+				{"planks", "planks", null},
 				{null, null, null}
 			}, 
 			new CraftingResult("craftingTable", 1)
 		));
+
+		CraftingRecipeRegistry.RegisterRecipe(
+			new CraftingRecipe(new string[3,3] {
+				{"goldBlock", "diamondBlock", "goldBlock"},
+				{"ironIngot", "emeraldBlock", "ironIngot"},
+				{"goldBlock", "diamondBlock", "goldBlock"}
+			}, 
+			new CraftingResult("rainbowGenerator", 1)
+		));
+		// TODO matrix is transposed for some reason, need to fix.
 	}
 }
