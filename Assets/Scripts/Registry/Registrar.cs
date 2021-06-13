@@ -232,6 +232,5 @@ public class Registrar : MonoBehaviour
 			}, 
 			new CraftingResult("rainbowGenerator", 1)
 		));
-		// TODO matrix is transposed for some reason, need to fix.
 	}
 }
