@@ -131,9 +131,13 @@ public class Item: IInteractable
 	/// <summary>
 	/// The number of ticks the fuel item lasts for as a burnable item.
 	/// </summary>
+	private int _burnTime = 300;
+	/// <summary>
+	/// The number of ticks the fuel item lasts for as a burnable item.
+	/// </summary>
 	public int burnTime {
-		get { return 300; }
-		set {}
+		get { return this._burnTime; }
+		set { this._burnTime = value; }
 	}
 
 	/// <summary>

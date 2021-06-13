@@ -321,4 +321,12 @@ public class TerrainGenerator : MonoBehaviour
 			blocks[tPosX, groundLevel + 6, tPosZ] = Registry.Instantiate("leaves") as BaseBlock;
 		}
 	}
+
+	/// <summary>
+	/// Given a chunk's (x,z)-coordinates, it generates ores for it.
+	/// </summary>
+	private void GenerateOres()
+	{
+		
+	}
 }

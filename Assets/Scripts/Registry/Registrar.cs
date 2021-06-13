@@ -42,6 +42,7 @@ public class Registrar : MonoBehaviour
 		Registry.RegisterItem<IronPickaxe>("ironPickaxe");
 		Registry.RegisterItem<GoldPickaxe>("goldPickaxe");
 		Registry.RegisterItem<DiamondPickaxe>("diamondPickaxe");
+		Registry.RegisterItem<Stick>("stick");
 	}
 
 	void RegisterCraftingRecipes()

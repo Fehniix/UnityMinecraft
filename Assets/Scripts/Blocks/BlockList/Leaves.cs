@@ -10,6 +10,6 @@ public class Leaves: Block
 		this.dropsItself		= false;
 		
 		this.drops = new List<Drop>();
-		this.drops.Add(new Drop("stick", (int)new System.Random().NextDouble() * 4, 1.0f));
+		this.drops.Add(new Drop("stick", (int)(new System.Random().NextDouble() * 4), 1.0f));
 	}
 }

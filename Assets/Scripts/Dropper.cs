@@ -11,6 +11,9 @@ public static class Dropper
 	/// </summary>
 	public static void DropItem(string itemName, Vector3 coordinates, int quantity = 1, Vector3? forceVector = null, bool pickupCooldownActive = false)
 	{
+		if (quantity == 0)
+			return;
+			
 		if (Registry.IsBlock(itemName))
 		{
 			// Other than building the block mesh, this also adds in the Entity component + SphereCollider trigger. 
