@@ -14,7 +14,7 @@ public struct Drop
 	public int quantity;
 
 	/// <summary>
-	/// The probability at which the item is dropped.
+	/// The probability at which the item is dropped. Float in range: [0,1].
 	/// </summary>
     public float probability;
 

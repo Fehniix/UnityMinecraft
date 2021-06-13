@@ -26,6 +26,11 @@ public class Item: IInteractable
 	public Vector3 coordinates;
 
 	/// <summary>
+	/// Whether the item uses the GenericItem prefab.
+	/// </summary>
+	public bool hasGenericMesh = false;
+
+	/// <summary>
 	/// Whether the item is placeable or not.
 	/// </summary>
 	public bool placeable = false;
@@ -113,8 +118,16 @@ public class Item: IInteractable
 	/// </summary>
 	public void LoadPrefab()
 	{
-		// Load the prefab.
-		this.prefab = Resources.Load<GameObject>(System.String.Format("Prefabs/{0}", this.itemName));
+		if (this.hasGenericMesh)
+		{
+			this.prefab = Resources.Load<GameObject>("Prefabs/GenericItem");
+			Texture2D texture = CachedResources.Load<Texture2D>(System.String.Format("Textures/Items/{0}", this.itemName));
+			this.prefab.transform.GetChild(0).GetComponent<MeshRenderer>().sharedMaterial.mainTexture = texture;
+			this.prefab.transform.GetChild(1).GetComponent<MeshRenderer>().sharedMaterial.mainTexture = texture;
+		}
+		else
+			// Load the prefab.
+			this.prefab = Resources.Load<GameObject>(System.String.Format("Prefabs/{0}", this.itemName));
 	}
 
 	/// <summary>

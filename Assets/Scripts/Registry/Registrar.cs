@@ -20,11 +20,13 @@ public class Registrar : MonoBehaviour
 		Registry.RegisterItem<Bedrock>("bedrock");
 		Registry.RegisterItem<CraftingTable>("craftingTable");
 		Registry.RegisterItem<Furnace>("furnace");
+		Registry.RegisterItem<OreCoal>("oreCoal");
 	}
 
 	void RegisterItems()
 	{
 		Registry.RegisterItem<Torch>("torch");
+		Registry.RegisterItem<Coal>("coal");
 	}
 
 	void RegisterCraftingRecipes()

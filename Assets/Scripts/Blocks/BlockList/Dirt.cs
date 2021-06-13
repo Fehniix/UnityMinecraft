@@ -4,6 +4,6 @@
 	{
 		this.blockName = "dirt";
 		this.hardness = 2 * 20;
-		this.maxStack = 2;
+		this.maxStack = 64;
 	}
 }
