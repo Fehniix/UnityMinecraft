@@ -25,7 +25,7 @@ public interface IInteractable
 	/// <summary>
 	/// The level at which the IInteractable is breakable.
 	/// </summary>
-	int miningLevel { get; set; }
+	MiningLevel miningLevel { get; set; }
 
 	void Place();
 

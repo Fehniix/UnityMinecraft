@@ -10,7 +10,7 @@ public class OreEmerald: Block
 		this.maxStack 			= 64;
 		this.dropsItself 		= false;
 		this.toolTypeRequired 	= ToolType.PICKAXE;
-		this.miningLevel		= 3;
+		this.miningLevel		= MiningLevel.IRON;
 		
 		this.drops = new List<Drop>();
 		this.drops.Add(new Drop("emerald", UnityEngine.Random.Range(1, 2), 1.0f));

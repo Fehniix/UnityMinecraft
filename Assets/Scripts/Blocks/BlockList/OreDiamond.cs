@@ -10,7 +10,7 @@ public class OreDiamond: Block
 		this.maxStack 			= 64;
 		this.dropsItself 		= false;
 		this.toolTypeRequired 	= ToolType.PICKAXE;
-		this.miningLevel		= 3;
+		this.miningLevel		= MiningLevel.IRON;
 		
 		this.drops = new List<Drop>();
 		this.drops.Add(new Drop("diamond", UnityEngine.Random.Range(1, 2), 1.0f));

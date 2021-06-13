@@ -35,11 +35,11 @@ public abstract class Block: BaseBlock, IInteractable
 	/// <summary>
 	/// The level at which the IInteractable is breakable.
 	/// </summary>
-	private int _miningLevel = 0;
+	private MiningLevel _miningLevel = MiningLevel.WOOD;
 	/// <summary>
 	/// The level at which the IInteractable is breakable.
 	/// </summary>
-	public int miningLevel {
+	public MiningLevel miningLevel {
 		get { return this._miningLevel; }
 		set { this._miningLevel = value; }
 	}

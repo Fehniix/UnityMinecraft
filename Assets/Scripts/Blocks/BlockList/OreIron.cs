@@ -12,6 +12,6 @@ public class OreIron: Block
 		this.smeltable 			= true;
 		this.smeltedResult 		= new CraftingResult("ironIngot", 1);
 		this.toolTypeRequired 	= ToolType.PICKAXE;
-		this.miningLevel		= 1;
+		this.miningLevel		= MiningLevel.STONE;
 	}
 }

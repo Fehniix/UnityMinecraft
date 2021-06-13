@@ -8,12 +8,10 @@ public class DiamondPickaxe: Item
     {
         this.itemName 				= "diamondPickaxe";
 		this.itemTextureName 		= "diamond_pickaxe";
-		this.placeable				= true;
-		this.placeableOnlyOnTop 	= true;
-		this.placeableOnOtherItems 	= false;
-		this.miningLevel			= 3;
+		this.placeable				= false;
+		this.miningLevel			= MiningLevel.DIAMOND;
 		this.toolType				= ToolType.PICKAXE;
-		this.breakingSpeedModifier	= 3f;
+		this.breakingSpeedModifier	= 3.5f;
 		this.LoadPrefab();
     }
 }

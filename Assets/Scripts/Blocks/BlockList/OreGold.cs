@@ -10,6 +10,6 @@
 		this.smeltable 			= true;
 		this.smeltedResult 		= new CraftingResult("goldIngot", 1);
 		this.toolTypeRequired 	= ToolType.PICKAXE;
-		this.miningLevel		= 2;
+		this.miningLevel		= MiningLevel.IRON;
 	}
 }
