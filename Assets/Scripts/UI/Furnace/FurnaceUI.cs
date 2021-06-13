@@ -23,7 +23,7 @@ public class FurnaceUI : UserInterface
 	/// The time it takes for a single smelting operation.
 	/// </summary>
 	public int singleOperationTime {
-		get { return 100; }
+		get { return 200; }
 	}
 
 	/// <summary>
