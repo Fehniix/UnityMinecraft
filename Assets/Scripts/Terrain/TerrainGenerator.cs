@@ -305,10 +305,20 @@ public class TerrainGenerator : MonoBehaviour
 				blocks[tPosX, groundLevel + i, tPosZ] = Registry.Instantiate("log") as BaseBlock;
 
 			// First 5x5 layer of leaves
-			for (int i = tPosX - 2; i < tPosX + 2; i++)
-				for (int j = tPosZ - 2; j < tPosZ + 2; j++)
-					if (blocks[i, groundLevel + 3, j]?.blockName != "log")
-						blocks[i, groundLevel + 3, j] = Registry.Instantiate("leaves") as BaseBlock;
+			for (int i = tPosX - 2; i <= tPosX + 2; i++)
+				for (int k = tPosZ - 2; k <= tPosZ + 2; k++)
+					if (blocks[i, groundLevel + 3, k]?.blockName != "log")
+						blocks[i, groundLevel + 3, k] = Registry.Instantiate("leaves") as BaseBlock;
+
+			// Second 4x2x4 layer of leaves
+			for (int i = tPosX - 1; i <= tPosX + 1; i++)
+				for (int j = 0; j < 2; j++)
+					for (int k = tPosZ - 1; k <= tPosZ + 1; k++)
+						if (blocks[i, groundLevel + 4 + j, k]?.blockName != "log")
+							blocks[i, groundLevel + 4 + j, k] = Registry.Instantiate("leaves") as BaseBlock;
+
+			// Za tip of za leavez Kreygasm
+			blocks[tPosX, groundLevel + 6, tPosZ] = Registry.Instantiate("leaves") as BaseBlock;
 		}
 	}
 }
