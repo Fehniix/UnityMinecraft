@@ -12,6 +12,6 @@ public class OreCoal: Block
 		this.toolTypeRequired 	= ToolType.PICKAXE;
 		
 		this.drops = new List<Drop>();
-		this.drops.Add(new Drop("coal", UnityEngine.Random.Range(1, 8), 1.0f));
+		this.drops.Add(new Drop("coal", (int)(new System.Random().NextDouble() * 8 + 1), 1.0f));
 	}
 }

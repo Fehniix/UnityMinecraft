@@ -26,6 +26,7 @@ public class Registrar : MonoBehaviour
 		Registry.RegisterItem<OreEmerald>("oreEmerald");
 		Registry.RegisterItem<OreGold>("oreGold");
 		Registry.RegisterItem<Log>("log");
+		Registry.RegisterItem<Planks>("planks");
 		Registry.RegisterItem<Leaves>("leaves");
 	}
 
@@ -58,7 +59,7 @@ public class Registrar : MonoBehaviour
 
 		CraftingRecipeRegistry.RegisterRecipe(
 			new CraftingRecipe(new string[3,3] {
-				{"plank", "plank", "plank"},
+				{"planks", "planks", "planks"},
 				{null, "stick", null},
 				{null, "stick", null}
 			}, 
@@ -107,7 +108,7 @@ public class Registrar : MonoBehaviour
 				{null, null, null},
 				{null, null, null}
 			}, 
-			new CraftingResult("plank", 4)
+			new CraftingResult("planks", 4)
 		));
 
 		CraftingRecipeRegistry.RegisterRecipe(
@@ -117,6 +118,15 @@ public class Registrar : MonoBehaviour
 				{"cobblestone", "cobblestone", "cobblestone"}
 			}, 
 			new CraftingResult("furnace", 1)
+		));
+
+		CraftingRecipeRegistry.RegisterRecipe(
+			new CraftingRecipe(new string[3,3] {
+				{"plank", "plank", null},
+				{"plank", "plank", null},
+				{null, null, null}
+			}, 
+			new CraftingResult("craftingTable", 1)
 		));
 	}
 }

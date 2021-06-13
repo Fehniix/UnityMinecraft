@@ -174,6 +174,8 @@ public class TerrainGenerator : MonoBehaviour
 	/// </summary>
 	private void GenerateChunkBlocks(int x, int z, out BaseBlock[,,] blocks)
 	{
+		System.Random random = new System.Random(x * z * 4096);
+
 		blocks = new BaseBlock[Chunk.chunkSize, Chunk.chunkHeight, Chunk.chunkSize];
 
 		for (int i = 0; i < Chunk.chunkSize; i++)
@@ -182,6 +184,17 @@ public class TerrainGenerator : MonoBehaviour
 				{
 					BaseBlock block = this.GenerateTerrainBlockType(i + x * 16, j, k + z * 16);
 					blocks[i,j,k] = block;
+
+					if (block.blockName == "stone")
+					{
+						string oreBlockName = this.GenerateOres(random, j);
+						if (oreBlockName != "stone")
+						{
+							BaseBlock oreBlock = Registry.Instantiate(oreBlockName) as BaseBlock;
+							blocks[i,j,k] = oreBlock;
+							Debug.Log("Placing " + oreBlockName);
+						} 
+					}
 
 					if (blocks[i,j,k].stateful)
 						PCTerrain.GetInstance().blocks[(i,j,k).ToVector3Int()] = Registry.Instantiate(block.blockName) as Block;
@@ -269,8 +282,6 @@ public class TerrainGenerator : MonoBehaviour
 
 		float treesSimplex = this.noise.GetSimplex(x * 2.5f, z * 2.5f);
 
-		Debug.Log(treesSimplex);
-
 		// The current chunk has... no trees in it!
 		if (treesSimplex < 0)
 			return;
@@ -317,7 +328,7 @@ public class TerrainGenerator : MonoBehaviour
 						if (blocks[i, groundLevel + 4 + j, k]?.blockName != "log")
 							blocks[i, groundLevel + 4 + j, k] = Registry.Instantiate("leaves") as BaseBlock;
 
-			// Za tip of za leavez Kreygasm
+			// The tip!
 			blocks[tPosX, groundLevel + 6, tPosZ] = Registry.Instantiate("leaves") as BaseBlock;
 		}
 	}
@@ -325,8 +336,35 @@ public class TerrainGenerator : MonoBehaviour
 	/// <summary>
 	/// Given a chunk's (x,z)-coordinates, it generates ores for it.
 	/// </summary>
-	private void GenerateOres()
+	private string GenerateOres(System.Random random, int y)
 	{
+		/**
+		* Coal: spawns wherever stone can spawn. Rate: 0.25
+		* Iron: spawns at y > 25. Rate: 0.18
+		* Gold: spawns at y < 25 Rate: 0.10
+		* Diamond & Emerald: spawns y < 14. Rate: 0.05
+		*/
+
+		float probability = (float)(random.NextDouble() * 100);
+		float probabilityDiamond = (float)(random.NextDouble() * 100);
+
+		string blockName = "stone";
 		
+		if (probability <= 0.25)
+			blockName = "oreCoal";
+
+		if (probability <= 0.18 && y > 25)
+			blockName = "oreIron";
+
+		if (probability <= 0.10 && y <= 25)
+			blockName = "oreGold";
+
+		if (probability <= 0.05 && y <= 14)
+			if (probabilityDiamond > 0.5)
+				blockName = "oreDiamond";
+			else
+				blockName = "oreEmerald";
+
+		return blockName;
 	}
 }

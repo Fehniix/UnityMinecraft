@@ -13,6 +13,6 @@ public class OreEmerald: Block
 		this.miningLevel		= MiningLevel.IRON;
 		
 		this.drops = new List<Drop>();
-		this.drops.Add(new Drop("emerald", UnityEngine.Random.Range(1, 2), 1.0f));
+		this.drops.Add(new Drop("emerald", (int)(new System.Random().NextDouble() * 4 + 1), 1.0f));
 	}
 }
