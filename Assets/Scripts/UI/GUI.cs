@@ -34,6 +34,11 @@ public static class GUI
 	public static FurnaceUI furnaceUI;
 
 	/// <summary>
+	/// Reference to the pause menu.
+	/// </summary>
+	public static PauseMenuUI pauseMenuUI;
+
+	/// <summary>
 	/// Reference to the currently active GUI.
 	/// </summary>
 	public static UserInterface activeGUI;
@@ -132,6 +137,24 @@ public static class GUI
 	public static void HideActiveUI()
 	{
 		HideBase(activeGUI);
+	}
+
+	/// <summary>
+	/// Shows the pause menu UI.
+	/// </summary>
+	public static void ShowPauseMenu()
+	{
+		ShowBase(pauseMenuUI);
+		//Time.timeScale = 0;
+	}
+
+	/// <summary>
+	/// Hides the pause menu UI.
+	/// </summary>
+	public static void HidePauseMenu()
+	{
+		//Time.timeScale = 1;
+		HideBase(pauseMenuUI);
 	}
 
 	/// <summary>

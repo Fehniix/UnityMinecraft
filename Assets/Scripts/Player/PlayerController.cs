@@ -47,11 +47,13 @@ public class PlayerController : MonoBehaviour
 		if (Input.GetKeyDown(KeyCode.E))
 			this.HandleInventoryKey();
 
-		if (Input.GetKeyDown(KeyCode.Escape) && GUI.isAGUIShown)
-			this.CloseInventory();
-		
-		if (Input.GetKeyDown(KeyCode.Escape) && !GUI.isAGUIShown)
-			Application.Quit();
+		if (Input.GetKeyDown(KeyCode.Escape))
+		{
+			if (GUI.isAGUIShown)
+				this.CloseInventory();
+			else
+				GUI.ShowPauseMenu();
+		}
     }
 
 	private void HandleMouseLeftClickDown()
