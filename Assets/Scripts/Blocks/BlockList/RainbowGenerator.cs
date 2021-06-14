@@ -1,4 +1,6 @@
-﻿public class RainbowGenerator: Block
+﻿using UnityEngine;
+
+public class RainbowGenerator: Block
 {
     public RainbowGenerator(): base()
 	{
@@ -9,10 +11,22 @@
 		this.miningLevel		= MiningLevel.DIAMOND;
 	}
 
-	public override void Place()
+	public override Vector3? Place()
 	{
-		base.Place();
+		Vector3? placementCoords = base.Place();
 
-		UnityEngine.Debug.Log("Game won!");
+		if (placementCoords == null)
+			return null;
+
+		ChunkPosition position 		= Player.instance.GetVoxelChunk();
+		Chunk chunk 				= PCTerrain.GetInstance().chunks[position];
+		AudioSource source			= AudioManager.Create3DSound("challenge_complete");
+		
+		source.gameObject.transform.parent 			= chunk.chunkGameObject.transform;
+		source.gameObject.transform.localPosition 	= placementCoords.Value;
+
+		source.Play();
+
+		return placementCoords;
 	}
 }

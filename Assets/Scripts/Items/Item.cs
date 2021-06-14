@@ -165,7 +165,7 @@ public class Item: IInteractable
 	/// <summary>
 	/// Places the item on the world.
 	/// </summary>
-	public virtual void Place()
+	public virtual Vector3? Place()
 	{
 		// Place the block in the middle.
 		this.prefab.transform.position = this.coordinates + (0.5f, 0.0f, 0.5f).ToVector3();
@@ -174,6 +174,8 @@ public class Item: IInteractable
 
 		// And instantiate the associated prefab.
 		GameObject.Instantiate(this.prefab);
+
+		return this.coordinates;
 	}
 
 	/// <summary>

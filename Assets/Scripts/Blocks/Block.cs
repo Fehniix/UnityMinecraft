@@ -168,7 +168,7 @@ public abstract class Block: BaseBlock, IInteractable
 	/// <summary>
 	/// Allows to place the block where the player is currently looking at.
 	/// </summary>
-	public virtual void Place()
+	public virtual Vector3? Place()
 	{
 		RaycastHit hit;
 		bool didHit = Physics.Raycast(Camera.main.ScreenPointToRay((
@@ -178,7 +178,7 @@ public abstract class Block: BaseBlock, IInteractable
 		).ToVector3()), out hit);
 
 		if (!didHit)
-			return;
+			return null;
 		
 		Vector3Int placingBlockCoordinates = Utils.ToVectorInt(hit.point + hit.normal / 2.0f);
 		Vector3Int playerPosition = Player.instance.GetVoxelPosition();
@@ -187,9 +187,9 @@ public abstract class Block: BaseBlock, IInteractable
 			placingBlockCoordinates == playerPosition || 
 			placingBlockCoordinates == new Vector3Int(playerPosition.x, playerPosition.y + 1, playerPosition.z)
 		)
-			return;
+			return null;
 		
-		PCTerrain.GetInstance().PlaceAt(this.blockName, placingBlockCoordinates);
+		return PCTerrain.GetInstance().PlaceAt(this.blockName, placingBlockCoordinates);
 	}
 
 	// Block breaking logic.

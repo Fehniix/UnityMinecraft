@@ -27,7 +27,7 @@ public interface IInteractable
 	/// </summary>
 	MiningLevel miningLevel { get; set; }
 
-	void Place();
+	UnityEngine.Vector3? Place();
 
 	void Break();
 

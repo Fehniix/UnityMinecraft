@@ -88,8 +88,9 @@ public class PCTerrain
 
 	/// <summary>
 	/// Places a block (given its reference) at the given position.
+	/// Returns the local chunk coordinates where the block was placed.
 	/// </summary>
-	public void PlaceAt(Block blockRef, int x, int y, int z)
+	public Vector3 PlaceAt(Block blockRef, int x, int y, int z)
 	{
 		ChunkPosition chunkPosition = (
 			Mathf.FloorToInt(x / 16), 
@@ -100,33 +101,35 @@ public class PCTerrain
 		this.blocks[new Vector3(x % 16, y, z % 16)] = blockRef;
 
 		this.chunks[chunkPosition].BuildMesh();
+
+		return new Vector3(x % 16, y, z % 16);
 	}
 
 
 	/// <summary>
 	/// Places a block (given its name) at the given position.
 	/// </summary>
-	public void PlaceAt(string blockName, int x, int y, int z)
+	public Vector3 PlaceAt(string blockName, int x, int y, int z)
 	{
 		// Create the instance
 		Block b = Registry.Instantiate(blockName) as Block;
 		b.coordinates = new Vector3Int(x,y,z);
 
 		// Delegate logic
-		this.PlaceAt(b, x, y, z);
+		return this.PlaceAt(b, x, y, z);
 	}
 
 	/// <summary>
 	/// Places a block (given its name) at the given position.
 	/// </summary>
-	public void PlaceAt(string blockName, Vector3Int position)
+	public Vector3 PlaceAt(string blockName, Vector3Int position)
 	{
 		// Create the instance
 		Block b = Registry.Instantiate(blockName) as Block;
 		b.coordinates = new Vector3Int(position.x, position.y, position.z);
 
 		// Delegate logic
-		this.PlaceAt(b, position.x, position.y, position.z);
+		return this.PlaceAt(b, position.x, position.y, position.z);
 	}
 
 	/// <summary>

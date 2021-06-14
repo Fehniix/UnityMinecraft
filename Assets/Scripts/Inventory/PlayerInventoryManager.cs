@@ -45,7 +45,7 @@ public static class PlayerInventoryManager
 		{
 			if (!block.placeable)
 				return false;
-
+				
 			block.Place();
 		}
 
