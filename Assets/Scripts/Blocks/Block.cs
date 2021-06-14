@@ -120,6 +120,11 @@ public abstract class Block: BaseBlock, IInteractable
 	public ToolType toolTypeRequired = ToolType.ANY;
 
 	/// <summary>
+	/// The sound the block produces when broken or placed.
+	/// </summary>
+	public BlockSoundType soundType = BlockSoundType.STONE;
+
+	/// <summary>
 	/// The list of items to drop.
 	/// </summary>
 	public List<Drop> drops;
@@ -188,6 +193,22 @@ public abstract class Block: BaseBlock, IInteractable
 			placingBlockCoordinates == new Vector3Int(playerPosition.x, playerPosition.y + 1, playerPosition.z)
 		)
 			return null;
+
+		string soundName = "Breaking/";
+
+		if (this.soundType == BlockSoundType.STONE)
+			soundName += "stone" + Random.Range(1, 5);
+
+		if (this.soundType == BlockSoundType.WOOD)
+			soundName += "wood" + Random.Range(1, 5);
+
+		if (this.soundType == BlockSoundType.DIRT)
+			soundName += "dirt" + Random.Range(1, 5);
+
+		AudioSource source = AudioManager.Create3DSound(soundName);
+		source.transform.parent = hit.transform;
+		source.transform.localPosition = new Vector3(placingBlockCoordinates.x % 16, placingBlockCoordinates.y, placingBlockCoordinates.z % 16);
+		AudioManager.Play3DSound(source);
 		
 		return PCTerrain.GetInstance().PlaceAt(this.blockName, placingBlockCoordinates);
 	}

@@ -39,14 +39,17 @@ public static class PlayerInventoryManager
 				return false;
 
 			item.coordinates = placement.Value;
-			item.Place();
+
+			if (item.Place() == null)
+				return false;
 		}
 		else
 		{
 			if (!block.placeable)
 				return false;
 				
-			block.Place();
+			if (block.Place() == null)
+				return false;
 		}
 
 		hotbarItems[activeItemIndex].quantity--;
