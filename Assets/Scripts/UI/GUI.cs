@@ -39,6 +39,11 @@ public static class GUI
 	public static PauseMenuUI pauseMenuUI;
 
 	/// <summary>
+	/// Reference to the GameWon UI!
+	/// </summary>
+	public static GameWonUI gameWonUI;
+
+	/// <summary>
 	/// Reference to the currently active GUI.
 	/// </summary>
 	public static UserInterface activeGUI;
@@ -145,7 +150,7 @@ public static class GUI
 	public static void ShowPauseMenu()
 	{
 		ShowBase(pauseMenuUI);
-		//Time.timeScale = 0;
+		Time.timeScale = 0;
 	}
 
 	/// <summary>
@@ -153,8 +158,24 @@ public static class GUI
 	/// </summary>
 	public static void HidePauseMenu()
 	{
-		//Time.timeScale = 1;
+		Time.timeScale = 1;
 		HideBase(pauseMenuUI);
+	}
+
+	/// <summary>
+	/// Shows the Game Won UI.
+	/// </summary>
+	public static void ShowGameWonUI()
+	{
+		ShowBase(gameWonUI);
+	}
+
+	/// <summary>
+	/// Hides the Game Won UI.
+	/// </summary>
+	public static void HideGameWonUI()
+	{
+		HideBase(gameWonUI);
 	}
 
 	/// <summary>

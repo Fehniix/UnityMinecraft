@@ -37,4 +37,19 @@ public class Controller : MonoBehaviour
 		ChunkPosition cp = Player.instance.GetVoxelChunk();
 		this.positionText.text = System.String.Format("({0},{1},{2}) ({3},{4})", p.x, p.y, p.z, cp.x, cp.z);
     }
+
+	/// <summary>
+	/// Calls the given function after the given delay (in seconds).
+	/// </summary>
+	public void RunAfterDelay(System.Action callback, float delay)
+	{
+		StartCoroutine(DelayedRun(callback, delay));
+	}
+
+	private System.Collections.IEnumerator DelayedRun(System.Action callback, float delay)
+	{
+		yield return new WaitForSeconds(delay);
+
+		callback();
+	}
 }
