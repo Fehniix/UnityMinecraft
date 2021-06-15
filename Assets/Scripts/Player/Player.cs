@@ -64,8 +64,6 @@ public class Player : MonoBehaviour
 		if (soundType == BlockSoundType.DIRT)
 			selectedClip = this.dirtSteppingClips[soundToPlay];
 
-		Debug.Log("Playing a sound! " + selectedClip);
-
 		this.audioSource.clip = selectedClip;
 		this.audioSource.Play();
 	}

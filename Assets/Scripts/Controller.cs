@@ -26,7 +26,6 @@ public class Controller : MonoBehaviour
 		InventoryContainers.hotbar.items[3].quantity = 2;
 		InventoryContainers.hotbar.items[4].quantity = 2;
 
-
 		GUI.hotbar.UpdateGUI();
     }
 

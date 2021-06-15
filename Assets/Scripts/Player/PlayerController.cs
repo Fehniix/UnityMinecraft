@@ -206,12 +206,12 @@ public class PlayerController : MonoBehaviour
 			return;
 		}
 
-		Debug.Log("Target block non interactable.");
+		//Debug.Log("Target block non interactable.");
 
 		if (PlayerInventoryManager.IsActiveItemConsumable())
 		{
 			bool consumed = PlayerInventoryManager.ConsumeActive();
-			Debug.Log("Attempted to consume: " + consumed);
+			//Debug.Log("Attempted to consume: " + consumed);
 		}
 	}
 
