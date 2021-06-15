@@ -23,11 +23,6 @@ public class RainbowGenerator: Block
 		ChunkPosition position 		= Player.instance.GetVoxelChunk();
 		Chunk chunk 				= PCTerrain.GetInstance().chunks[position];
 
-		GameObject _particleSystem 				= Resources.Load<GameObject>("Prefabs/SmokeExplosionParticles");
-		GameObject particleSystem				= GameObject.Instantiate<GameObject>(_particleSystem);
-		particleSystem.transform.parent 		= chunk.chunkGameObject.transform;
-		particleSystem.transform.localPosition 	= placementCoords.Value;
-
 		AudioSource c_complete	= AudioManager.Create3DSound("challenge_complete");
 		c_complete.gameObject.transform.parent 			= chunk.chunkGameObject.transform;
 		c_complete.gameObject.transform.localPosition 	= placementCoords.Value;
@@ -47,6 +42,11 @@ public class RainbowGenerator: Block
 
 		explosion.GetComponent<DelayedAudio>().PlayDelayed(explosion, launchTimes[0] + launch.clip.length);
 		explosion.GetComponent<DelayedAudio>().PlayDelayed(explosion, launchTimes[1] + launch.clip.length);
+
+		GameObject _particleSystem 				= Resources.Load<GameObject>("Prefabs/SmokeExplosionParticles");
+		GameObject particleSystem				= GameObject.Instantiate<GameObject>(_particleSystem);
+		particleSystem.transform.parent 		= chunk.chunkGameObject.transform;
+		particleSystem.transform.localPosition 	= placementCoords.Value;
 
 		GameObject.Find("Controller").GetComponent<Controller>().RunAfterDelay(GUI.ShowGameWonUI, 1.5f);
 

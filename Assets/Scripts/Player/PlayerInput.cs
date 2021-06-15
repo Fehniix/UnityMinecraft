@@ -34,6 +34,11 @@ public class PlayerInput : MonoBehaviour
 	/// Reference to the player's CharacterController. Used to change the player's position.
 	/// </summary>
 	private Rigidbody _rigidbody;
+	
+	/// <summary>
+	/// Used to indicate whether or not a stepping sound is ready to be played.
+	/// </summary>
+	private bool canPlaySteppingSound = true;
 
     // Start is called before the first frame update
     void Start()
@@ -63,6 +68,8 @@ public class PlayerInput : MonoBehaviour
 			deltaY = 0;
 		}
 
+		// Reset the rigidBody velocity if the player is not moving any longer.
+		// For example, when the inventory has been opened.
 		if (deltaX == 0 && deltaY == 0 && !this.jumping && false)
 			this._rigidbody.velocity = Vector3.zero;
 		
@@ -71,6 +78,15 @@ public class PlayerInput : MonoBehaviour
 		
 		RaycastHit verticalHit;
 		bool grounded = Physics.Raycast(this.transform.position, -this.transform.up, out verticalHit, raycastDistance);
+
+		if (!grounded && !this.canPlaySteppingSound)
+			Player.instance.StopAllSounds();
+
+		if (this.canPlaySteppingSound && (deltaX != 0 || deltaY != 0) && grounded)
+		{
+			this.PlaySteppingSound(verticalHit);
+			StartCoroutine(this.StartSteppingSoundCooldown());
+		}
 
 		// Movement along the x-z axis
 		Vector3 movement_xz = new Vector3(deltaX, 0.1f, deltaY);
@@ -96,4 +112,34 @@ public class PlayerInput : MonoBehaviour
 
 		this._rigidbody.velocity = new Vector3(movement.x * this.speed, this._rigidbody.velocity.y, movement.z * this.speed);
     }
+
+	/// <summary>
+	/// Plays the stepping sound, changing depending on the block that the player walked on.
+	/// </summary>
+	private void PlaySteppingSound(RaycastHit hit)
+	{
+		// Move 0.5f towards the center of the block
+		Vector3 hitBlockCoords = hit.point - new Vector3(0, 0.5f, 0);
+		ChunkPosition chunkPosition = Player.instance.GetVoxelChunk();
+
+		BaseBlock baseBlock = PCTerrain.GetInstance().chunks[chunkPosition].blocks[
+			(int)hitBlockCoords.x % 16, 
+			(int)hitBlockCoords.y, 
+			(int)hitBlockCoords.z % 16
+		];
+		Block block = Registry.Instantiate(baseBlock.blockName) as Block;
+		Player.instance.PlaySteppingSound(block.soundType);
+	}
+
+	/// <summary>
+	/// Starts the stepping sound cooldown.
+	/// </summary>
+	private IEnumerator StartSteppingSoundCooldown()
+	{
+		this.canPlaySteppingSound = false;
+
+		yield return new WaitForSeconds(0.45f);
+
+		this.canPlaySteppingSound = true;
+	}
 }

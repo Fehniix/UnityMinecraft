@@ -157,6 +157,10 @@ public abstract class Block: BaseBlock, IInteractable
 	{
 		this.broken = true;
 
+		ChunkPosition position 		= Player.instance.GetVoxelChunk();
+		Chunk chunk 				= PCTerrain.GetInstance().chunks[position];
+		this.PlaySound(chunk.chunkGameObject.transform, this.coordinates, true);
+
 		if (this.dropsItself)
 			Dropper.DropItem(this.blockName, this.coordinates);
 
@@ -194,6 +198,16 @@ public abstract class Block: BaseBlock, IInteractable
 		)
 			return null;
 
+		this.PlaySound(hit.transform, placingBlockCoordinates);
+		
+		return PCTerrain.GetInstance().PlaceAt(this.blockName, placingBlockCoordinates);
+	}
+
+	/// <summary>
+	/// Places the sound associated with the block.
+	/// </summary>
+	private void PlaySound(Transform parent, Vector3 parentCoords, bool transformCoords = true)
+	{
 		string soundName = "Breaking/";
 
 		if (this.soundType == BlockSoundType.STONE)
@@ -203,14 +217,17 @@ public abstract class Block: BaseBlock, IInteractable
 			soundName += "wood" + Random.Range(1, 5);
 
 		if (this.soundType == BlockSoundType.DIRT)
-			soundName += "dirt" + Random.Range(1, 5);
+			soundName += "grass" + Random.Range(1, 5);
 
 		AudioSource source = AudioManager.Create3DSound(soundName);
-		source.transform.parent = hit.transform;
-		source.transform.localPosition = new Vector3(placingBlockCoordinates.x % 16, placingBlockCoordinates.y, placingBlockCoordinates.z % 16);
+		source.transform.parent = parent;
+
+		if (!transformCoords)
+			source.transform.localPosition = parentCoords;
+		else
+			source.transform.localPosition = new Vector3(parentCoords.x % 16, parentCoords.y, parentCoords.z % 16);
+
 		AudioManager.Play3DSound(source);
-		
-		return PCTerrain.GetInstance().PlaceAt(this.blockName, placingBlockCoordinates);
 	}
 
 	// Block breaking logic.

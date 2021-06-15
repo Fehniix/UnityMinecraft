@@ -8,6 +8,7 @@ public class Leaves: Block
 		this.textureName 		= "oak_leaves";
 		this.hardness 			= 1 * 15;
 		this.dropsItself		= false;
+		this.soundType			= BlockSoundType.DIRT;
 		
 		this.drops = new List<Drop>();
 		this.drops.Add(new Drop("stick", (int)(new System.Random().NextDouble() * 4), 1.0f));

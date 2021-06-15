@@ -13,7 +13,7 @@ public class Coal: Item
 		this.placeableOnOtherItems 	= false;
 		this.hasGenericMesh			= true;
 		this.burnable				= true;
-		this.burnTime				= 800 * 20;
+		this.burnTime				= 80 * 20;
 		this.LoadPrefab();
     }
 }

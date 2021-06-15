@@ -8,5 +8,6 @@
 		this.hasSidedTextures 	= true;
 		this.burnable 			= true;
 		this.burnTime 			= 300;
+		this.soundType			= BlockSoundType.WOOD;
 	}
 }

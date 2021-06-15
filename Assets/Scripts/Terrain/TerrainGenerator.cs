@@ -192,7 +192,6 @@ public class TerrainGenerator : MonoBehaviour
 						{
 							BaseBlock oreBlock = Registry.Instantiate(oreBlockName) as BaseBlock;
 							blocks[i,j,k] = oreBlock;
-							Debug.Log("Placing " + oreBlockName);
 						} 
 					}
 

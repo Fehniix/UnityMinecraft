@@ -98,6 +98,11 @@ public class FurnaceUI : UserInterface
 		get { return this.smeltingSlot.item?.itemInstance as IInteractable; }
 	}
 
+	/// <summary>
+	/// Used to indicate whether or not a crackling sound is ready to be played.
+	/// </summary>
+	private bool canPlayCracklingSound = true;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -140,6 +145,16 @@ public class FurnaceUI : UserInterface
 		if (this.remainingFuel > 0)
 		{
 			// Keep consuming fuel no matter whether we're smelting an item or not.
+			if (this.canPlayCracklingSound)
+			{
+				AudioSource source = AudioManager.Create3DSound("Crackling/fire_crackle" + Random.Range(1, 6));
+				source.transform.parent = Player.instance.gameObject.transform;
+				source.transform.localPosition = Vector3.zero;
+				source.Play();
+				
+				StartCoroutine(this.StartCracklingSoundCooldown());
+			}
+
 			this.remainingFuel--;
 			this.UpdateProgressElementsUI();
 		}
@@ -218,5 +233,17 @@ public class FurnaceUI : UserInterface
 		this.smeltingSlot.UpdateTexture();
 		this.smeltedSlot.UpdateTexture();
 		this.UpdateProgressElementsUI();
+	}
+
+	/// <summary>
+	/// Starts the crackling sound cooldown.
+	/// </summary>
+	private IEnumerator StartCracklingSoundCooldown()
+	{
+		this.canPlayCracklingSound = false;
+
+		yield return new WaitForSeconds(0.9f);
+
+		this.canPlayCracklingSound = true;
 	}
 }
