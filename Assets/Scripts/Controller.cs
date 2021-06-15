@@ -13,18 +13,7 @@ public class Controller : MonoBehaviour
 
 		GameObject.Find("Player").transform.Translate(new Vector3(512, 70, 512));
 
-		InventoryContainers.hotbar.items[0] = new InventoryItem("furnace");
-		InventoryContainers.hotbar.items[1] = new InventoryItem("cobblestone");
-		InventoryContainers.hotbar.items[2] = new InventoryItem("coal");
-		InventoryContainers.hotbar.items[3] = new InventoryItem("emeraldBlock");
-		InventoryContainers.hotbar.items[4] = new InventoryItem("ironIngot");
-		InventoryContainers.hotbar.items[5] = new InventoryItem("craftingTable");
-		InventoryContainers.hotbar.items[6] = new InventoryItem("ironBlock");
-		InventoryContainers.hotbar.items[7] = new InventoryItem("rainbowGenerator");
-		InventoryContainers.hotbar.items[1].quantity = 2;
-		InventoryContainers.hotbar.items[2].quantity = 4;
-		InventoryContainers.hotbar.items[3].quantity = 2;
-		InventoryContainers.hotbar.items[4].quantity = 2;
+		InventoryContainers.inventory.items[26] = new InventoryItem("rainbowGenerator");
 
 		GUI.hotbar.UpdateGUI();
     }
